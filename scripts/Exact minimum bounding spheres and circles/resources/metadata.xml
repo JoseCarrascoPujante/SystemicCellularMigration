@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addOn>
+  <identifier>460ddf17-70f1-4203-8893-ba27bcbebdc8</identifier>
+  <displayType>Collection</displayType>
+  <translatedDisplayType>
+    <en_US>Collection</en_US>
+    <es_ES>Collection</es_ES>
+    <es_MX>Collection</es_MX>
+    <ja_JP>コレクション</ja_JP>
+    <ko_KR>컬렉션</ko_KR>
+    <zh_CN>集合</zh_CN>
+  </translatedDisplayType>
+  <name>Exact minimum bounding spheres and circles</name>
+  <author>Anton Semechko</author>
+  <version>1.4.0.1</version>
+  <downloadUrl>https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/460ddf17-70f1-4203-8893-ba27bcbebdc8/003e2c84-c39e-47c0-8c20-9507752e67d1/packages/zip?src=addons_ml_desktop_install&amp;profile_id=21939608&amp;license=40825541&amp;release_family=R2022a</downloadUrl>
+  <licenseUrl>https://addons.mathworks.com/registry/v1/460ddf17-70f1-4203-8893-ba27bcbebdc8/1.4.0.1/-/license</licenseUrl>
+  <previewImageUrl>https://www.mathworks.com/responsive_image/160/120/0/0/0/cache/matlabcentral/mlc-downloads/downloads/460ddf17-70f1-4203-8893-ba27bcbebdc8/003e2c84-c39e-47c0-8c20-9507752e67d1/images/screenshot.jpg</previewImageUrl>
+  <releaseNotesUrl>https://www.mathworks.com/add-ons/460ddf17-70f1-4203-8893-ba27bcbebdc8/003e2c84-c39e-47c0-8c20-9507752e67d1/releaseNotes</releaseNotesUrl>
+  <installationFolder>Collections</installationFolder>
+</addOn>
