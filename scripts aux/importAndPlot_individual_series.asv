@@ -20,14 +20,14 @@ ratio_list = {...
     {38.7651,38.7651,38.7651,38.7651,38.7651,38.7651,38.7651}
     } ;
 
-for i = length(ratio_list)
-    figure('Name',strcat('Tracks_group_',i))
+count=1;
+for i = 1:length(ratio_list)
+    figure('Name',strcat('Tracks_',num2str(count:count+length(ratio_list{i})),'_group_',num2str(i)))
     hTracks = gca;
-    [ratio_list{:}]
     
-    for j = length(ratio_list{i})
+    for j = 1:length(ratio_list{i})
         
-        thisfile = files(i).name ;
+        thisfile = files(count).name ;
         temp_x = readmatrix(thisfile,'Range','E1:E3600') ;
         temp_y = readmatrix(thisfile,'Range','F1:F3600') ;
             
@@ -36,18 +36,20 @@ for i = length(ratio_list)
         centered_y = temp_y-temp_y(1) ;
         
         % convert to polar coordinates
-    %     [teta,rho] = cart2pol(centered_x,centered_y);
-    %     rho = rho/11.63;
+        [teta,rho] = cart2pol(centered_x,centered_y);
+        rho = rho/ratio_list{i}{j};
         
         % scale
-        scaled_x = centered_x/ratio_list(i);
-        scaled_y = centered_y/ratio_list(i);
+        scaled_x = centered_x/ratio_list{i}{j};
+        scaled_y = centered_y/ratio_list{i}{j};
         
         % Plot trajectory and 'ko' marker at its tip
-        disp(i)
+        disp(count)
         plot(hTracks, scaled_x, scaled_y, 'Color', [0, 0, 0]) ;
         hold on;
         plot(hTracks, scaled_x(end), scaled_y(end), 'ko',  'MarkerFaceColor',  [0, 0, 0], 'MarkerSize', 2) ;
+        
+        count = count+1;
     end
 end
 
