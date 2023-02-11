@@ -110,25 +110,27 @@ sApEn = results.full(:,12);
 % 2D scatters
 
 figures.full2DScatters.(type) = figure('Name',strcat('Scatter2D_allConditions', type),'NumberTitle','off') ;
-figures.full2DScatters.(type).InvertHardcopy = 'off';
-% ax2D = gca;
+ax2D = gca;
 figures.full2DScatters.(type).Position(1:4) = [10 10 1250 650];
 tiledlayout(2,3,'TileSpacing','tight','Padding','tight')
 
 nexttile
 
-scatter(rmsfAlpha, dfaGamma, 1, 'g','filled') ;
+s(1) = scatter(rmsfAlpha, dfaGamma, 1, 'g','filled') ;
+hold on
 xlabel('RMSF Alpha')
 ylabel('DFA Gamma')
 set(gca, 'Color','k', 'XColor','w', 'YColor','w')
 set(gcf, 'Color','k')
 % bds = boundary(rmsfAlpha, dfaGamma, 0); % s=0 gives the 2D convex hull
 % plot(rmsfAlpha(bds),dfaGamma(bds),'w');
+hold on
+fit_ellipse(rmsfAlpha, dfaGamma, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([rmsfAlpha(bds)'; ...
 %     dfaGamma(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
 hold on
-scatter(srmsfAlpha, sdfaGamma, 1, 'y','filled') ;
+scatter(srmsfAlpha, sdfaGamma, 1, 'y','filled')
 hold on
 % xlabel('Shuffled RMSF Alpha')
 % ylabel('Shuffled DFA Gamma')
@@ -137,16 +139,16 @@ hold on
 % bds = boundary(srmsfAlpha, sdfaGamma, 0);
 % plot(srmsfAlpha(bds), sdfaGamma(bds),'w');
 % hold on
-fit_ellipse(rmsfAlpha, dfaGamma, gcf) ;
-hold on
 fit_ellipse(srmsfAlpha, sdfaGamma, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([srmsfAlpha(bds)'; ...
 %     sdfaGamma(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
+legend('Original','Shuffled')
 
 nexttile
 
 scatter(rmsfAlpha, msdBeta, 1, 'g','filled')
+hold on
 xlabel('RMSF Alpha')
 ylabel('MSD Beta')
 set(gca, 'Color','k', 'XColor','w', 'YColor','w')
@@ -154,6 +156,7 @@ set(gcf, 'Color','k')
 % bds = boundary(rmsfAlpha, msdBeta, 0);
 % plot(rmsfAlpha(bds),msdBeta(bds),'w');
 % hold on
+fit_ellipse(rmsfAlpha, msdBeta, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([rmsfAlpha(bds)'; ...
 %     msdBeta(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
@@ -167,16 +170,16 @@ hold on
 % bds = boundary(srmsfAlpha, smsdBeta, 0);
 % plot(srmsfAlpha(bds), smsdBeta(bds),'w');
 % hold on
-fit_ellipse(rmsfAlpha, msdBeta, gcf);
-hold on
 fit_ellipse(srmsfAlpha, smsdBeta, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([srmsfAlpha(bds)'; ...
 %     smsdBeta(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
+legend('Original','Shuffled')
 
 nexttile
 
 scatter(dfaGamma, msdBeta, 1, 'g','filled')
+hold on
 xlabel('DFA Gamma')
 ylabel('MSD Beta')
 set(gca, 'Color','k', 'XColor','w', 'YColor','w')
@@ -184,6 +187,7 @@ set(gcf, 'Color','k')
 % bds = boundary(dfaGamma, msdBeta, 0);
 % plot(dfaGamma(bds),msdBeta(bds),'w');
 % hold on
+fit_ellipse(dfaGamma, msdBeta, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([dfaGamma(bds)'; ...
 %     msdBeta(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
@@ -197,16 +201,16 @@ hold on
 % bds = boundary(sdfaGamma, smsdBeta, 0);
 % plot(sdfaGamma(bds),smsdBeta(bds),'w');
 % hold on
-fit_ellipse(dfaGamma, msdBeta, gcf);
-hold on
 fit_ellipse(sdfaGamma, smsdBeta, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([sdfaGamma(bds)'; ...
 %     smsdBeta(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
+legend('Original','Shuffled')
 
 nexttile
 
 scatter(msdBeta, ApEn, 1, 'g','filled')
+hold on
 xlabel('MSD Beta')
 ylabel('Approximate Entropy')
 set(gca, 'Color','k', 'XColor','w', 'YColor','w')
@@ -214,6 +218,7 @@ set(gcf, 'Color','k')
 % bds = boundary(msdBeta, ApEn, 0);
 % plot(msdBeta(bds), ApEn(bds),'w');
 % hold on
+fit_ellipse(msdBeta, ApEn, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([msdBeta(bds)'; ...
 %     ApEn(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
@@ -227,16 +232,16 @@ hold on
 % bds = boundary(smsdBeta, sApEn, 0);
 % plot(smsdBeta(bds), sApEn(bds),'w');
 % hold on
-fit_ellipse(msdBeta, ApEn, gcf);
-hold on
 fit_ellipse(smsdBeta, sApEn, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([smsdBeta(bds)'; ...
 %     sApEn(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
+legend('Original','Shuffled')
 
 nexttile
 
 scatter(rmsfAlpha, ApEn, 1, 'g','filled')
+hold on
 xlabel('RMSF Alpha')
 ylabel('Approximate Entropy')
 set(gca, 'Color','k', 'XColor','w', 'YColor','w')
@@ -244,6 +249,7 @@ set(gcf, 'Color','k')
 % bds = boundary(rmsfAlpha, ApEn, 0);
 % plot(rmsfAlpha(bds), ApEn(bds),'w');
 % hold on
+fit_ellipse(rmsfAlpha, ApEn, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([rmsfAlpha(bds)'; ...
 %     ApEn(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
@@ -257,16 +263,16 @@ hold on
 % bds = boundary(srmsfAlpha, sApEn, 0);
 % plot(srmsfAlpha(bds), sApEn(bds),'w');
 % hold on
-fit_ellipse(rmsfAlpha, ApEn, gcf);
-hold on
 fit_ellipse(srmsfAlpha, sApEn, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([srmsfAlpha(bds)'; ...
 %     sApEn(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
+legend('Original','Shuffled')
 
 nexttile
 
 scatter(dfaGamma, ApEn, 1, 'g','filled')
+hold on
 xlabel('DFA Gamma')
 ylabel('Approximate Entropy')
 set(gca, 'Color','k', 'XColor','w', 'YColor','w')
@@ -274,6 +280,7 @@ set(gcf, 'Color','k')
 % bds = boundary(dfaGamma, ApEn, 0);
 % plot(dfaGamma(bds),ApEn(bds),'w');
 % hold on
+fit_ellipse(dfaGamma, ApEn, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([dfaGamma(bds)'; ...
 %     ApEn(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
@@ -287,19 +294,11 @@ hold on
 % bds = boundary(sdfaGamma, sApEn, 0);
 % plot(sdfaGamma(bds),sApEn(bds),'w');
 % hold on
-fit_ellipse(dfaGamma, ApEn, gcf);
-hold on
 fit_ellipse(sdfaGamma, sApEn, gcf);
 % [ellipsoid_equation,ellipsoid_center] = MinVolEllipse([sdfaGamma(bds)'; ...
 %     sApEn(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
-
-
-leg = legend('Orientation', 'Horizontal');
-leg.Layout.Tile = 'north';
-legend('Original','Shuffled', 'Best-fit ellipse')
-leg.TextColor = 'w';
-leg.FontSize = 14 ;
+legend('Original','Shuffled')
 
 % % Create textbox
 % annotation(figures.full2DScatters,'textbox',...
@@ -317,6 +316,5 @@ leg.FontSize = 14 ;
 %     'FontSize',22,...
 %     'FitBoxToText','off');
 
-saveas(gcf,'C:\Users\pc\Desktop\GraphicalAbstract.png')
 
 end
