@@ -115,7 +115,7 @@ figures.full2DScatters.(type).InvertHardcopy = 'off';
 figures.full2DScatters.(type).Position(1:4) = [10 10 1250 650];
 tiledlayout(2,3,'TileSpacing','tight','Padding','tight')
 
-nexttile
+ax1 = nexttile ;
 
 scatter(rmsfAlpha, dfaGamma, 1, 'g','filled') ;
 xlabel('RMSF Alpha')
@@ -144,7 +144,7 @@ fit_ellipse(srmsfAlpha, sdfaGamma, gcf);
 %     sdfaGamma(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
 
-nexttile
+ax2 = nexttile ;
 
 scatter(rmsfAlpha, msdBeta, 1, 'g','filled')
 xlabel('RMSF Alpha')
@@ -174,7 +174,7 @@ fit_ellipse(srmsfAlpha, smsdBeta, gcf);
 %     smsdBeta(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
 
-nexttile
+ax3 = nexttile ;
 
 scatter(dfaGamma, msdBeta, 1, 'g','filled')
 xlabel('DFA Gamma')
@@ -204,7 +204,7 @@ fit_ellipse(sdfaGamma, smsdBeta, gcf);
 %     smsdBeta(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
 
-nexttile
+ax4 = nexttile ;
 
 scatter(msdBeta, ApEn, 1, 'g','filled')
 xlabel('MSD Beta')
@@ -234,7 +234,7 @@ fit_ellipse(smsdBeta, sApEn, gcf);
 %     sApEn(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
 
-nexttile
+ax5 = nexttile ;
 
 scatter(rmsfAlpha, ApEn, 1, 'g','filled')
 xlabel('RMSF Alpha')
@@ -264,7 +264,7 @@ fit_ellipse(srmsfAlpha, sApEn, gcf);
 %     sApEn(bds)'], 0.00001);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
 
-nexttile
+ax6 = nexttile ;
 
 scatter(dfaGamma, ApEn, 1, 'g','filled')
 xlabel('DFA Gamma')
@@ -295,11 +295,10 @@ fit_ellipse(sdfaGamma, sApEn, gcf);
 % Ellipse_plot(ax2D, ellipsoid_equation, ellipsoid_center, 1000);
 
 
-leg = legend('Orientation', 'Horizontal');
+leg = legend('Original', 'Shuffled', 'Best-fit ellipse','Orientation', 'Horizontal');
 leg.Layout.Tile = 'north';
-legend('Original','Shuffled', 'Best-fit ellipse')
 leg.TextColor = 'w';
-leg.FontSize = 14 ;
+leg.FontSize = 17 ;
 
 % % Create textbox
 % annotation(figures.full2DScatters,'textbox',...
@@ -316,6 +315,8 @@ leg.FontSize = 14 ;
 %     'String',['Shuffled',newline,'data'],...
 %     'FontSize',22,...
 %     'FitBoxToText','off');
+
+axis([ax1 ax2 ax3 ax4 ax5 ax6],[-0.3 2.1 -0.3 2.3])
 
 saveas(gcf,'C:\Users\pc\Desktop\GraphicalAbstract.png')
 

@@ -188,7 +188,7 @@ for f=1:length(UsefulSubFolderNames)
     end
     
     
-    %Adjust 'tracks' figure's proportions
+    %Adjust 'tracks' axes' proportions
     divx=[-18 18];
     divy=[0 0];
     plot(hTracks,divx,divy,'k');
