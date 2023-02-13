@@ -317,7 +317,13 @@ leg.FontSize = 17 ;
 %     'FitBoxToText','off');
 
 axis([ax1 ax2 ax3 ax4 ax5 ax6],[-0.3 2.1 -0.3 2.3])
-
-saveas(gcf,'C:\Users\pc\Desktop\GraphicalAbstract.png')
+versions = dir('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\Tracks 3600 frames, matlab files and tables\GraphicalAbstract') ;
+count = 0 ;
+for v = 1:length(versions)
+    if  contains(versions(v).name, 'GraphicalAbstract')
+        count = count + 1 ;
+    end
+end
+saveas(gcf,strcat('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\Tracks 3600 frames, matlab files and tables\GraphicalAbstract(',num2str(count),').png'))
 
 end
