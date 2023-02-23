@@ -146,7 +146,6 @@ for f=1:length(UsefulSubFolderNames)
                 coordinates.(conditionValidName).centered_y(:,i)/ratio_list(i) ;
         end
         
-        
         % Shuffle X and Y
        coordinates.(conditionValidName).shuffled_x(:,i) = ...
             coordinates.(conditionValidName).scaled_x(:,i) ; % make copy of scaled x
@@ -319,8 +318,6 @@ end
 % Scatter plots (Graphical abstract)
 
 figures = scatts(field_names,results,figures, 'original') ;
-% figures = scatts(field_names,results,figures, 'standardized') ;
-% figures = scatts(field_names,results,figures, 'normalized') ;
 
 calcTime = datevec(toc(tCalc)./(60*60*24)) ;
 
