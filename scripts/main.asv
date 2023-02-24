@@ -58,7 +58,7 @@ destination_folder = strcat(topLevelFolder, '\', run_date, '_', ...
 mkdir(destination_folder) ;
 
 
-%% Coordinate extraction and track plotting
+%% Coordinate extraction
 
 ImportTime = tic;
 
@@ -207,7 +207,7 @@ save(strcat(destination_folder, '\', run_date, '_coordinates'), 'N', 'parameters
 ['Coordinate section runtime was ' num2str(ImportTime) ' seconds']
 
 
-%% Parameter calculations
+%% Calculations section
 
 tCalc=tic;
 
@@ -329,7 +329,7 @@ clear old_dest_folder
 
 ['Calculations section runtime was ' num2str(toc(tCalc)) ' seconds']
 
-%% Statistical analysis
+%% Statistical analyses
 
 % Kolmogorov-Smirnov test against the standard normal distribution of parameters
 
@@ -353,7 +353,7 @@ end
 
 ['K-S test: done']
 
-% Create groups to test data by condition and species under
+% Create groups to test data by condition and species under the
 % Kruskal-Wallis test
 
 kw_conds = {{'SinEstimulo','Galvanotaxis','Quimiotaxis','Induccion','Comprobacion'},...
@@ -428,7 +428,7 @@ save(strcat(destination_folder, '\', run_date, '_statistics'), ...
     'kolmogorov_smirnov', 'kruskal_groups', 'kruskal_results','multcomp_results','dunn_results') ;
 
 
-%% File back-up and figure export
+%% Back up files and export figures as vector files
 
 % Backing up 'scripts' folder
 

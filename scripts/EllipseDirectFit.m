@@ -89,7 +89,7 @@ eqt= ['(',a, ')*x^2 + (',b,')*x*y + (',c,')*y^2 + (',d,')*x+ (',e,')*y + (',f,')
 xmin=0.7*min(XY(:,1));
 xmax=1.3*max(XY(:,2));
 fh = ezplot(eqt,[xmin,xmax]);
-set(fh,'Color','r','LineWidth',.5,'LineStyle','--')
+set(fh,'Color','b','LineWidth',.5,'LineStyle','--')
 % scatter(XY(:,1),XY(:,2))
 hold off
 
