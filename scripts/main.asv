@@ -4,8 +4,8 @@
 topLevelFolder = uigetdir('C:\') ;
 
 % Number of times Rho(s) will be randomly permuted to test against the
-% null hypothesis that DFA results are random
-shuffles = 200000;
+% null hypothesis that results are random
+shuffles = 1;
 
 % Get a list of all .xlsx files and their containing subfolders in this
 % directory
@@ -57,8 +57,7 @@ destination_folder = strcat(topLevelFolder, '\', run_date, '_', ...
 
 mkdir(destination_folder) ;
 
-
-%% Coordinate extraction
+%% Coordinate extraction and track plotting
 
 ImportTime = tic;
 
@@ -134,7 +133,7 @@ for f=1:length(UsefulSubFolderNames)
                 coordinates.(conditionValidName).centered_x(:,i)/23.44 ;
             coordinates.(conditionValidName).scaled_y(:,i) = ...
                 coordinates.(conditionValidName).centered_y(:,i)/23.44 ;
-        elseif contains(condition, 'en nombre de cada')
+        else
             coordinates.(conditionValidName).scaled_rho(:,i) = ...
                 coordinates.(conditionValidName).rho(:,i)/ratio_list(i) ;
             coordinates.(conditionValidName).scaled_x(:,i) = ...
@@ -182,8 +181,7 @@ for f=1:length(UsefulSubFolderNames)
         
         [thisfile ' runtime was ' num2str(toc(thisfiletic)) ' seconds']
     end
-    
-    
+        
     %Adjust 'tracks' axes' proportions
     divx=[-18 18];
     divy=[0 0];
@@ -207,7 +205,7 @@ save(strcat(destination_folder, '\', run_date, '_coordinates'), 'N', 'parameters
 ['Coordinate section runtime was ' num2str(ImportTime) ' seconds']
 
 
-%% Calculations section
+%% Parameter calculations
 
 tCalc=tic;
 
@@ -234,7 +232,7 @@ for i=1:length(field_names)
     ylabel('Log(\tau(s))');
     Shuffmsdhandle = gca;
 
-    for j=N %number of trajectories per condition
+    for j=N % number of trajectories per condition
         
         tic
 
@@ -329,7 +327,7 @@ clear old_dest_folder
 
 ['Calculations section runtime was ' num2str(toc(tCalc)) ' seconds']
 
-%% Statistical analyses
+%% Statistical analysis
 
 % Kolmogorov-Smirnov test against the standard normal distribution of parameters
 
@@ -353,7 +351,7 @@ end
 
 ['K-S test: done']
 
-% Create groups to test data by condition and species under the
+% Create groups to test data by condition and species under
 % Kruskal-Wallis test
 
 kw_conds = {{'SinEstimulo','Galvanotaxis','Quimiotaxis','Induccion','Comprobacion'},...
@@ -428,11 +426,11 @@ save(strcat(destination_folder, '\', run_date, '_statistics'), ...
     'kolmogorov_smirnov', 'kruskal_groups', 'kruskal_results','multcomp_results','dunn_results') ;
 
 
-%% Back up files and export figures as vector files
+%% File back-up and figure export
 
 % Backing up 'scripts' folder
 
-copyfile('C:\Users\pc\Desktop\Paper amebas 3 (movimiento sistémico)\_Tracks 3600 frames, matlab files and tables\scripts', strcat(destination_folder, '\Scripts_backup'));
+copyfile('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\Tracks 3600 frames, matlab files and tables\systemic-movement\scripts', strcat(destination_folder, '\Scripts_backup'));
 
 % Export figures as vector graphic files (.svg)
 

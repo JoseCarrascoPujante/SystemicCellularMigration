@@ -4,8 +4,8 @@
 topLevelFolder = uigetdir('C:\') ;
 
 % Number of times Rho(s) will be randomly permuted to test against the
-% null hypothesis that DFA results are random
-shuffles = 200000;
+% null hypothesis that results are random
+shuffles = 1;
 
 % Get a list of all .xlsx files and their containing subfolders in this
 % directory
@@ -56,7 +56,6 @@ destination_folder = strcat(topLevelFolder, '\', run_date, '_', ...
     num2str(shuffles), '_shuffles') ;
 
 mkdir(destination_folder) ;
-
 
 %% Coordinate extraction and track plotting
 
@@ -134,7 +133,7 @@ for f=1:length(UsefulSubFolderNames)
                 coordinates.(conditionValidName).centered_x(:,i)/23.44 ;
             coordinates.(conditionValidName).scaled_y(:,i) = ...
                 coordinates.(conditionValidName).centered_y(:,i)/23.44 ;
-        elseif contains(condition, 'en nombre de cada')
+        else
             coordinates.(conditionValidName).scaled_rho(:,i) = ...
                 coordinates.(conditionValidName).rho(:,i)/ratio_list(i) ;
             coordinates.(conditionValidName).scaled_x(:,i) = ...
@@ -182,8 +181,7 @@ for f=1:length(UsefulSubFolderNames)
         
         [thisfile ' runtime was ' num2str(toc(thisfiletic)) ' seconds']
     end
-    
-    
+        
     %Adjust 'tracks' axes' proportions
     divx=[-18 18];
     divy=[0 0];
@@ -234,7 +232,7 @@ for i=1:length(field_names)
     ylabel('Log(\tau(s))');
     Shuffmsdhandle = gca;
 
-    for j=N %number of trajectories per condition
+    for j=N % number of trajectories per condition
         
         tic
 
@@ -314,7 +312,8 @@ end
 
 % Scatter plots (Graphical Abstract)
 
-figures = scatts(field_names,results,figures, 'original') ;
+figures = GraphicalAbstract_TiledLayout(field_names,results,figures, 'original') ;
+GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
 
 calcTime = datevec(toc(tCalc)./(60*60*24)) ;
 
@@ -432,7 +431,7 @@ save(strcat(destination_folder, '\', run_date, '_statistics'), ...
 
 % Backing up 'scripts' folder
 
-copyfile('C:\Users\pc\Desktop\Paper amebas 3 (movimiento sistémico)\_Tracks 3600 frames, matlab files and tables\scripts', strcat(destination_folder, '\Scripts_backup'));
+copyfile('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\Tracks 3600 frames, matlab files and tables\systemic-movement\scripts', strcat(destination_folder, '\Scripts_backup'));
 
 % Export figures as vector graphic files (.svg)
 
