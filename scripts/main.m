@@ -50,7 +50,7 @@ bar2 = waitbar(0,'In progress...','Name','Reading file...') ;
 
 % Create destination folder
 
-run_date = datestr(now,'YYYY-mm-dd hhºMM''ss''''') ;
+run_date = char(datetime('now','Format','yyyy-mm-dd_HH.mm''''ss''''''''')) ;
 
 destination_folder = strcat(topLevelFolder, '\', run_date, '_', ...
     num2str(shuffles), '_shuffles') ;
@@ -312,7 +312,12 @@ end
 
 % Scatter plots (Graphical Abstract)
 
-figures = GraphicalAbstract_TiledLayout(field_names,results,figures, 'original') ;
+figures = GraphAbs_def_subplot(field_names,results,figures) ;
+
+figures = GraphAbs_def(field_names,results,figures) ;
+
+figures = GraphicalAbstract_TiledLayout(field_names,results,figures) ;
+
 GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
 
 calcTime = datevec(toc(tCalc)./(60*60*24)) ;
@@ -320,11 +325,11 @@ calcTime = datevec(toc(tCalc)./(60*60*24)) ;
 save(strcat(destination_folder, '\', run_date, '_rmsf_', num2str(tc2), 'tmax_calculations&figures'),...
     'calcTime', 'results', 'figures') ;
 
-old_dest_folder = destination_folder;
-destination_folder = strcat(old_dest_folder, '_', num2str(tc2), 'tmax');
+old_folder = destination_folder;
+destination_folder = strcat(old_folder, '_', num2str(tc2), 'tmax');
 
-movefile(old_dest_folder, destination_folder)
-clear old_dest_folder
+movefile(old_folder, destination_folder)
+clear old_folder
 
 ['Calculations section runtime was ' num2str(toc(tCalc)) ' seconds']
 

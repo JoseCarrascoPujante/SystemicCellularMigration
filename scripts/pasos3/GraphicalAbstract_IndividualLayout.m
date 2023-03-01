@@ -1,5 +1,5 @@
 
-function figures = GraphicalAbstract_IndividualLayout(field_names, results, figures)
+function [] = GraphicalAbstract_IndividualLayout(field_names, results)
 
 % Plots systemic movement parameters in 2D and 3D scatterplots
 
@@ -20,9 +20,13 @@ disp(pairs)
 
 % 2D scatters
 
+graphPath = strcat(['E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\' ...
+                'Tracks 3600 frames, matlab files and tables\GraphicalAbstract\'],...
+                string(datetime('now','Format','yyyy-mm-dd_HH.mm.ss')),'\');
+mkdir(graphPath)
 precision = [[.50, .75, .90, .95]; [.5, .75, 1, 1.5]];
 ellipseFitType = [{'%Confidence'},{'xSTD'}];
-colr = ['w','c','r','m'];
+colr = ['w','c','r','m']; % there must be one color per precision level
 for precisionType=1:height(precision)
     for ej=1:length(pairs)
         disp(strcat('Combination: ',stat_names(pairs(ej,1)), '_and_',stat_names(pairs(ej,2))))
@@ -45,7 +49,7 @@ for precisionType=1:height(precision)
             set(gca, 'Color','k', 'XColor','w', 'YColor','w')
             set(gcf, 'Color','k')
             hold on
-            ellipse(cat(2,metric1,metric2),G,precision(precisionType,c),colr(c),precisionType)
+            ellipse_switch(cat(2,metric1,metric2),G,precision(precisionType,c),colr(c),precisionType)
             xlabel(stat_names(pairs(ej,1)))
             ylabel(stat_names(pairs(ej,2)))
             h(1) = plot(nan, nan, 'go', 'MarkerFaceColor','g', 'MarkerSize', 10, 'DisplayName', 'Original');
@@ -54,13 +58,12 @@ for precisionType=1:height(precision)
                 'DisplayName', strcat(num2str(precision(precisionType,c)), ellipseFitType{precisionType}));
             leg=legend(h,Orientation='Horizontal',TextColor='w',FontSize=15);
             leg.Location = 'northoutside';
-            saveas(gcf,strcat(stat_names(pairs(ej,1)),'_vs_',stat_names(pairs(ej,2)),...
-                '_',num2str(precision(precisionType,c)),ellipseFitType{precisionType},'.png'))
+            saveas(gcf,strcat(graphPath,stat_names(pairs(ej,1)),...
+                '_vs_',stat_names(pairs(ej,2)),'_',num2str(precision(precisionType,c)),...
+                ellipseFitType{precisionType},'.png'))
             hold off
         end
     end
 end
-
-
 
 end

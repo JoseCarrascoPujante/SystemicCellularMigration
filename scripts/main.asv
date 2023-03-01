@@ -50,7 +50,7 @@ bar2 = waitbar(0,'In progress...','Name','Reading file...') ;
 
 % Create destination folder
 
-run_date = datestr(now,'YYYY-mm-dd hhºMM''ss''''') ;
+run_date = string(datetime('now','Format','yyyy-mm-dd_HH.mm''''.ss"''')) ;
 
 destination_folder = strcat(topLevelFolder, '\', run_date, '_', ...
     num2str(shuffles), '_shuffles') ;
@@ -312,7 +312,8 @@ end
 
 % Scatter plots (Graphical Abstract)
 
-figures = scatts(field_names,results,figures, 'original') ;
+figures = GraphicalAbstract_TiledLayout(field_names,results,figures, 'original') ;
+GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
 
 calcTime = datevec(toc(tCalc)./(60*60*24)) ;
 
