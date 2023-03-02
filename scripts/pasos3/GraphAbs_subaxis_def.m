@@ -27,7 +27,7 @@ hBig = [subaxis(2,2,1, props{:}) subaxis(2,2,2, props{:}) subaxis(2,2,3, props{:
 posBig = get(hBig, 'Position');             %# record their positions
 delete(hBig)                                %# delete them
 posSmall{1} = [0.83 0.61 0.13 0.13];
-posSmall{2} = [0.3 0.18 0.13 0.13];
+posSmall{2} = [0.31 0.18 0.13 0.13];
 posSmall{3} = [0.83 0.16 0.13 0.13];
 
 %# Create axes (big/small)
@@ -59,50 +59,33 @@ for ek=1:length(pairs)-1
         scatter(hAxS(ek),results.full(:,pairs(ek+1,1)),results.full(:,pairs(ek+1,2)),.75,'g','filled','o') ;
         hold(hAxS(ek),'on')
         ellipse_scatter(hAxS(ek),cat(2,results.full(:,pairs(ek+1,1)),results.full(:,pairs(ek+1,2))),precision,'r')
-        box(hAxS(ek),"on")
-        xl= xlim(hAxS(ek));
-        yl= ylim(hAxS(ek));
-        rPos = [xl(1)-(((xl(2)-xl(1))*1.1)-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))*7)-((yl(2)-yl(1))))/2 (xl(2)-xl(1))*1.1 (yl(2)-yl(1))*7];
-        hold(hAxB(ek+1),'on')
-        rectangle(hAxB(ek+1), 'Position',rPos, 'EdgeColor','r','FaceColor','none', 'LineWidth',.5);
-        [Xor,Yor] = ds2nfu(hAxB(ek+1),rPos(1),rPos(2));
-        [Xfr,Yfr] = ds2nfu(hAxB(ek+1),rPos(1)+rPos(3),rPos(2)+rPos(4));
-        disp([Xor,Yor; ... %# rectangle bottom left
-            Xfr,Yfr; ... %# rectangle top right
-            posSmall{ek}(1),posSmall{ek}(2); ... %# small axis ek bottom left
-            posSmall{ek}(1)+posSmall{ek}(3),posSmall{ek}(2)+posSmall{ek}(4)]) %# small axis ek top right
-        annotation(figures.full2DScatters,'line',[Xfr posSmall{ek}(1)+posSmall{ek}(4)], [Yor posSmall{ek}(2)], ...
-            'Color','w','LineStyle','--','LineWidth',.5);
-        annotation(figures.full2DScatters,'line',[Xor posSmall{ek}(1)], [Yfr posSmall{ek}(2)+posSmall{ek}(4)], ...
-            'Color','w','LineStyle','--','LineWidth',.5);
-        alpha(hAxS(ek),1)
     else
         scatter(hAxS(ek),results.full(:,pairs(ek+1,1)+1),results.full(:,pairs(ek+1,2)+1),.75,'y','filled','o') ;
         hold(hAxS(ek),'on')
         ellipse_scatter(hAxS(ek),cat(2,results.full(:,pairs(ek+1,1)+1),results.full(:,pairs(ek+1,2)+1)),precision,'r')
-        box(hAxS(ek),"on")
-        xl= xlim(hAxS(ek));
-        yl= ylim(hAxS(ek));
-        rPos = [xl(1)-(((xl(2)-xl(1))*1.1)-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))*7)-((yl(2)-yl(1))))/2 (xl(2)-xl(1))*1.1 (yl(2)-yl(1))*7];
-        hold(hAxB(ek+1),'on')
-        rectangle(hAxB(ek+1),'Position', rPos,'EdgeColor','r','FaceColor','none','LineWidth',.5);
-        [Xor,Yor] = ds2nfu(hAxB(ek+1),rPos(1),rPos(2));
-        [Xfr,Yfr] = ds2nfu(hAxB(ek+1),rPos(1)+rPos(3),rPos(2)+rPos(4));
-        disp([Xor,Yor; ... %# rectangle bottom left
-            Xfr,Yfr; ... %# rectangle top right
-            posSmall{ek}(1),posSmall{ek}(2); ... %# small axis ek bottom left
-            posSmall{ek}(1)+posSmall{ek}(3),posSmall{ek}(2)+posSmall{ek}(4)]) %# small axis ek top right
-        annotation(figures.full2DScatters,'line',[Xfr posSmall{ek}(1)+posSmall{ek}(4)], [Yor posSmall{ek}(2)], ...
-            'Color','w','LineStyle','--','LineWidth',.5);
-        annotation(figures.full2DScatters,'line',[Xor posSmall{ek}(1)], [Yfr posSmall{ek}(2)+posSmall{ek}(4)], ...
-            'Color','w','LineStyle','--','LineWidth',.5);
-        alpha(hAxS(ek),1)
     end
+    box(hAxS(ek),"on")
+    xl= xlim(hAxS(ek));
+    yl= ylim(hAxS(ek));
+    rPos = [xl(1)-(((xl(2)-xl(1))*1.1)-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))*7)-((yl(2)-yl(1))))/2 (xl(2)-xl(1))*1.05 (yl(2)-yl(1))*7];
+    hold(hAxB(ek+1),'on')
+    rectangle(hAxB(ek+1),'Position', rPos,'EdgeColor','r','FaceColor','none','LineWidth',.5);
+    [Xor,Yor] = ds2nfu(hAxB(ek+1),rPos(1),rPos(2));
+    [Xfr,Yfr] = ds2nfu(hAxB(ek+1),rPos(1)+rPos(3),rPos(2)+rPos(4));
+    disp([Xor,Yor; ... %# rectangle bottom left
+        Xfr,Yfr; ... %# rectangle top right
+        posSmall{ek}(1),posSmall{ek}(2); ... %# small axis ek bottom left
+        posSmall{ek}(1)+posSmall{ek}(3),posSmall{ek}(2)+posSmall{ek}(4)]) %# small axis ek top right
+    annotation(figures.full2DScatters,'line',[Xfr posSmall{ek}(1)+posSmall{ek}(4)], [Yor posSmall{ek}(2)], ...
+        'Color','w','LineStyle','--','LineWidth',.5);
+    annotation(figures.full2DScatters,'line',[Xor posSmall{ek}(1)], [Yfr posSmall{ek}(2)+posSmall{ek}(4)], ...
+        'Color','w','LineStyle','--','LineWidth',.5);
+    alpha(hAxS(ek),1)
 end
 
 %# set axes properties
 set(hAxB, 'Color','k', 'XColor','w', 'YColor','w','FontSize',9.5,'FontWeight','bold')
-set(hAxS, 'Color','none', 'XColor','r', 'YColor','r','LineWidth',.3,'FontSize',6, ...
+set(hAxS, 'Color','none', 'XColor','r', 'YColor','r','LineWidth',.5,'FontSize',6, ...
     'XAxisLocation','bottom', 'YAxisLocation','left');
 hAxS(1).XAxis.TickLabelColor = 'w';
 hAxS(1).YAxis.TickLabelColor = 'w';
