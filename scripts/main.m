@@ -312,9 +312,9 @@ end
 
 % Scatter plots (Graphical Abstract)
 
-figures = GraphAbs_def_subplot(field_names,results,figures) ;
+figures = GraphAbs_subaxis_def(field_names,results,figures) ;
 
-figures = GraphAbs_def(field_names,results,figures) ;
+figures = GraphAbs_TiledLayout_def(field_names,results,figures) ;
 
 figures = GraphicalAbstract_TiledLayout(field_names,results,figures) ;
 

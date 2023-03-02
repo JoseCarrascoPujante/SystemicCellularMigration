@@ -1,4 +1,4 @@
-function figures = GraphAbs_def_subplot(field_names, results, figures)
+function figures = GraphAbs_subaxis_def(field_names, results, figures)
 %# create dataset
 results.full = [];
 for index = 1:length(field_names)
@@ -8,12 +8,12 @@ stat_names = ["RMSF\alpha" "sRMSF\alpha" "RMSFR2" "sRMSFR2" "RMSFtimeMax" ...
     "sRMSFTimeMax" "DFA\gamma" "sDFA\gamma" "MSD\beta" "sMSD\beta" "Approximate Entropy" "sApproximate Entropy"];
 %# Presets
 precision = .6827; %Equivalent to 1xSTD
-ellipseFitType = '%confidence';
+ellipseFitType = '% confidence interval';
 
 figures.full2DScatters = figure('Name',strcat('GraphicalAbstract_',...
-    ellipseFitType,'fit'),'NumberTitle','off') ;
+    ellipseFitType,'fit'),'NumberTitle','off','Visible','on') ;
 figures.full2DScatters.InvertHardcopy = 'off';
-figures.full2DScatters.Position(1:4) = [0 0 625 625];
+figures.full2DScatters.Position(1:4) = [0 0 700 700];
 
 % pair stats to plot
 indexes = 1:length(stat_names);
@@ -22,15 +22,15 @@ pairs([5,6],:) = []; % remove two last combinations
 results.full(:,7) = results.full(:,7)-1;
 
 %# build axes positions
-props = {'sh', 0.05, 'sv', 0.03, 'padding', 0.03 'margin', 0.03};
+props = {'sh', 0.02, 'sv', 0.03, 'padding', 0.03 'margin', 0.03};
 hBig = [subaxis(2,2,1, props{:}) subaxis(2,2,2, props{:}) subaxis(2,2,3, props{:}) subaxis(2,2,4, props{:})]; %# create subplots
 posBig = get(hBig, 'Position');             %# record their positions
 delete(hBig)                                %# delete them
-posSmall{1} = [0.81 0.63 0.13 0.13];
-posSmall{2} = [0.35 0.22 0.13 0.13];
-posSmall{3} = [0.85 0.185 0.13 0.13];
+posSmall{1} = [0.83 0.61 0.13 0.13];
+posSmall{2} = [0.3 0.18 0.13 0.13];
+posSmall{3} = [0.83 0.16 0.13 0.13];
 
-%# create axes (big/small)
+%# Create axes (big/small)
 hAxB(1) = axes('Position',posBig{1});
 hAxB(2) = axes('Position',posBig{2});
 hAxB(3) = axes('Position',posBig{3});
@@ -39,7 +39,7 @@ hAxS(1) = axes('Position',posSmall{1});
 hAxS(2) = axes('Position',posSmall{2});
 hAxS(3) = axes('Position',posSmall{3});
 
-%# Plot big axes
+%# Plot on big axes
 for ej=1:length(pairs)
     disp(strcat('Plot nº',num2str(ej)))
     metric1 = cat(1,results.full(:,pairs(ej,1)), results.full(:,pairs(ej,1)+1));
@@ -53,21 +53,29 @@ for ej=1:length(pairs)
     ylabel(hAxB(ej),stat_names(pairs(ej,2)))
 end
 
-%# plot Small1
+%# plot on small axes
 for ek=1:length(pairs)-1
     if ek == 2
         scatter(hAxS(ek),results.full(:,pairs(ek+1,1)),results.full(:,pairs(ek+1,2)),.75,'g','filled','o') ;
         hold(hAxS(ek),'on')
         ellipse_scatter(hAxS(ek),cat(2,results.full(:,pairs(ek+1,1)),results.full(:,pairs(ek+1,2))),precision,'r')
         box(hAxS(ek),"on")
-        xl= xlim(hAxS(ek))
-        yl= ylim(hAxS(ek))
+        xl= xlim(hAxS(ek));
+        yl= ylim(hAxS(ek));
+        rPos = [xl(1)-(((xl(2)-xl(1))*1.1)-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))*7)-((yl(2)-yl(1))))/2 (xl(2)-xl(1))*1.1 (yl(2)-yl(1))*7];
         hold(hAxB(ek+1),'on')
-        rectangle(hAxB(ek+1),'Position', ...
-            [xl(1)-(((xl(2)-xl(1))*1.1)-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))*7)-((yl(2)-yl(1))))/2 (xl(2)-xl(1))*1.1 (yl(2)-yl(1))*7], ...
-            'EdgeColor','r','FaceColor','none','LineWidth',.5)
+        rectangle(hAxB(ek+1), 'Position',rPos, 'EdgeColor','r','FaceColor','none', 'LineWidth',.5);
+        [Xor,Yor] = ds2nfu(hAxB(ek+1),rPos(1),rPos(2));
+        [Xfr,Yfr] = ds2nfu(hAxB(ek+1),rPos(1)+rPos(3),rPos(2)+rPos(4));
+        disp([Xor,Yor; ... %# rectangle bottom left
+            Xfr,Yfr; ... %# rectangle top right
+            posSmall{ek}(1),posSmall{ek}(2); ... %# small axis ek bottom left
+            posSmall{ek}(1)+posSmall{ek}(3),posSmall{ek}(2)+posSmall{ek}(4)]) %# small axis ek top right
+        annotation(figures.full2DScatters,'line',[Xfr posSmall{ek}(1)+posSmall{ek}(4)], [Yor posSmall{ek}(2)], ...
+            'Color','w','LineStyle','--','LineWidth',.5);
+        annotation(figures.full2DScatters,'line',[Xor posSmall{ek}(1)], [Yfr posSmall{ek}(2)+posSmall{ek}(4)], ...
+            'Color','w','LineStyle','--','LineWidth',.5);
         alpha(hAxS(ek),1)
-
     else
         scatter(hAxS(ek),results.full(:,pairs(ek+1,1)+1),results.full(:,pairs(ek+1,2)+1),.75,'y','filled','o') ;
         hold(hAxS(ek),'on')
@@ -75,10 +83,19 @@ for ek=1:length(pairs)-1
         box(hAxS(ek),"on")
         xl= xlim(hAxS(ek));
         yl= ylim(hAxS(ek));
+        rPos = [xl(1)-(((xl(2)-xl(1))*1.1)-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))*7)-((yl(2)-yl(1))))/2 (xl(2)-xl(1))*1.1 (yl(2)-yl(1))*7];
         hold(hAxB(ek+1),'on')
-        rectangle(hAxB(ek+1),'Position', ...
-            [xl(1)-(((xl(2)-xl(1))*1.1)-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))*7)-((yl(2)-yl(1))))/2 (xl(2)-xl(1))*1.1 (yl(2)-yl(1))*7], ...
-            'EdgeColor','r','FaceColor','none','LineWidth',.5)
+        rectangle(hAxB(ek+1),'Position', rPos,'EdgeColor','r','FaceColor','none','LineWidth',.5);
+        [Xor,Yor] = ds2nfu(hAxB(ek+1),rPos(1),rPos(2));
+        [Xfr,Yfr] = ds2nfu(hAxB(ek+1),rPos(1)+rPos(3),rPos(2)+rPos(4));
+        disp([Xor,Yor; ... %# rectangle bottom left
+            Xfr,Yfr; ... %# rectangle top right
+            posSmall{ek}(1),posSmall{ek}(2); ... %# small axis ek bottom left
+            posSmall{ek}(1)+posSmall{ek}(3),posSmall{ek}(2)+posSmall{ek}(4)]) %# small axis ek top right
+        annotation(figures.full2DScatters,'line',[Xfr posSmall{ek}(1)+posSmall{ek}(4)], [Yor posSmall{ek}(2)], ...
+            'Color','w','LineStyle','--','LineWidth',.5);
+        annotation(figures.full2DScatters,'line',[Xor posSmall{ek}(1)], [Yfr posSmall{ek}(2)+posSmall{ek}(4)], ...
+            'Color','w','LineStyle','--','LineWidth',.5);
         alpha(hAxS(ek),1)
     end
 end
@@ -86,7 +103,7 @@ end
 %# set axes properties
 set(hAxB, 'Color','k', 'XColor','w', 'YColor','w','FontSize',9.5,'FontWeight','bold')
 set(hAxS, 'Color','none', 'XColor','r', 'YColor','r','LineWidth',.3,'FontSize',6, ...
-    'XAxisLocation','top', 'YAxisLocation','left');
+    'XAxisLocation','bottom', 'YAxisLocation','left');
 hAxS(1).XAxis.TickLabelColor = 'w';
 hAxS(1).YAxis.TickLabelColor = 'w';
 hAxS(2).XAxis.TickLabelColor = 'w';
@@ -95,14 +112,23 @@ hAxS(3).XAxis.TickLabelColor = 'w';
 hAxS(3).YAxis.TickLabelColor = 'w';
 set(gcf, 'Color','k')
 
-% plot(hAxS(3),nan, nan, 'go', 'MarkerFaceColor','g', 'MarkerSize', 6, 'DisplayName', 'Original');
-% plot(hAxB(1),nan, nan, 'yo', 'MarkerFaceColor','y', 'MarkerSize', 10, 'DisplayName', 'Shuffled');
-% plot(hAxB(1),nan, nan, 'r--', 'MarkerSize',25, 'DisplayName',strcat(num2str(precision),ellipseFitType));
 [h,objh] = legend(hAxB(1),'Original','Shuffled',strcat(num2str(precision),ellipseFitType), ...
     Orientation='Horizontal',TextColor='w',FontSize=12);
 objhl = findobj(objh, 'type', 'line'); %// objects of legend of type line
 set(objhl, 'Markersize', 30); %// set marker size as desired
 
-h.Position(1:2)=[0.19,0.95];
+h.Position(1:2)=[0.15,0.95];
+
+versions = dir('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\GraphicalAbstract') ;
+gabs = 1 ;
+for v = 1:length(versions)
+    if  contains(versions(v).name, 'GraphicalAbstract')
+        gabs = gabs + 1 ;
+    end
+end
+disp(strcat(num2str(gabs),' Graphical Abstract files found'))
+exportgraphics(gcf,strcat(['E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\Graphical' ...
+    'Abstract\GraphicalAbstract('],num2str(gabs),')',ellipseFitType,'.png'),"Resolution",600,'BackgroundColor','k')
+saveas(gcf,strcat('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\GraphicalAbstract\GraphicalAbstract(',num2str(gabs),')',ellipseFitType,'.svg'))
 
 end

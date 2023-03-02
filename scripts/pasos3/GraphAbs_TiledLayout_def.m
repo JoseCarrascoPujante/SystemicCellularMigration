@@ -1,5 +1,5 @@
 % Plots cell movement statistics in 2D scatterplots
-function figures = GraphAbs_def(field_names, results, figures)
+function figures = GraphAbs_TiledLayout_def(field_names, results, figures)
 
 % Merge all 12 stats in one struct
 
