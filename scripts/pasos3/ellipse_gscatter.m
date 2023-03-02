@@ -1,5 +1,8 @@
 function [] = ellipse_gscatter(h,X,G,precision,colr)
-%%# PrecisionType==1 for Confidence Interval, PrecisionType==2 for STD
+
+%# Modified from:
+%# https://stackoverflow.com/a/3419973
+%# PrecisionType==1 for Confidence Interval, PrecisionType==2 for STD
 % STD = precision;
 for k=1:2
     %# indices of points in this group

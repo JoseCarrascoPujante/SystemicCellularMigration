@@ -1,5 +1,6 @@
 function [] = ellipse_scatter(h,X,precision,colr)
-
+%# Modified from:
+%# https://stackoverflow.com/a/3419973
 %# substract mean
 Mu = mean( X );
 X0 = bsxfun(@minus, X, Mu);

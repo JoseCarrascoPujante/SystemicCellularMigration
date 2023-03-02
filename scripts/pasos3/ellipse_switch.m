@@ -1,5 +1,7 @@
 function [] = ellipse_switch(X,G,precision,colr,precisionType)
-%%# PrecisionType==1 for Confidence Interval, PrecisionType==2 for STD
+%# Modified from:
+%# https://stackoverflow.com/a/3419973
+%# PrecisionType==1 for Confidence Interval, PrecisionType==2 for STD
 if precisionType == 2
     STD = precision;
 end
