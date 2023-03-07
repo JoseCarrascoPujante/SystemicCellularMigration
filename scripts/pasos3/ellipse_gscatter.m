@@ -1,9 +1,8 @@
-function [] = ellipse_gscatter(h,X,G,precision,colr)
+function [] = ellipse_gscatter(h,X,G,conf,colr)
 
 %# Modified from:
 %# https://stackoverflow.com/a/3419973
 %# PrecisionType==1 for Confidence Interval, PrecisionType==2 for STD
-% STD = precision;
 for k=1:2
     %# indices of points in this group
     idx = ( G == k );
@@ -19,12 +18,12 @@ for k=1:2
 %     V = V(:, order);
     
     %# manual selection of standard deviation level to represent
-%     STD = 2;                  %# set n standard deviations
-%     precision = 2*normcdf(STD)-1;     %# covers 95.45% of population when STD=2, 68.27% when STD=1
-    scale = chi2inv(precision,2);     %# inverse chi-squared with dof=#dimensions
+%     STD = precision;                  %# set n standard deviations
+%     conf = 2*normcdf(STD)-1;     %# covers 95.45% of population when STD=2, 68.27% when STD=1
+    scale = chi2inv(conf/100,2);     %# inverse chi-squared with dof=#dimensions
     
-    Cov = cov(X0) * scale;
-    [V, D] = eig(Cov);
+    Covar = cov(X0) * scale;
+    [V, D] = eig(Covar);
     
     t = linspace(0,2*pi,100);
     e = [cos(t) ; sin(t)];        %# unit circle
@@ -33,6 +32,6 @@ for k=1:2
     
     %# plot cov and major/minor axes
     plot(h,e(1,:), e(2,:),'Color',colr,'LineWidth', 1,'LineStyle','--');
-    %#quiver(Mu(1),Mu(2), VV(1,1),VV(2,1), 'Color','k')
-    %#quiver(Mu(1),Mu(2), VV(1,2),VV(2,2), 'Color','k')
+    %#quiver(h,Mu(1),Mu(2), VV(1,1),VV(2,1), 'Color','k')
+    %#quiver(h,Mu(1),Mu(2), VV(1,2),VV(2,2), 'Color','k')
 end

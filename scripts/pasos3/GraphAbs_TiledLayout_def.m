@@ -16,10 +16,10 @@ stat_names = ["rmsf\alpha" "srmsf\alpha" "rmsfR2" "srmsfR2" "rmsfTimeMax" ...
 precision = .65;
 ellipseFitType = '%confidence';
 
-figures.full2DScatters = figure('Name',strcat('GraphicalAbstract_',...
+figures.GraphicalAbstract = figure('Name',strcat('GraphicalAbstract_',...
     ellipseFitType,'fit'),'NumberTitle','off') ;
-figures.full2DScatters.InvertHardcopy = 'off';
-figures.full2DScatters.Position(1:4) = [0 0 625 625];
+figures.GraphicalAbstract.InvertHardcopy = 'off';
+figures.GraphicalAbstract.Position(1:4) = [0 0 625 625];
 T = tiledlayout(2,2,'TileSpacing','tight','Padding','tight'); % Outer layout
 
 % pair stats to plot

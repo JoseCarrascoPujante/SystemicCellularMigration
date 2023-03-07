@@ -185,13 +185,13 @@ for f=1:length(UsefulSubFolderNames)
     %Adjust 'tracks' axes' proportions
     divx=[-18 18];
     divy=[0 0];
-    plot(hTracks,divx,divy,'k');
-    hold on;
-    plot(hTracks,divy,divx,'k');
-    hold on;
-    axis([-18 18 -18 18]);
-    daspect([1 1 1]);
-    box on;
+    plot(hTracks,divx,divy,'k')
+    hold on
+    plot(hTracks,divy,divx,'k')
+    hold on
+    axis([-18 18 -18 18])
+    daspect([1 1 1])
+    box on
     hold off
     
     [condition ' runtime was ' num2str(toc(thisfoldertic)) ' seconds']
@@ -310,16 +310,16 @@ for i=1:length(field_names)
 
 end
 
-% Scatter plots (Graphical Abstract)
-
+% Graphical Abstract
 figures = GraphAbs_subaxis_def(field_names,results,figures) ;
+% figures = GraphAbs_TiledLayout_def(field_names,results,figures) ;
+% figures = GraphicalAbstract_TiledLayout(field_names,results,figures) ;
+% GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
 
-figures = GraphAbs_TiledLayout_def(field_names,results,figures) ;
+% Figures
+figures.figure1 = fig1_version2(coordinates) ;
 
-figures = GraphicalAbstract_TiledLayout(field_names,results,figures) ;
-
-GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
-
+%# Save files
 calcTime = datevec(toc(tCalc)./(60*60*24)) ;
 
 save(strcat(destination_folder, '\', run_date, '_rmsf_', num2str(tc2), 'tmax_calculations&figures'),...

@@ -29,8 +29,8 @@ for k=1:2
         scale = chi2inv(precision,2);     %# inverse chi-squared with dof=#dimensions
     end
     
-    Cov = cov(X0) * scale;
-    [V, D] = eig(Cov);
+    Covar = cov(X0) * scale;
+    [V, D] = eig(Covar);
     
     t = linspace(0,2*pi,100);
     e = [cos(t) ; sin(t)];        %# unit circle
