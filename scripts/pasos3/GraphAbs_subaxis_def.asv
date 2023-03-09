@@ -52,8 +52,8 @@ for ej=1:length(pairs)
     disp(strcat(stat_names{pairs(ej,1)},'_vs_',stat_names{pairs(ej,2)}))
     hold(hAxB(ej),'on')
     ellipse_gscatter(hAxB(ej),cat(2,metric1,metric2),G,conf,'r')
-    xlabel(hAxB(ej),stat_names{pairs(ej,1)})
-    ylabel(hAxB(ej),stat_names{pairs(ej,2)})
+    xlabel(hAxB(ej),stat_names(pairs(ej,1)))
+    ylabel(hAxB(ej),stat_names(pairs(ej,2)))
 end
 
 %# plot on small axes
