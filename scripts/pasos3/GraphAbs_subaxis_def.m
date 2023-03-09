@@ -40,7 +40,7 @@ hAxS(3) = axes('Position',posSmall{3});
 
 %# Plot on big axes
 for ej=1:length(pairs)
-    disp(strcat('Plot nº',num2str(ej)))
+    disp(strcat('Plot nº',num2str(ej),': ',stat_names{pairs(ej,1)},'_vs_',stat_names{pairs(ej,2)}))
     metric1 = cat(1,results.full(:,pairs(ej,1)), results.full(:,pairs(ej,1)+1));
     metric2 = cat(1,results.full(:,pairs(ej,2)), results.full(:,pairs(ej,2)+1));
     G = [1*ones(length(metric1)/2,1) ; 2*ones(length(metric2)/2,1)];
@@ -49,7 +49,6 @@ for ej=1:length(pairs)
     else
         gscatter(hAxB(ej),metric1,metric2, G,'gy','..',1.75,'off') ;
     end
-    disp(strcat(stat_names{pairs(ej,1)},'_vs_',stat_names{pairs(ej,2)}))
     hold(hAxB(ej),'on')
     ellipse_gscatter(hAxB(ej),cat(2,metric1,metric2),G,conf,'r')
     xlabel(hAxB(ej),stat_names{pairs(ej,1)})
@@ -75,10 +74,10 @@ for ek=1:length(pairs)-1 % for number of small axes do...
     rectangle(hAxB(ek+1),'Position', rPos,'EdgeColor','r','FaceColor','none','LineWidth',.5);
     [Xor,Yor] = ds2nfu(hAxB(ek+1),rPos(1),rPos(2));
     [Xfr,Yfr] = ds2nfu(hAxB(ek+1),rPos(1)+rPos(3),rPos(2)+rPos(4));
-    disp([Xor,Yor; ... %# rectangle bottom left
-        Xfr,Yfr; ... %# rectangle top right
-        posSmall{ek}(1),posSmall{ek}(2); ... %# small axis ek bottom left
-        posSmall{ek}(1)+posSmall{ek}(3),posSmall{ek}(2)+posSmall{ek}(4)]); %# small axis ek top right
+%     disp([Xor,Yor; ... %# rectangle bottom left
+%         Xfr,Yfr; ... %# rectangle top right
+%         posSmall{ek}(1),posSmall{ek}(2); ... %# smallAxis{ek} bottom left
+%         posSmall{ek}(1)+posSmall{ek}(3),posSmall{ek}(2)+posSmall{ek}(4)]); %# smallAxis{ek} top right
     annotation(figures.GraphicalAbstract,'line',[Xfr posSmall{ek}(1)+posSmall{ek}(4)], [Yor posSmall{ek}(2)], ...
         'Color','w','LineStyle','--','LineWidth',.5);
     annotation(figures.GraphicalAbstract,'line',[Xor posSmall{ek}(1)], [Yfr posSmall{ek}(2)+posSmall{ek}(4)], ...
@@ -98,7 +97,7 @@ hAxS(3).XAxis.TickLabelColor = 'w';
 hAxS(3).YAxis.TickLabelColor = 'w';
 set(gcf, 'Color','k')
 
-[h,objh] = legend(hAxB(1),'Experimental Systemic Cell Migrations','Non-Systemic Cell Migrations',...
+[h,objh] = legend(hAxB(1),'Systemic Cell Migrations','Non-Systemic Cell Migrations',...
     '', Orientation='Horizontal',TextColor='w',FontSize=12);
 objhl = findobj(objh, 'type', 'line'); %// objects of legend #1 of type line
 set(objhl, 'Markersize', 30); %// set marker size as desired
@@ -108,7 +107,7 @@ set(objhl, 'Markersize', 30); %// set marker size as desired
 objhl2 = findobj(objh2, 'type', 'line'); %// objects of legend #2 of type line
 set(objhl2, 'Markersize', 15); %// set marker size as desired
 
-h.Position(1:2)=[0.08,0.953];
+h.Position(1:2)=[0.15,0.953];
 h2.Position(1:2)=[0.35,0];
 
 %# save as .png and .svg

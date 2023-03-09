@@ -17,7 +17,7 @@ X0 = X - Mu; % substract to X its mean
 % conf = conf(2) - conf(1);
 scale = chi2inv(conf/100,2);    %# inverse chi-squared with dof=#dimensions. If you generate random numbers from this chi-square distribution, you would observe numbers greater than scale only (1-conf)*100 of the time.
 
-Covar = cov(X0) * scale;      %# Multiply variance vector by inverse chi-squared function
+Covar = cov(X0) * scale;      %# Multiply variance vector by inverse chi-squared function output
 [V, D] = eig(Covar);
 
 t = linspace(0,2*pi,100);
