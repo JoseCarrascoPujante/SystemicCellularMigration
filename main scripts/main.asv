@@ -1,13 +1,26 @@
 %% Preprocessing
 
+% Run date & time
+run_date = char(datetime('now','Format','yyyy-MM-dd_HH.mm''''ss''''''''')) ;
+
 % Select dir containing .xlsx track files
 topLevelFolder = uigetdir('C:\') ;
-run_date = char(datetime('now','Format','yyyy-MM-dd_HH.mm''''ss''''''''')) ;
-diary strcat('log', run_date)
 
 % Number of times Rho(s) will be randomly permuted to test against the
 % null hypothesis that results are random
 shuffles = 200000;
+
+% Create destination folder
+destination_folder = strcat(fileparts(topLevelFolder), '\', run_date, '_', ...
+    num2str(shuffles), '_shuffles') ;
+mkdir(destination_folder) ;
+
+% Initialize log
+diary off
+diary_filename = strcat(destination_folder,'\MatlabCommandWindowlog_', run_date,'.txt') ;
+set(0,'DiaryFile',diary_filename)
+clear diary_filename
+diary on
 
 % Get a list of all .xlsx files and their containing subfolders in this
 % directory
@@ -50,12 +63,6 @@ ratio_list = ...
 
 bar1 = waitbar(0,'In progress...','Name','Reading condition files...') ;
 bar2 = waitbar(0,'In progress...','Name','Reading file...') ;
-
-% Create destination folder
-destination_folder = strcat(fileparts(topLevelFolder), '\', run_date, '_', ...
-    num2str(shuffles), '_shuffles') ;
-
-mkdir(destination_folder) ;
 
 %% Track extraction and plotting
 
@@ -459,4 +466,5 @@ copyfile('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\Trac
 % %   exportgraphics(FigHandle, fullfile(destination_folder, [FigName '.pdf']), 'Resolution', 600) ;
 % end
 
+diary off
 
