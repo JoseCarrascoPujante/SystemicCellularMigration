@@ -2,6 +2,8 @@
 
 % Select dir containing .xlsx track files
 topLevelFolder = uigetdir('C:\') ;
+run_date = char(datetime('now','Format','yyyy-MM-dd_HH.mm''''ss''''''''')) ;
+diary strcat('log', run_date)
 
 % Number of times Rho(s) will be randomly permuted to test against the
 % null hypothesis that results are random
@@ -24,13 +26,13 @@ for k = 1 : length(UsefulSubFolderNames)
 end
 
 % List the parameters to be calculated by the script
-
 stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSFR2', 'sRMSFR2', 'RMSFtimeMax', ...
     'sRMSFTimeMax', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta', 'Approximate Entropy', 'sApproximate Entropy'} ;
 
 % Initialize bulk data structures
-results = struct ;
+tracks = struct ;
 coordinates = struct ;
+results = struct ;
 
 % Custom pixel/mm ratio list for Metamoeba leningradensis chemotaxis
 ratio_list = ...
@@ -50,67 +52,81 @@ bar1 = waitbar(0,'In progress...','Name','Reading condition files...') ;
 bar2 = waitbar(0,'In progress...','Name','Reading file...') ;
 
 % Create destination folder
-
-run_date = char(datetime('now','Format','yyyy-mm-dd_HH.mm''''ss''''''''')) ;
-
-destination_folder = strcat(topLevelFolder, '\', run_date, '_', ...
+destination_folder = strcat(fileparts(topLevelFolder), '\', run_date, '_', ...
     num2str(shuffles), '_shuffles') ;
 
 mkdir(destination_folder) ;
 
-%% Coordinate extraction and track plotting
+%% Track extraction and plotting
 
 ImportTime = tic;
 
-for f=1:length(UsefulSubFolderNames)
+for f = 1:length(UsefulSubFolderNames)
 
     % Find all subfolders containing xlsx files
     thisfoldertic = tic;
-    folder=UsefulSubFolderNames{f};
+    folder = UsefulSubFolderNames{f};
     cd(folder)
     files = dir('*.xlsx') ;
     
     % Store valid condition names as a variable
-
     [~,name2,name3] = fileparts(pwd) ;
     condition = strcat(name2, name3) ;
     conditionValidName = matlab.lang.makeValidName(condition) ;
     
     % update condition/subfolder progress bar
-
     bar1 = waitbar(f/length(UsefulSubFolderNames), bar1, condition) ;
 
     % Sort file names in natural alphanumerical order so index/position
     % matches naming (e.g. Conditioned31.xlsx shall be indexed at i=31) 
-
     files = natsortfiles(files) ;
     
     % Initialize condition track figure
-
     figures.(conditionValidName).tracks = figure('Name',strcat('Tracks_',condition),...
         'Visible','off','NumberTitle','off') ;
     hTracks = gca;
+    
+    % Retrieve tracks in current condition xlsx files
+    condition_track_n = 0 ;
+    for l = 1:length(files)
+        thisxlsx = files(l).name ;
+        temp_xlsx = readmatrix(thisxlsx, "Range", "E:F");
+        startRow = 1;  %starting row nuber
+        nRows = 3600;  %number of rows in segment
+        totalRows = size(temp_xlsx,1) ;  %number of total rows
+        nSegments = floor((totalRows - startRow + 1) / nRows);  %number of complete segments
+        nLeftover = totalRows -startRow + 1 -(nSegments * nRows);  %number of rows at end that will be ignored
+        % Compute start and end indices of each segment
+        segStart = startRow : nRows : totalRows ;
+        segStop = segStart(2)-1 : nRows : totalRows ;
+        segment = cell(nSegments, 1) ;
+        for s = 1:nSegments
+            % This is the s_th section:
+            condition_track_n = condition_track_n + 1 ;
+            tracks.(conditionValidName).(genvarname(num2str(condition_track_n))) = ...
+                temp_xlsx(segStart(s) : segStop(s), :) ; 
+        end
+    end
 
     % Tracks loop
-    for i = 1:len(files)
+    A = fieldnames(tracks.(conditionValidName)) ;
+    for i = 1:length(A)
         
-        thisfile = files(i).name ;
         thisfiletic = tic;
-
+        thistrack =  A{i};
+      
         % update track progress bar
-        bar2 = waitbar(i/length(N), bar2, thisfile) ;
-        
-        % Read amoeba trajectory coordinates from excel file
-        temp_x = readmatrix(thisfile,'Range','E1:E3600') ;
-        temp_y = readmatrix(thisfile,'Range','F1:F3600') ;
-     
+        bar2 = waitbar(i/length(A), bar2, thistrack) ;
+             
         % Save original X and Y coordinates as x(i) and y(i)
-        coordinates.(conditionValidName).original_x(:,i) = temp_x ;
-        coordinates.(conditionValidName).original_y(:,i) = temp_y ;
+        coordinates.(conditionValidName).original_x(:,i) = tracks.(conditionValidName).(A{1})(:,1) ;
+        coordinates.(conditionValidName).original_y(:,i) = tracks.(conditionValidName).(A{1})(:,2) ;
         
-        % Center X and Y coordinates
-        coordinates.(conditionValidName).centered_x(:,i) = temp_x-temp_x(1) ;
-        coordinates.(conditionValidName).centered_y(:,i) = temp_y-temp_y(1) ;
+        % Center X and Y coordinates (substract first value to all series)
+        coordinates.(conditionValidName).centered_x(:,i) = ...
+            tracks.(conditionValidName).(A{1})(:,1) - tracks.(conditionValidName).(A{1})(1,1) ;
+        coordinates.(conditionValidName).centered_y(:,i) = ...
+            tracks.(conditionValidName).(A{1})(:,2) - tracks.(conditionValidName).(A{1})(1,2) ;
         
         % Polar coordinate conversion
         [coordinates.(conditionValidName).teta(:,i),...
@@ -142,12 +158,12 @@ for f=1:length(UsefulSubFolderNames)
                 coordinates.(conditionValidName).centered_y(:,i)/ratio_list(i) ;
         end
         
-        % Shuffle X and Y
+        % Duplicate and Shuffle X and Y trajectories
        coordinates.(conditionValidName).shuffled_x(:,i) = ...
-            coordinates.(conditionValidName).scaled_x(:,i) ; % make copy of scaled x
+            coordinates.(conditionValidName).scaled_x(:,i) ; % initiate shuffled x
 
         coordinates.(conditionValidName).shuffled_y(:,i) = ...
-            coordinates.(conditionValidName).scaled_y(:,i) ; % make copy of scaled y
+            coordinates.(conditionValidName).scaled_y(:,i) ; % initiate shuffled y
         
         tic
         
@@ -161,9 +177,9 @@ for f=1:length(UsefulSubFolderNames)
 
         end
         
-        % Shuffle Rho
+        % Duplicate Scaled_Rho and Shuffle it
         coordinates.(conditionValidName).shuffled_rho(:,i) = ...
-            coordinates.(conditionValidName).scaled_rho(:,i) ; % make a copy of scaled rho
+            coordinates.(conditionValidName).scaled_rho(:,i) ;
         
         tic
         for k=1:shuffles
@@ -179,10 +195,10 @@ for f=1:length(UsefulSubFolderNames)
             coordinates.(conditionValidName).scaled_y(end,i),...
             'ko',  'MarkerFaceColor',  [0, 0, 0], 'MarkerSize', 2) ;
         
-        [thisfile ' runtime was ' num2str(toc(thisfiletic)) ' seconds']
+        [thistrack ' runtime was ' num2str(toc(thisfiletic)) ' seconds']
     end
         
-    %Adjust 'tracks' axes' proportions
+    % Adjust track plot axes' proportions
     divx=[-18 18];
     divy=[0 0];
     plot(hTracks,divx,divy,'k')
