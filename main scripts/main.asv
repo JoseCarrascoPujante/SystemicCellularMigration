@@ -39,8 +39,8 @@ for k = 1 : length(UsefulSubFolderNames)
 end
 
 % List the parameters to be calculated by the script
-stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSFR2', 'sRMSFR2', 'RMSFtimeMax', ...
-    'sRMSFTimeMax', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta', 'Approximate Entropy', 'sApproximate Entropy'} ;
+stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
+    'sRMSFCorrelationTime', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta', 'AppEn', 'sAppEn'} ;
 
 % Initialize bulk data structures
 tracks = struct ;
@@ -126,14 +126,14 @@ for f = 1:length(UsefulSubFolderNames)
         bar2 = waitbar(i/length(A), bar2, thistrack) ;
              
         % Save original X and Y coordinates as x(i) and y(i)
-        coordinates.(conditionValidName).original_x(:,i) = tracks.(conditionValidName).(A{1})(:,1) ;
-        coordinates.(conditionValidName).original_y(:,i) = tracks.(conditionValidName).(A{1})(:,2) ;
+        coordinates.(conditionValidName).original_x(:,i) = tracks.(conditionValidName).(A{i})(:,1) ;
+        coordinates.(conditionValidName).original_y(:,i) = tracks.(conditionValidName).(A{i})(:,2) ;
         
         % Center X and Y coordinates (substract first value to all series)
         coordinates.(conditionValidName).centered_x(:,i) = ...
-            tracks.(conditionValidName).(A{1})(:,1) - tracks.(conditionValidName).(A{1})(1,1) ;
+            tracks.(conditionValidName).(A{i})(:,1) - tracks.(conditionValidName).(A{i})(1,1) ;
         coordinates.(conditionValidName).centered_y(:,i) = ...
-            tracks.(conditionValidName).(A{1})(:,2) - tracks.(conditionValidName).(A{1})(1,2) ;
+            tracks.(conditionValidName).(A{i})(:,2) - tracks.(conditionValidName).(A{i})(1,2) ;
         
         % Polar coordinate conversion
         [coordinates.(conditionValidName).teta(:,i),...
@@ -220,15 +220,13 @@ for f = 1:length(UsefulSubFolderNames)
     [condition ' runtime was ' num2str(toc(thisfoldertic)) ' seconds']
 end
 
-CoordImportAndShuffleTime = datevec(toc(ImportTime)./(60*60*24)) ;
+save(strcat(destination_folder, '\', run_date, '_coordinates.mat'), 'condition_track_n',...
+    'stat_names', 'shuffles', 'coordinates', 'ImportTime') ;
 
-save(strcat(destination_folder, '\', run_date, '_coordinates'), 'N', 'stat_names', 'shuffles', 'coordinates',...
-    'CoordImportAndShuffleTime') ;
-
-['Coordinate section runtime was ' num2str(ImportTime) ' seconds']
+['Coordinate section runtime was ', num2str(toc(ImportTime)), ' seconds']
 
 
-%% Parameter calculations
+%% Parameter calculation
 
 tCalc=tic;
 
@@ -254,12 +252,13 @@ for i=1:length(field_names)
     xlabel('Log(MSD(\tau))');
     ylabel('Log(\tau(s))');
     Shuffmsdhandle = gca;
-
-    for j=N % number of trajectories per condition
+    
+    N = length(coordinates.(field_names{i}).original_x(1,:)) ; % N trajectories in condition
+    for j = 1:N 
         
         tic
 
-        bar4 = waitbar(j/length(N), bar4, strcat('Track number', ' ', num2str(j))) ;
+        bar4 = waitbar(j/N, bar4, strcat('Track number', ' ', num2str(j))) ;
 
         % RMSFalpha
 		figures.(field_names{i}).rmsf.(strcat('number', num2str(j))) = ...
@@ -268,15 +267,15 @@ for i=1:length(field_names)
 		
 		rmsfhandle = gca;
 		
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'alpha')),...
-            results.(field_names{i})(j,strcmp(stat_names(:), 'r2')),...
-            results.(field_names{i})(j,strcmp(stat_names(:), 'correlation_time')), tc2] = ...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF\alpha')),...
+            results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF_R2')),...
+            results.(field_names{i})(j,strcmp(stat_names(:), 'RMSFCorrelationTime')), tc2] = ...
             amebas5(coordinates.(field_names{i}).scaled_rho(:,j), rmsfhandle) ;
         
         % Shuffled RMSFalpha
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'shuff_alpha')),...
-            results.(field_names{i})(j,strcmp(stat_names(:), 'shuff_r2')),...
-            results.(field_names{i})(j,strcmp(stat_names(:), 'shuff_correlation_time')), ~] = ...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'sRMSF\alpha')),...
+            results.(field_names{i})(j,strcmp(stat_names(:), 'sRMSF_R2')),...
+            results.(field_names{i})(j,strcmp(stat_names(:), 'sRMSFCorrelationTime')), ~] = ...
             amebas5(coordinates.(field_names{i}).shuffled_rho(:,j), rmsfhandle) ;
 
         legend('Original RMSF','Shuffled RMSF','Location','best')
@@ -288,11 +287,11 @@ for i=1:length(field_names)
 
         dfahandle = gca;
 
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'dfa_gamma'))] = ...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'DFA\gamma'))] = ...
             DFA_main2(coordinates.(field_names{i}).scaled_rho(:,j), 'Original_DFA_', dfahandle) ;
 
         % Shuffled DFAgamma
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'shuff_dfa_gamma'))] = ...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'sDFA\gamma'))] = ...
             DFA_main2(coordinates.(field_names{i}).shuffled_rho(:,j), 'Shuffled_DFA_', dfahandle) ;
 
         legend('Original data','Shuffled data (Gaussian noise)',...
@@ -300,22 +299,22 @@ for i=1:length(field_names)
             'Location','northwest')
 
         % MSDbeta
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'msd_beta'))] = ...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'MSD\beta'))] = ...
             msd(coordinates.(field_names{i}).scaled_x(:,j), coordinates.(field_names{i}).scaled_y(:,j), ...
             msdhandle) ;
         
         % Shuffled MSDbeta
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'shuff_msd_beta'))] = ...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'sMSD\beta'))] = ...
             msd(coordinates.(field_names{i}).shuffled_x(:,j), coordinates.(field_names{i}).shuffled_y(:,j), ...
             Shuffmsdhandle) ;
 
         % Approximate entropy (Kolmogorov-Sinai entropy)
-        results.(field_names{i})(j,strcmp(stat_names(:), 'ApEn')) = ...
+        results.(field_names{i})(j,strcmp(stat_names(:), 'AppEn')) = ...
             ApEn(2, 0.2*std(coordinates.(field_names{i}).scaled_rho(:,j)),...
             coordinates.(field_names{i}).scaled_rho(:,j)) ;
 
         % Shuffled Approximate entropy (Kolmogorov-Sinai entropy)
-        results.(field_names{i})(j,strcmp(stat_names(:), 'shuff_ApEn')) = ...
+        results.(field_names{i})(j,strcmp(stat_names(:), 'sAppEn')) = ...
             ApEn(2, 0.2*std(coordinates.(field_names{i}).shuffled_rho(:,j)),...
             coordinates.(field_names{i}).shuffled_rho(:,j)) ;
 
@@ -327,26 +326,11 @@ for i=1:length(field_names)
 
 end
 
-% Graphical Abstract
-figures = GraphAbs_subaxis_def(field_names,results,figures, stat_names) ;
-% figures = GraphAbs_TiledLayout_def(field_names,results,figures) ;
-% figures = GraphicalAbstract_TiledLayout(field_names,results,figures) ;
-% GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
-
-% Figures
-figures.figure1 = fig1_version2(coordinates) ;
-
 %# Save files
 calcTime = datevec(toc(tCalc)./(60*60*24)) ;
 
-save(strcat(destination_folder, '\', run_date, '_rmsf_', num2str(tc2), 'tmax_calculations&figures'),...
+save(strcat(destination_folder, '\', run_date, '_rmsf_', num2str(tc2), 'tmax_calculations&figures.mat'),...
     'calcTime', 'results', 'figures') ;
-
-old_folder = destination_folder;
-destination_folder = strcat(old_folder, '_', num2str(tc2), 'tmax');
-
-movefile(old_folder, destination_folder)
-clear old_folder
 
 ['Calculations section runtime was ' num2str(toc(tCalc)) ' seconds']
 
@@ -355,7 +339,7 @@ clear old_folder
 % Kolmogorov-Smirnov test against the standard normal distribution of parameters
 
 for field = 1:length(field_names)
-    n_hypotheses = size(results.(field_names{field}),2) ; % N hypotheses being tested, needed for Bonferroni correction)
+    n_hypotheses = size(results.(field_names{field}),2) ; % N hypotheses being tested, needed by Bonferroni correction)
     for column_index = 1:n_hypotheses
 
         x = (results.(field_names{field})(:,column_index)...
@@ -377,7 +361,7 @@ end
 % Create groups to test data by condition and species under
 % Kruskal-Wallis test
 
-kw_conds = {{'SinEstimulo','Galvanotaxis','Quimiotaxis','Induccion','Comprobacion'},...
+kw_conds = {{'SinEstimulo','Galvanotaxis','Quimiotaxis','Induccion'},...
     {'Proteus','Leningradensis','Borokensis'}} ; % Conditions for the Kruskal-Wallis test
 
 for group = 1:length(kw_conds)
@@ -398,8 +382,8 @@ end
 
 ['Created K-W groups']
 
-% Kruskal-Wallis test to determine if the samples come from the same population
-% (or, equivalently, from different populations with the same distribution).
+% Kruskal-Wallis test to determine if the samples come from the same population/different
+% populations with the same distribution).
 
 fields_krusk = fieldnames(kruskal_groups) ;
 for kwfield = 1:length(fields_krusk)
@@ -445,15 +429,15 @@ end
 
 ['Done performing statistical tests']
 
-save(strcat(destination_folder, '\', run_date, '_statistics'), ...
+save(strcat(destination_folder, '\', run_date, '_statistics.mat'), ...
     'kolmogorov_smirnov', 'kruskal_groups', 'kruskal_results','multcomp_results','dunn_results') ;
 
 
-%% File back-up and figure export
+%% File back-up and plot export
 
-% Backing up 'scripts' folder
+% Back up 'scripts' folder
 
-copyfile('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\Tracks 3600 frames, matlab files and tables\systemic-movement\scripts', strcat(destination_folder, '\Scripts_backup'));
+copyfile('C:\Users\pc\Desktop\mov_sist\code', strcat(destination_folder, '\Scripts_backup'));
 
 % Export figures as vector graphic files (.svg)
 
@@ -465,6 +449,17 @@ copyfile('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\Trac
 %   export_fig(strcat(destination_folder,'\',FigName),'-svg')
 % %   exportgraphics(FigHandle, fullfile(destination_folder, [FigName '.pdf']), 'Resolution', 600) ;
 % end
+
+%% Paper Figures
+
+% % Graphical Abstract
+% figures = GraphAbs_subaxis_def(field_names,results,figures, stat_names) ;
+% figures = GraphAbs_TiledLayout_def(field_names,results,figures) ;
+% figures = GraphicalAbstract_TiledLayout(field_names,results,figures) ;
+% GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
+
+% % Figure 1
+% figures.figure1 = fig1_version2(coordinates) ;
 
 diary off
 
