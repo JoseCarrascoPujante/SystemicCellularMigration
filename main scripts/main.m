@@ -173,13 +173,11 @@ for f = 1:length(UsefulSubFolderNames)
             coordinates.(conditionValidName).scaled_y(:,i) ; % initialize shuffled Y
             
         for k=1:shuffles
-
           coordinates.(conditionValidName).shuffled_x(:,i) = ...
               shuff(coordinates.(conditionValidName).shuffled_x(:,i)) ;
 
           coordinates.(conditionValidName).shuffled_y(:,i) = ...
               shuff(coordinates.(conditionValidName).shuffled_y(:,i)) ;
-
         end
         
         % Shuffle Scaled_Rho
@@ -191,7 +189,7 @@ for f = 1:length(UsefulSubFolderNames)
               shuff(coordinates.(conditionValidName).shuffled_rho(:,i)) ;
         end
         
-        % Plot trajectory and black dot marker at its tip      
+        % Plot trajectory and place black dot marker at its tip      
         plot(hTracks,coordinates.(conditionValidName).scaled_x(:,i),...
             coordinates.(conditionValidName).scaled_y(:,i), 'Color', [0, 0, 0]) ;
         hold on;
