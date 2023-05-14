@@ -39,8 +39,8 @@ for k = 1 : length(UsefulSubFolderNames)
 end
 
 % List the parameters to be calculated by the script
-stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
-    'sRMSFCorrelationTime', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta', 'AppEn', 'sAppEn'} ;
+stat_names = {'RMSF_alpha', 'sRMSF_alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
+    'sRMSFCorrelationTime', 'DFA_gamma', 'sDFA_gamma', 'MSD_beta', 'sMSD_beta', 'AppEn', 'sAppEn'} ;
 
 % Initialize bulk data structures
 tracks = struct ;
@@ -141,7 +141,7 @@ for f = 1:length(UsefulSubFolderNames)
             cart2pol(coordinates.(conditionValidName).centered_x(:,i),...
             coordinates.(conditionValidName).centered_y(:,i)) ;
         
-        % Scale Rho, X and Y
+        % Scale Rho, X, and Y
         if contains(condition, '11.63')
             coordinates.(conditionValidName).scaled_rho(:,i) = ...
                 coordinates.(conditionValidName).rho(:,i)/11.63 ;
@@ -165,15 +165,13 @@ for f = 1:length(UsefulSubFolderNames)
                 coordinates.(conditionValidName).centered_y(:,i)/ratio_list(i) ;
         end
         
-        % Duplicate and Shuffle X and Y trajectories
+        % Shuffle X and Y trajectories
        coordinates.(conditionValidName).shuffled_x(:,i) = ...
-            coordinates.(conditionValidName).scaled_x(:,i) ; % initiate shuffled x
+            coordinates.(conditionValidName).scaled_x(:,i) ; % initialize shuffled X
 
         coordinates.(conditionValidName).shuffled_y(:,i) = ...
-            coordinates.(conditionValidName).scaled_y(:,i) ; % initiate shuffled y
-        
-        tic
-        
+            coordinates.(conditionValidName).scaled_y(:,i) ; % initialize shuffled Y
+            
         for k=1:shuffles
 
           coordinates.(conditionValidName).shuffled_x(:,i) = ...
@@ -184,11 +182,10 @@ for f = 1:length(UsefulSubFolderNames)
 
         end
         
-        % Duplicate Scaled_Rho and Shuffle it
+        % Shuffle Scaled_Rho
         coordinates.(conditionValidName).shuffled_rho(:,i) = ...
             coordinates.(conditionValidName).scaled_rho(:,i) ;
         
-        tic
         for k=1:shuffles
           coordinates.(conditionValidName).shuffled_rho(:,i) = ...
               shuff(coordinates.(conditionValidName).shuffled_rho(:,i)) ;
@@ -267,13 +264,13 @@ for i=1:length(field_names)
 		
 		rmsfhandle = gca;
 		
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF\alpha')),...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF_alpha')),...
             results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF_R2')),...
             results.(field_names{i})(j,strcmp(stat_names(:), 'RMSFCorrelationTime')), tc2] = ...
             amebas5(coordinates.(field_names{i}).scaled_rho(:,j), rmsfhandle) ;
         
         % Shuffled RMSFalpha
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'sRMSF\alpha')),...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'sRMSF_alpha')),...
             results.(field_names{i})(j,strcmp(stat_names(:), 'sRMSF_R2')),...
             results.(field_names{i})(j,strcmp(stat_names(:), 'sRMSFCorrelationTime')), ~] = ...
             amebas5(coordinates.(field_names{i}).shuffled_rho(:,j), rmsfhandle) ;
@@ -287,11 +284,11 @@ for i=1:length(field_names)
 
         dfahandle = gca;
 
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'DFA\gamma'))] = ...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'DFA_gamma'))] = ...
             DFA_main2(coordinates.(field_names{i}).scaled_rho(:,j), 'Original_DFA_', dfahandle) ;
 
         % Shuffled DFAgamma
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'sDFA\gamma'))] = ...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'sDFA_gamma'))] = ...
             DFA_main2(coordinates.(field_names{i}).shuffled_rho(:,j), 'Shuffled_DFA_', dfahandle) ;
 
         legend('Original data','Shuffled data (Gaussian noise)',...
@@ -299,12 +296,12 @@ for i=1:length(field_names)
             'Location','northwest')
 
         % MSDbeta
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'MSD\beta'))] = ...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'MSD_beta'))] = ...
             msd(coordinates.(field_names{i}).scaled_x(:,j), coordinates.(field_names{i}).scaled_y(:,j), ...
             msdhandle) ;
         
         % Shuffled MSDbeta
-        [results.(field_names{i})(j,strcmp(stat_names(:), 'sMSD\beta'))] = ...
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'sMSD_beta'))] = ...
             msd(coordinates.(field_names{i}).shuffled_x(:,j), coordinates.(field_names{i}).shuffled_y(:,j), ...
             Shuffmsdhandle) ;
 
@@ -387,9 +384,9 @@ end
 
 fields_krusk = fieldnames(kruskal_groups) ;
 for kwfield = 1:length(fields_krusk)
-    if kwfield <= 5
+    if kwfield <= 4
         subgroup = 2;
-    elseif kwfield > 5
+    elseif kwfield > 4
         subgroup = 1;
     end
     for params =  1:length(stat_names)
@@ -400,7 +397,7 @@ for kwfield = 1:length(fields_krusk)
         kruskalwallis(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}),kw_conds{subgroup}',"off") ;
         
         % Run multicomparison post-hoc test with bonferroni correction
-        % on the 'stats' structure created by Kruskal-Wallis
+        % on the 'stats' Kruskal-Wallis structure
         [multcomp_results.(fields_krusk{kwfield}){1, params},... % matrix of multiple comparison results
             multcomp_results.(fields_krusk{kwfield}){2, params},... % matrix of estimates
             multcomp_results.(fields_krusk{kwfield}){3, params},... % handle to the figure
@@ -408,21 +405,20 @@ for kwfield = 1:length(fields_krusk)
         multcompare(kruskal_results.(fields_krusk{kwfield}){3, params},...
             "Alpha",0.05,"Display","off","CriticalValueType","bonferroni");
         
-        if kwfield <= 5
-
         % Run Dunn's post-hoc test to benchmark "multcompare"
+        if kwfield <= 4
         [dunn_results.(fields_krusk{kwfield}){1, params},...
             dunn_results.(fields_krusk{kwfield}){2, params},...
             dunn_results.(fields_krusk{kwfield}){3, params}] = ...
         dunn(reshape(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}),1,[]),...
             [ones(1,40) repmat(2,1,40) repmat(3,1,40)],0);
 
-        elseif kwfield > 5
+        elseif kwfield > 4
             [dunn_results.(fields_krusk{kwfield}){1, params},...
                 dunn_results.(fields_krusk{kwfield}){2, params},...
                 dunn_results.(fields_krusk{kwfield}){3, params}] = ...
             dunn(reshape(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}),1,[]),...
-                [ones(1,40) repmat(2,1,40) repmat(3,1,40) repmat(4,1,40) repmat(5,1,40)],0);
+                [ones(1,40) repmat(2,1,40) repmat(3,1,40) repmat(4,1,40)],0);
         end
     end
 end
