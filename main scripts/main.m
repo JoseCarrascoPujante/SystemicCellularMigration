@@ -215,11 +215,12 @@ for f = 1:length(UsefulSubFolderNames)
     [condition ' runtime was ' num2str(toc(thisfoldertic)) ' seconds']
 end
 
-save(strcat(destination_folder, '\', run_date, '_coordinates.mat'), 'condition_track_n',...
+ImportTime = num2str(toc(ImportTime)) ;
+
+save(strcat(destination_folder, '\', run_date, '_coordinates2.mat'),...
     'stat_names', 'shuffles', 'coordinates', 'ImportTime') ;
 
-['Coordinate section runtime was ', num2str(toc(ImportTime)), ' seconds']
-
+['Coordinate section runtime was ', ImportTime, ' seconds']
 
 %% Parameter calculation
 
@@ -325,9 +326,11 @@ end
 calcTime = datevec(toc(tCalc)./(60*60*24)) ;
 
 save(strcat(destination_folder, '\', run_date, '_rmsf_', num2str(tc2), 'tmax_calculations&figures.mat'),...
-    'calcTime', 'results', 'figures') ;
+    'tCalc', 'results', 'figures') ;
 
-['Calculations section runtime was ' num2str(toc(tCalc)) ' seconds']
+tCalc = num2str(toc(tCalc)) ;
+
+['Calculations section runtime was ' tCalc ' seconds']
 
 %% Statistical analysis
 
@@ -367,7 +370,7 @@ for group = 1:length(kw_conds)
             if contains(field_names{field},kw_conds{group}{condit})
                 count = count + 1 ;
                 for ind = 1:length(stat_names) % Shuffled parameters can be excluded by tweaking this line
-                    kruskal_groups.(kw_conds{group}{condit}).(stat_names{ind})(:,count) = ...
+                    kruskal_groups.(kw_conds{group}{condit}).(stat_names{ind}){:,count} = ...
                         results.(field_names{field})(:,ind) ;
                 end
             end
@@ -387,15 +390,15 @@ for kwfield = 1:length(fields_krusk)
     elseif kwfield > 4
         subgroup = 1;
     end
-    for params =  1:length(stat_names)
+    for params=1:length(stat_names)
         
         [kruskal_results.(fields_krusk{kwfield}){1, params}, ... % p_value
             kruskal_results.(fields_krusk{kwfield}){2, params}, ... % anova_table
             kruskal_results.(fields_krusk{kwfield}){3, params}] = ... % test_stats
-        kruskalwallis(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}),kw_conds{subgroup}',"off") ;
+        kruskalwallis(padcat(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){:}),kw_conds{subgroup}',"off") ;
         
         % Run multicomparison post-hoc test with bonferroni correction
-        % on the 'stats' Kruskal-Wallis structure
+        % on the 'stats' structure output by the Kruskal-Wallis function
         [multcomp_results.(fields_krusk{kwfield}){1, params},... % matrix of multiple comparison results
             multcomp_results.(fields_krusk{kwfield}){2, params},... % matrix of estimates
             multcomp_results.(fields_krusk{kwfield}){3, params},... % handle to the figure
@@ -408,15 +411,20 @@ for kwfield = 1:length(fields_krusk)
         [dunn_results.(fields_krusk{kwfield}){1, params},...
             dunn_results.(fields_krusk{kwfield}){2, params},...
             dunn_results.(fields_krusk{kwfield}){3, params}] = ...
-        dunn(reshape(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}),1,[]),...
-            [ones(1,40) repmat(2,1,40) repmat(3,1,40)],0);
+        dunn(vertcat(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){:}).',...
+            [ones(1,length(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){1}))...
+            repmat(2,1,length(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){2}))...
+            repmat(3,1,length(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){3}))],0);
 
         elseif kwfield > 4
             [dunn_results.(fields_krusk{kwfield}){1, params},...
                 dunn_results.(fields_krusk{kwfield}){2, params},...
                 dunn_results.(fields_krusk{kwfield}){3, params}] = ...
-            dunn(reshape(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}),1,[]),...
-                [ones(1,40) repmat(2,1,40) repmat(3,1,40) repmat(4,1,40)],0);
+            dunn(vertcat(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){:}).',...
+                [ones(1,length(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){1}))...
+                repmat(2,1,length(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){2}))...
+                repmat(3,1,length(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){3}))...
+                repmat(4,1,length(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){4}))],0);
         end
     end
 end
@@ -427,7 +435,7 @@ save(strcat(destination_folder, '\', run_date, '_statistics.mat'), ...
     'kolmogorov_smirnov', 'kruskal_groups', 'kruskal_results','multcomp_results','dunn_results') ;
 
 
-%% File back-up and plot export
+%% File backup and plot exporting
 
 % Back up 'scripts' folder
 
@@ -444,7 +452,7 @@ copyfile('C:\Users\pc\Desktop\mov_sist\code', strcat(destination_folder, '\Scrip
 % %   exportgraphics(FigHandle, fullfile(destination_folder, [FigName '.pdf']), 'Resolution', 600) ;
 % end
 
-%% Paper Figures
+%% Generate publication figures
 
 % % Graphical Abstract
 % figures = GraphAbs_subaxis_def(field_names,results,figures, stat_names) ;
