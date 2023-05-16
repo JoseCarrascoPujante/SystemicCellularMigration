@@ -1,4 +1,4 @@
-function figures = GraphAbs_subaxis_def(field_names, results, figures, stat_names)
+function figures = GraphAbs_subaxis_def(field_names, results, figures, destination_folder)
 %# create dataset
 results.full = [];
 for index = 1:length(field_names)
@@ -6,6 +6,8 @@ for index = 1:length(field_names)
 end
 
 %# Presets
+stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
+    'sRMSFCorrelationTime', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta', 'AppEn', 'sAppEn'} ;
 conf = 68.27; %# set to either STD or confidence %
 ellipseFitType = '% confidence interval';  %# set to either STD or confidence %
 
@@ -25,9 +27,9 @@ props = {'sh', 0.02, 'sv', 0.03, 'padding', 0.03 'margin', 0.03};
 hBig = [subaxis(2,2,1, props{:}) subaxis(2,2,2, props{:}) subaxis(2,2,3, props{:}) subaxis(2,2,4, props{:})]; %# create subplots
 posBig = get(hBig, 'Position');             %# record their positions
 delete(hBig)                                %# delete them
-posSmall{1} = [0.83 0.61 0.13 0.13];
+posSmall{1} = [0.85 0.62 0.13 0.13];
 posSmall{2} = [0.339 0.18 0.13 0.13];
-posSmall{3} = [0.83 0.16 0.13 0.13];
+posSmall{3} = [0.85 0.17 0.13 0.13];
 
 %# Create axes (big/small)
 hAxB(1) = axes('Position',posBig{1});
@@ -111,8 +113,7 @@ h.Position(1:2)=[0.15,0.953];
 h2.Position(1:2)=[0.35,0];
 
 %# save as .png and .svg
-
-versions = dir('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\GraphicalAbstract') ;
+versions = dir(destination_folder) ;
 gabs = 1 ;
 for v = 1:length(versions)
     if  contains(versions(v).name, 'GraphicalAbstract')
@@ -120,8 +121,7 @@ for v = 1:length(versions)
     end
 end
 disp(strcat(num2str(gabs),' Graphical Abstract files found'))
-exportgraphics(gcf,strcat(['E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\Graphical' ...
-    'Abstract\GraphicalAbstract('],num2str(gabs),')','.jpg'),"Resolution",600,'BackgroundColor','k')
-saveas(gcf,strcat('E:\Doctorado\Amebas\Pavlov 2 y 3\Resultados movimiento sistémico\GraphicalAbstract\GraphicalAbstract(',num2str(gabs+1),')','.svg'))
+exportgraphics(gcf,strcat(destination_folder, 'GraphicalAbstract(',num2str(gabs),')','.jpg'),"Resolution",600,'BackgroundColor','k')
+saveas(gcf,strcat(destination_folder, 'GraphicalAbstract(',num2str(gabs+1),')','.svg'))
 
 end
