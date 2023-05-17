@@ -46,10 +46,10 @@ for ej=1:length(pairs)
     metric1 = cat(1,results.full(:,pairs(ej,1)), results.full(:,pairs(ej,1)+1));
     metric2 = cat(1,results.full(:,pairs(ej,2)), results.full(:,pairs(ej,2)+1));
     G = [1*ones(length(metric1)/2,1) ; 2*ones(length(metric2)/2,1)];
-    if ej == 1 || ej == 3
-        gscatter(hAxB(ej),metric1,metric2, G,'gy','..',2.3,'off')
+    if ej == 1
+        gscatter(hAxB(ej),metric1,metric2, G,'gy','..',2.4,'off')
     else
-        gscatter(hAxB(ej),metric1,metric2, G,'gy','..',1.75,'off') ;
+        gscatter(hAxB(ej),metric1,metric2, G,'gy','..',1.9,'off') ;
     end
     hold(hAxB(ej),'on')
     ellipse_gscatter(hAxB(ej),cat(2,metric1,metric2),G,conf,'r')
@@ -71,7 +71,7 @@ for ek=1:length(pairs)-1 % for number of small axes do...
     box(hAxS(ek),"on")
     xl= xlim(hAxS(ek));
     yl= ylim(hAxS(ek));
-    rPos = [xl(1)-(((xl(2)-xl(1))*1.1)-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))*7)-((yl(2)-yl(1))))/2 (xl(2)-xl(1))*1.05 (yl(2)-yl(1))*7];
+    rPos = [xl(1)-(((xl(2)-xl(1)))-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))*7)-((yl(2)-yl(1))))/2 (xl(2)-xl(1)) (yl(2)-yl(1))*7];
     hold(hAxB(ek+1),'on')
     rectangle(hAxB(ek+1),'Position', rPos,'EdgeColor','r','FaceColor','none','LineWidth',.5);
     [Xor,Yor] = ds2nfu(hAxB(ek+1),rPos(1),rPos(2));
@@ -120,8 +120,14 @@ for v = 1:length(versions)
         gabs = gabs + 1 ;
     end
 end
+
 disp(strcat(num2str(gabs),' Graphical Abstract files found'))
-exportgraphics(gcf,strcat(destination_folder, 'GraphicalAbstract(',num2str(gabs),')','.jpg'),"Resolution",600,'BackgroundColor','k')
-saveas(gcf,strcat(destination_folder, 'GraphicalAbstract(',num2str(gabs+1),')','.svg'))
+
+exportgraphics(figures.GraphicalAbstract, ...
+    strcat(destination_folder,'\GraphicalAbstract(',num2str(gabs),')','.jpg') ...
+    ,"Resolution",600,'BackgroundColor','k')
+exportgraphics(figures.GraphicalAbstract, ...
+    strcat(destination_folder,'\GraphicalAbstract(',num2str(gabs+1),').pdf') ...
+    ,'BackgroundColor','k', 'ContentType','vector')
 
 end
