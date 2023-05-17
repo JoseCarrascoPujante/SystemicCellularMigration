@@ -1,4 +1,4 @@
-function figure1 = fig1_version1(coordinates, destination_folder)
+function figure1 = figure1(coordinates, destination_folder)
 
 field_names = fieldnames(coordinates) ;
 figure
@@ -33,10 +33,11 @@ for i = 1:length(panels)
         end
     end
 %     set(ax,'YTickLabel',[],'YTick',[]);
-    ax.FontSize = 8;
+    ax.FontSize = 7;
     MaxX = max(abs(ax.XLim));    MaxY = max(abs(ax.YLim)+0.75);
     axis([-MaxX MaxX -MaxY MaxY]);
-    xline(0,'-');  yline(0,'-');
+    xline(0,'-','Alpha',1,'Color',[0 0 0]); % xline and yline cannot be sent to back
+    yline(0,'-','Alpha',1,'Color',[0 0 0]);
 %     daspect([1 1 1])
 end
 
@@ -54,7 +55,7 @@ plot(coordinates.(scenario1).scaled_x(:,Ameba_wo_stim), ...
     coordinates.(scenario1).scaled_y(:,Ameba_wo_stim), 'Color', 'b') ;
 
 % Define bounds of the rectangle
-left = -1.6;
+left = -1.62;
 bottom = -3.91;
 width = 0.25;
 height = 0.25;
@@ -66,7 +67,7 @@ rectangle('Position',[left bottom width height], ...
 
 % Create axes for zoomed-in view
 ax2 = axes(fig1_3);
-ax2.Layout.Tile = 2;
+ax2.Layout.Tile = 5;
 plot(coordinates.(scenario1).scaled_x(:,Ameba_wo_stim), ...
     coordinates.(scenario1).scaled_y(:,Ameba_wo_stim), 'Color', 'b') 
 
@@ -81,7 +82,7 @@ ax2.Box = 'on';
 ax2.XAxis.Color = 'k';
 ax2.YAxis.Color = 'k';
 ax1.FontSize = 7;
-ax2.FontSize = 7;
+ax2.FontSize = 6;
 % title(ax1,'Trajectory in the absence of stimuli','Color','red','FontSize',9);
 
 %% Panel 6
@@ -106,10 +107,10 @@ rectangle('Position',[left bottom width height], ...
 
 % Create axes for zoomed-in view
 ax2 = axes(fig1_3_1);
-ax2.Layout.Tile = 3;
+ax2.Layout.Tile = 5;
 plot(coordinates.(scenario2).scaled_x(:,Ameba_w_stim), ...
     coordinates.(scenario2).scaled_y(:,Ameba_w_stim), 'Color', 'b') 
-% Adjust axis limits and remove ticks
+% Adjust axis limits
 ax2.XLim = [left left+width];
 ax2.YLim = [bottom bottom+height];
 % ax2.XTick = [];
@@ -120,7 +121,7 @@ ax2.Box = 'on';
 ax2.XAxis.Color = 'k';
 ax2.YAxis.Color = 'k';
 ax1.FontSize = 7;
-ax2.FontSize = 7;
+ax2.FontSize = 6;
 % title(ax1,'Trajectory under simultaneous stimuli','Color','red','FontSize',9);
 
 % Export as .jpg and .svg
@@ -131,8 +132,12 @@ for v = 1:length(versions)
         gabs = gabs + 1 ;
     end
 end
+
 disp(strcat(num2str(gabs),' Fig1 files found'))
-exportgraphics(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs),')','.jpg'),"Resolution",600)
-saveas(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs+1),')','.svg'))
+
+exportgraphics(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs),').jpg') ...
+    ,"Resolution",600)
+exportgraphics(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs),').pdf') ...
+    ,'BackgroundColor','white', 'ContentType','vector')
 
 end

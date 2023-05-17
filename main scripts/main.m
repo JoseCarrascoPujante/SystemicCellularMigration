@@ -461,7 +461,7 @@ figures.GraphAbs = GraphAbs_subaxis_def(field_names, results, figures, destinati
 % GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
 
 % % Figure 1
-figures.figure1 = fig1_version1(coordinates, destination_folder) ;
+figures.figure1 = figure1(coordinates, destination_folder) ;
 
 diary off
 
