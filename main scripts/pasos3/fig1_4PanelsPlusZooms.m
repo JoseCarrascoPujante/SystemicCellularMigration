@@ -1,4 +1,4 @@
-function figure1 = figure1(coordinates, destination_folder)
+function figure1 = fig1_4PanelsPlusZooms(coordinates, destination_folder)
 
 field_names = fieldnames(coordinates) ;
 figure
@@ -34,7 +34,7 @@ for i = 1:length(panels)
     end
 %     set(ax,'YTickLabel',[],'YTick',[]);
     ax.FontSize = 7;
-    MaxX = max(abs(ax.XLim));    MaxY = max(abs(ax.YLim)+0.75);
+    MaxX = max(abs(ax.XLim));    MaxY = max(abs(ax.YLim)+.75);
     axis([-MaxX MaxX -MaxY MaxY]);
     xline(0,'-','Alpha',1,'Color',[0 0 0]); % xline and yline cannot be sent to back
     yline(0,'-','Alpha',1,'Color',[0 0 0]);
@@ -122,7 +122,6 @@ ax2.XAxis.Color = 'k';
 ax2.YAxis.Color = 'k';
 ax1.FontSize = 7;
 ax2.FontSize = 6;
-% title(ax1,'Trajectory under simultaneous stimuli','Color','red','FontSize',9);
 
 % Export as .jpg and .svg
 versions = dir(destination_folder) ;
@@ -136,7 +135,9 @@ end
 disp(strcat(num2str(gabs),' Fig1 files found'))
 
 exportgraphics(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs),').jpg') ...
-    ,"Resolution",600)
+    ,"Resolution",400)
+exportgraphics(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs),').tiff') ...
+    ,"Resolution",400)
 exportgraphics(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs),').pdf') ...
     ,'BackgroundColor','white', 'ContentType','vector')
 

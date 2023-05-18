@@ -8,7 +8,7 @@ end
 %# Presets
 stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
     'sRMSFCorrelationTime', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta', 'AppEn', 'sAppEn'} ;
-conf = 68.27; %# set to either STD or confidence %
+conf = 68.27; %# set to either a STD value or confidence %
 ellipseFitType = '% confidence interval';  %# set to either STD or confidence %
 
 figures.GraphicalAbstract = figure('Name',strcat('GraphicalAbstract_',...
@@ -127,7 +127,9 @@ disp(strcat(num2str(gabs),' Graphical Abstract files found'))
 
 exportgraphics(figures.GraphicalAbstract, ...
     strcat(destination_folder,'\GraphicalAbstract(',num2str(gabs),')','.jpg') ...
-    ,"Resolution",600,'BackgroundColor','k')
+    ,"Resolution",400,'BackgroundColor','k')
+exportgraphics(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs),').tiff') ...
+    ,"Resolution",400)
 saveas(figures.GraphicalAbstract, ...
     strcat(destination_folder,'\GraphicalAbstract(',num2str(gabs+1),').svg'))
 

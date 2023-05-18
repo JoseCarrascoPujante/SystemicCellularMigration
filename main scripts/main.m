@@ -93,7 +93,7 @@ for f = 1:length(UsefulSubFolderNames)
         'Visible','off','NumberTitle','off') ;
     hTracks = gca;
     
-    % Retrieve tracks in current condition xlsx files
+    % Retrieve tracks from condition's xlsx files
     condition_track_n = 0 ;
     for l = 1:length(files)
         thisxlsx = files(l).name ;
@@ -201,12 +201,11 @@ for f = 1:length(UsefulSubFolderNames)
     end
         
     % Adjust track plot axes' proportions
+    hold on
     divx=[-18 18];
     divy=[0 0];
     plot(hTracks,divx,divy,'k')
-    hold on
     plot(hTracks,divy,divx,'k')
-    hold on
     axis([-18 18 -18 18])
     daspect([1 1 1])
     box on
@@ -461,7 +460,9 @@ figures.GraphAbs = GraphAbs_subaxis_def(field_names, results, figures, destinati
 % GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
 
 % % Figure 1
-figures.figure1 = figure1(coordinates, destination_folder) ;
+figures.figure1_4Panels = fig1_4PanelsPlusZooms(coordinates, destination_folder) ;
+figures.figure1_12Panels3x4 = fig1_12Panels3x4NoZooms(coordinates, destination_folder) ;
+figures.figure1_12Panels4x3 = fig1_12Panels4x3NoZooms(coordinates, destination_folder) ;
 
 diary off
 
