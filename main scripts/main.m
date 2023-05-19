@@ -120,10 +120,9 @@ for f = 1:length(UsefulSubFolderNames)
     for i = 1:length(A)
         
         thisfiletic = tic;
-        thistrack =  A{i};
       
         % update track progress bar
-        bar2 = waitbar(i/length(A), bar2, thistrack) ;
+        bar2 = waitbar(i/length(A), bar2, A{i}) ;
              
         % Save original X and Y coordinates as x(i) and y(i)
         coordinates.(conditionValidName).original_x(:,i) = tracks.(conditionValidName).(A{i})(:,1) ;
@@ -131,9 +130,9 @@ for f = 1:length(UsefulSubFolderNames)
         
         % Center X and Y coordinates (substract first value to all series)
         coordinates.(conditionValidName).centered_x(:,i) = ...
-            tracks.(conditionValidName).(A{i})(:,1) - tracks.(conditionValidName).(A{i})(1,1) ;
+            coordinates.(conditionValidName).original_x(:,i) - coordinates.(conditionValidName).original_x(1,i) ;
         coordinates.(conditionValidName).centered_y(:,i) = ...
-            tracks.(conditionValidName).(A{i})(:,2) - tracks.(conditionValidName).(A{i})(1,2) ;
+            coordinates.(conditionValidName).original_y(:,i) - coordinates.(conditionValidName).original_y(1,i) ;
         
         % Polar coordinate conversion
         [coordinates.(conditionValidName).theta(:,i),...
@@ -197,7 +196,7 @@ for f = 1:length(UsefulSubFolderNames)
             coordinates.(conditionValidName).scaled_y(end,i),...
             'ko',  'MarkerFaceColor',  [0, 0, 0], 'MarkerSize', 2) ;
         
-        [thistrack ' runtime was ' num2str(toc(thisfiletic)) ' seconds']
+        [A{i} ' runtime was ' num2str(toc(thisfiletic)) ' seconds']
     end
         
     % Adjust track plot axes' proportions
@@ -216,7 +215,7 @@ end
 
 ImportTime = num2str(toc(ImportTime)) ;
 
-save(strcat(destination_folder, '\', run_date, '_coordinates2.mat'),...
+save(strcat(destination_folder, '\', run_date, '_coordinates.mat'),...
     'stat_names', 'shuffles', 'coordinates', 'ImportTime') ;
 
 ['Coordinate section runtime was ', ImportTime, ' seconds']
@@ -322,12 +321,12 @@ for i=1:length(field_names)
 end
 
 %# Save files
-calcTime = datevec(toc(tCalc)./(60*60*24)) ;
-
-save(strcat(destination_folder, '\', run_date, '_rmsf_', num2str(tc2), 'tmax_calculations&figures.mat'),...
-    'tCalc', 'results', 'figures') ;
 
 tCalc = num2str(toc(tCalc)) ;
+
+save(strcat(destination_folder, '\', run_date, '_rmsf_', num2str(tc2), 'tmax_calculations&figures.mat'),...
+    'tCalc', results', 'figures') ;
+
 
 ['Calculations section runtime was ' tCalc ' seconds']
 
