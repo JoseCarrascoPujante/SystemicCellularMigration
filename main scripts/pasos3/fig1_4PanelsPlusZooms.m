@@ -78,10 +78,10 @@ plot(coordinates.(scenario1).scaled_x(:,Ameba_wo_stim), ...
     coordinates.(scenario1).scaled_y(:,Ameba_wo_stim), 'Color', 'b') ;
 
 % Define bounds of the rectangle
-left = 2.9;
-bottom = 0.1;
-width = 0.25;
-height = 0.25;
+left = 2.97;
+bottom = 0.2;
+width = 0.12;
+height = 0.12;
 
 % Display the rectangle
 hold(ax1,'on');
@@ -113,15 +113,15 @@ fig1_3_1 = tiledlayout(fig1_2,3,3,'TileSpacing','none','Padding','tight');
 fig1_3_1.Layout.Tile = 2;
 ax1 = nexttile(fig1_3_1,[3 3]);
 scenario2 = 'SinEstimuloLeningradensis11_63';
-Ameba_w_stim = 12;
+Ameba_w_stim = 14;
 plot(coordinates.(scenario2).scaled_x(:,Ameba_w_stim), ...
     coordinates.(scenario2).scaled_y(:,Ameba_w_stim), 'Color', 'b') ;
 
 % Define bounds of the rectangle
-left = -1;
-bottom = -0.05;
-width = 0.25;
-height = 0.25;
+left = -1.35;
+bottom = -2.9;
+width = 0.3;
+height = 0.15;
 
 % Display the rectangle
 hold(ax1,'on');
@@ -130,7 +130,7 @@ rectangle('Position',[left bottom width height], ...
 
 % Create axes for zoomed-in view
 ax2 = axes(fig1_3_1);
-ax2.Layout.Tile = 3;
+ax2.Layout.Tile = 9;
 plot(coordinates.(scenario2).scaled_x(:,Ameba_w_stim), ...
     coordinates.(scenario2).scaled_y(:,Ameba_w_stim), 'Color', 'b') 
 % Adjust axis limits
