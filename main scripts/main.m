@@ -66,14 +66,13 @@ bar2 = waitbar(0,'In progress...','Name','Reading file...') ;
 
 %% Track extraction and plotting
 
-ImportTime = tic;
+tImportSec = tic;
 
 for f = 1:length(UsefulSubFolderNames)
 
     % Find all subfolders containing xlsx files
     thisfoldertic = tic;
-    folder = UsefulSubFolderNames{f};
-    cd(folder)
+    cd(UsefulSubFolderNames{f})
     files = dir('*.xlsx') ;
     
     % Store valid condition names as a variable
@@ -201,28 +200,33 @@ for f = 1:length(UsefulSubFolderNames)
         
     % Adjust track plot axes' proportions
     hold on
-    divx=[-18 18];
-    divy=[0 0];
-    plot(hTracks,divx,divy,'k')
-    plot(hTracks,divy,divx,'k')
-    axis([-18 18 -18 18])
-    daspect([1 1 1])
     box on
+    MaxX = max(abs(hTracks.XLim))+1;   MaxY = max(abs(hTracks.YLim))+1;
+    xline(0,'-','Alpha',1,'Color',[0 0 0]); % xline and yline cannot be sent to plot's back
+    yline(0,'-','Alpha',1,'Color',[0 0 0]);
+    axis equal
+    if MaxX > MaxY
+        axis([-MaxX MaxX -MaxY*(MaxX/MaxY) MaxY*(MaxX/MaxY)]);
+    elseif MaxY > MaxX
+        axis([-MaxX*(MaxY/MaxX) MaxX*(MaxY/MaxX) -MaxY MaxY]);
+    elseif MaxY == MaxX
+        axis([-MaxX MaxX -MaxY MaxY]);
+    end
     hold off
     
     [condition ' runtime was ' num2str(toc(thisfoldertic)) ' seconds']
 end
 
-ImportTime = num2str(toc(ImportTime)) ;
+tImportSec = num2str(toc(tImportSec)) ;
 
 save(strcat(destination_folder, '\', run_date, '_coordinates.mat'),...
-    'stat_names', 'shuffles', 'coordinates', 'ImportTime') ;
+    'stat_names', 'shuffles', 'coordinates', 'tImportSec') ;
 
-['Coordinate section runtime was ', ImportTime, ' seconds']
+['Coordinate section runtime was ', tImportSec, ' seconds']
 
 %% Parameter calculation
 
-tCalc=tic;
+tCalcSec=tic;
 
 field_names = fieldnames(coordinates) ;
 
@@ -233,7 +237,7 @@ for i=1:length(field_names)
     
     bar3 = waitbar(i/length(field_names), bar3, field_names{i}) ;
     
-    foldern = tic;
+    foldertime = tic;
 
     figures.(field_names{i}).msd = figure('Name',strcat('MSD_',field_names{i}),...
         'Visible','off','NumberTitle','off') ;
@@ -316,21 +320,22 @@ for i=1:length(field_names)
 
     end
 
-    [field_names{i} ' runtime was ' num2str(toc(foldern)) ' seconds']
+    [field_names{i} ' runtime was ' num2str(toc(foldertime)) ' seconds']
 
 end
 
 %# Save files
 
-tCalc = num2str(toc(tCalc)) ;
+tCalcSec = num2str(toc(tCalcSec)) ;
 
 save(strcat(destination_folder, '\', run_date, '_rmsf_', num2str(tc2), 'tmax_calculations&figures.mat'),...
-    'tCalc', results', 'figures') ;
+    'tCalcSec', 'results', 'figures') ;
 
-
-['Calculations section runtime was ' tCalc ' seconds']
+['Calculations section runtime was ' tCalcSec ' seconds']
 
 %% Statistical analysis
+
+tStatsSec=tic;
 
 % Kolmogorov-Smirnov test against the standard normal distribution of parameters
 
@@ -429,8 +434,10 @@ end
 
 ['Done performing statistical tests']
 
+tStatsSec = num2str(toc(tStatsSec)) ;
+
 save(strcat(destination_folder, '\', run_date, '_statistics.mat'), ...
-    'kolmogorov_smirnov', 'kruskal_groups', 'kruskal_results','multcomp_results','dunn_results') ;
+    'kolmogorov_smirnov','kruskal_groups','kruskal_results','multcomp_results','dunn_results','tStatsSec') ;
 
 
 %% File backup and plot exporting

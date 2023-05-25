@@ -1,7 +1,7 @@
 function figure1 = fig1_4PanelsPlusZooms(coordinates, destination_folder)
 
 field_names = fieldnames(coordinates) ;
-figure('Position', [770 10 500 1500])
+figure('Position', [750 10 500 1500])
 figure1 = tiledlayout(3,1,'TileSpacing','tight','Padding','tight') ;
 
 %% Panels 1-4
@@ -12,23 +12,23 @@ panels = {'SinEstimulo','Galvanotaxis','Quimiotaxis','Induccion'};
 indexes = {
 {
 {1 2}
-{1}
+{1 2}
 {1 2}
 };
 {
+{1}
 {1:20}
+{1:20}
+};
+{
+{1}
 {1}
 {1:20}
 };
 {
-{1:20}
-{1}
-{1}
-};
-{
-{1:20}
 {1}
 {37 38 39 40 41 42 43}
+{1:20}
 }
 };
 for i = 1:length(panels)
@@ -36,22 +36,22 @@ for i = 1:length(panels)
     ax = nexttile(fig1_1);
     for species = 1:length(idx)
         if species == 1
-            colr = [0, 0, 1];
-        elseif species == 2
             colr = [0, 0, 0];
+        elseif species == 2
+            colr = [0, 0, 1];
         elseif species == 3
             colr = [1, 0, 0];
         end
 %         rng()
 %         for track = randperm(length(coordinates.(field_names{idx(species)}).scaled_x(1,:)), 20)
-        for track = cell2mat(indexes{i}{species})
+        for track = indexes{i{species}}
             %# Plot trajectory and a 'ko' marker at its tip      
             plot(coordinates.(field_names{idx(species)}).scaled_x(:,track),...
                 coordinates.(field_names{idx(species)}).scaled_y(:,track), 'Color', colr) ;
             hold on;
             plot(coordinates.(field_names{idx(species)}).scaled_x(end,track),...
                 coordinates.(field_names{idx(species)}).scaled_y(end,track),...
-                'ko', 'MarkerFaceColor', colr, 'MarkerEdgeColor', colr, 'MarkerSize', 1.75) ;
+                'ko', 'MarkerFaceColor', colr, 'MarkerEdgeColor', colr, 'MarkerSize', 1.5) ;
 %             rng('default')
         end
     end
@@ -72,14 +72,14 @@ fig1_2.Layout.Tile = 3;
 fig1_3 = tiledlayout(fig1_2,3,3,'TileSpacing','none','Padding','tight');
 fig1_3.Layout.Tile = 1;
 ax1 = nexttile(fig1_3,[3 3]);
+Ameba_wo_stim = 8;
 scenario1 = 'SinEstimuloProteus11_63';
-Ameba_wo_stim = 9;
 plot(coordinates.(scenario1).scaled_x(:,Ameba_wo_stim), ...
     coordinates.(scenario1).scaled_y(:,Ameba_wo_stim), 'Color', 'b') ;
 
 % Define bounds of the rectangle
-left = 2.9;
-bottom = 0.1;
+left = -1.62;
+bottom = -3.91;
 width = 0.25;
 height = 0.25;
 
@@ -90,7 +90,7 @@ rectangle('Position',[left bottom width height], ...
 
 % Create axes for zoomed-in view
 ax2 = axes(fig1_3);
-ax2.Layout.Tile = 7;
+ax2.Layout.Tile = 3;
 plot(coordinates.(scenario1).scaled_x(:,Ameba_wo_stim), ...
     coordinates.(scenario1).scaled_y(:,Ameba_wo_stim), 'Color', 'b') 
 
@@ -112,8 +112,8 @@ ax2.FontSize = 6;
 fig1_3_1 = tiledlayout(fig1_2,3,3,'TileSpacing','none','Padding','tight');
 fig1_3_1.Layout.Tile = 2;
 ax1 = nexttile(fig1_3_1,[3 3]);
+Ameba_w_stim = 5;
 scenario2 = 'SinEstimuloLeningradensis11_63';
-Ameba_w_stim = 12;
 plot(coordinates.(scenario2).scaled_x(:,Ameba_w_stim), ...
     coordinates.(scenario2).scaled_y(:,Ameba_w_stim), 'Color', 'b') ;
 

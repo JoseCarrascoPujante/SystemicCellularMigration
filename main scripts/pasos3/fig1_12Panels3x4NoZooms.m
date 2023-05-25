@@ -40,7 +40,7 @@ for i = 1:length(field_names)
     end
     ax.FontSize = 7;
     MaxX = max(abs(ax.XLim))+1;   MaxY = max(abs(ax.YLim))+1;
-    xline(0,'-','Alpha',1,'Color',[0 0 0]); % xline and yline cannot be sent to plot back
+    xline(0,'-','Alpha',1,'Color',[0 0 0]); % xline and yline cannot be sent to plot's back
     yline(0,'-','Alpha',1,'Color',[0 0 0]);
     axis equal
     if MaxX > MaxY
