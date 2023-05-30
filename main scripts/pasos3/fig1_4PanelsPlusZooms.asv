@@ -1,7 +1,7 @@
 function figure1 = fig1_4PanelsPlusZooms(coordinates, destination_folder)
 
 field_names = fieldnames(coordinates) ;
-figure('Position', [630 10 800 2400])
+figure('Position', [630 10 300 900])
 figure1 = tiledlayout(3,1,'TileSpacing','tight','Padding','tight') ;
 
 %% Panels 1-4
@@ -26,7 +26,7 @@ indexes = {
 %Chemotaxis
 {12:31}%Borokensis
 {1,2,3,5,6,7,13,14,16,17,18,19,20,21,22,25,26,27,28,29}%Proteus
-{1,2,3,4,6,12,14,19,20,21,22,23,26,27,28,29,41,42,45,59}%Leningradensis
+{1,2,3,4,6,12,14,19,20,21,22,23,26,27,28,29,30,32,33,45,59}%Leningradensis
 };
 {
 %Induction
@@ -185,7 +185,7 @@ end
 disp(strcat(num2str(gabs),' Fig1 files found'))
 
 exportgraphics(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs),').jpg') ...
-    ,"Resolution",600)
+    ,"Resolution",400)
 exportgraphics(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs),').tiff') ...
     ,"Resolution",400)
 exportgraphics(gcf,strcat(destination_folder, '\Fig1(',num2str(gabs),').pdf') ...

@@ -118,7 +118,7 @@ h2.Position(1:2)=[0.35,0];
 versions = dir(destination_folder) ;
 gabs = 1 ;
 for v = 1:length(versions)
-    if  contains(versions(v).name, 'GraphicalAbstract')
+    if  contains(versions(v).name, 'GraphicalAbstract'+wildcardPattern+'.jpg')
         gabs = gabs + 1 ;
     end
 end
