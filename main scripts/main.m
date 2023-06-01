@@ -83,8 +83,7 @@ for f = 1:length(UsefulSubFolderNames)
     % update condition/subfolder progress bar
     bar1 = waitbar(f/length(UsefulSubFolderNames), bar1, condition) ;
 
-    % Sort file names in natural alphanumerical order so index/position
-    % matches naming (e.g. Conditioned31.xlsx shall be indexed at i=31) 
+    % Sort file names in natural order 
     files = natsortfiles(files) ;
     
     % Initialize condition track figure
@@ -197,13 +196,21 @@ for f = 1:length(UsefulSubFolderNames)
         
         [A{i} ' runtime was ' num2str(toc(thisfiletic)) ' seconds']
     end
-        
     % Adjust track plot axes' proportions
     hold on
     box on
     MaxX = max(abs(hTracks.XLim))+1;   MaxY = max(abs(hTracks.YLim))+1;
-    xline(0,'-','Alpha',1,'Color',[0 0 0]); % xline and yline cannot be sent to plot's back
-    yline(0,'-','Alpha',1,'Color',[0 0 0]);
+    % Add x-line
+    x = 0; 
+    xl = plot([x,x],ylim(hTracks), 'k-', 'LineWidth', .5);
+    % Add y-line
+    y = 0; 
+    yl = plot(xlim(hTracks), [y, y], 'k-', 'LineWidth', .5);
+    % Send x and y lines to the bottom of the stack
+    uistack([xl,yl],'bottom')
+    % Update the x and y line bounds any time the axes limits change
+    hTracks.XAxis.LimitsChangedFcn = @(ruler,~)set(xl, 'YData', ylim(ancestor(ruler,'axes')));
+    hTracks.YAxis.LimitsChangedFcn = @(ruler,~)set(yl, 'XData', xlim(ancestor(ruler,'axes')));
     axis equal
     if MaxX > MaxY
         axis([-MaxX MaxX -MaxY*(MaxX/MaxY) MaxY*(MaxX/MaxY)]);
@@ -459,7 +466,9 @@ copyfile('C:\Users\pc\Desktop\mov_sist\code', strcat(destination_folder, '\Scrip
 
 %% Generate publication figures
 
-% % Graphical Abstract
+% Navigate through coordinates struct sequentially plotting each track
+plot_tracks_scaled(coordinates)
+% Graphical Abstract
 figures.GraphAbs = GraphAbs_subaxis_def(field_names, results, figures, destination_folder) ;
 % figures = GraphAbs_TiledLayout_def(field_names,results,figures) ;
 % figures = GraphicalAbstract_TiledLayout(field_names,results,figures) ;
