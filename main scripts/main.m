@@ -227,7 +227,7 @@ end
 tImportSec = num2str(toc(tImportSec)) ;
 
 save(strcat(destination_folder, '\', run_date, '_coordinates.mat'),...
-    'stat_names', 'shuffles', 'coordinates', 'tImportSec') ;
+    'coordinates','figures','stat_names','shuffles','tImportSec') ;
 
 ['Coordinate section runtime was ', tImportSec, ' seconds']
 
@@ -240,7 +240,7 @@ field_names = fieldnames(coordinates) ;
 bar3 = waitbar(0,'In progress...','Name','Condition...') ;
 bar4 = waitbar(0,'In progress...','Name','Track number...') ;
 
-for i=1:length(field_names)
+for i = 1:length(field_names)
     
     bar3 = waitbar(i/length(field_names), bar3, field_names{i}) ;
     
@@ -464,17 +464,18 @@ copyfile('C:\Users\pc\Desktop\mov_sist\code', strcat(destination_folder, '\Scrip
 % %   exportgraphics(FigHandle, fullfile(destination_folder, [FigName '.pdf']), 'Resolution', 600) ;
 % end
 
-%% Generate publication figures
+%% Generate publishable figures
 
 % Navigate through coordinates struct sequentially plotting each track
 plot_tracks_scaled(coordinates)
+
 % Graphical Abstract
 figures.GraphAbs = GraphAbs_subaxis_def(field_names, results, figures, destination_folder) ;
 % figures = GraphAbs_TiledLayout_def(field_names,results,figures) ;
 % figures = GraphicalAbstract_TiledLayout(field_names,results,figures) ;
 % GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
 
-% % Figure 1
+% Figure 1
 figures.figure1_4Panels = fig1_4PanelsPlusZooms(coordinates, destination_folder) ;
 figures.figure1_12Panels3x4 = fig1_12Panels3x4NoZooms(coordinates, destination_folder) ;
 figures.figure1_12Panels4x3 = fig1_12Panels4x3NoZooms(coordinates, destination_folder) ;
