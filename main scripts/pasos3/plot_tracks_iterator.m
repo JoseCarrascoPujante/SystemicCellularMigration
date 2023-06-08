@@ -1,5 +1,5 @@
-function plot_tracks_scaled(coordinates)
-    fig = figure('Position', [130 10 800 800]);
+function plot_tracks_iterator(coordinates)
+    fig = figure('Position', [10 600 200 50]);
     f_n = fieldnames(coordinates);
     button = '';
     Previous = uicontrol('String','Previous','Position',[30 10 90 30]);
@@ -10,6 +10,7 @@ function plot_tracks_scaled(coordinates)
         while i <= size(coordinates.(f_n{f}).original_x,2)
             Previous.Callback = {@ButtonMode,fig};
             Next.Callback = {@ButtonMode,fig};
+            figure('Position', [600 230 250 200]);
             plot(coordinates.(f_n{f}).original_x(:,i), ...
                 coordinates.(f_n{f}).original_y(:,i),'Color','b')
             hold on
@@ -18,7 +19,7 @@ function plot_tracks_scaled(coordinates)
                 'ko','MarkerFaceColor','k','MarkerSize', 1.75)
             text(.05,.95,[f_n{f},'\_nº',num2str(i)],'Units','normalized')
             axis equal
-%             if MaxX > MaxY % Uncomment this to make square plots
+%             if MaxX > MaxY % Uncomment this to "square" up the plots
 %                 axis([-MaxX MaxX -MaxY*(MaxX/MaxY) MaxY*(MaxX/MaxY)]);
 %             elseif MaxY > MaxX
 %                 axis([-MaxX*(MaxY/MaxX) MaxX*(MaxY/MaxX) -MaxY MaxY]);

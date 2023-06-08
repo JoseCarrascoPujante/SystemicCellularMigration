@@ -234,9 +234,9 @@ end
 tImportSec = num2str(toc(tImportSec)) ;
 
 save(strcat(destination_folder, '\', run_date, '_coordinates.mat'),...
-    'coordinates','figures','stat_names','shuffles','tImportSec','destination_folder') ;
+    'coordinates','figures','stat_names','shuffles','tImportSec') ;
 
-['Coordinate section FINISHED in ', tImportSec, ' seconds']
+['Coordinate section runtime was ', tImportSec, ' seconds']
 
 %% Parameter calculation
 
@@ -247,7 +247,7 @@ field_names = fieldnames(coordinates) ;
 bar3 = waitbar(0,'In progress...','Name','Condition...') ;
 bar4 = waitbar(0,'In progress...','Name','Track number...') ;
 
-for i = 1:length(field_names)
+for i = 2%1:length(field_names)
     
     bar3 = waitbar(i/length(field_names), bar3, field_names{i}) ;
     
@@ -259,8 +259,8 @@ for i = 1:length(field_names)
     ylabel('Log(\tau(s))');
     msdhandle = gca;
 
-    figures.(field_names{i}).msd_shuff = figure('Name',strcat('MSD_Shuffled_',...
-        field_names{i}),'Visible','off','NumberTitle','off') ;
+    figures.(field_names{i}).msd_shuff = figure('Name',strcat('MSD_Shuffled_',field_names{i}),...
+        'Visible','off','NumberTitle','off') ;
     xlabel('Log(MSD(\tau))');
     ylabel('Log(\tau(s))');
     Shuffmsdhandle = gca;
@@ -300,13 +300,11 @@ for i = 1:length(field_names)
         dfahandle = gca;
 
         [results.(field_names{i})(j,strcmp(stat_names(:), 'DFA_gamma'))] = ...
-            DFA_main2(coordinates.(field_names{i}).scaled_rho(:,j),...
-            'Original_DFA_', dfahandle) ;
+            DFA_main2(coordinates.(field_names{i}).scaled_rho(:,j), 'Original_DFA_', dfahandle) ;
 
         % Shuffled DFAgamma
         [results.(field_names{i})(j,strcmp(stat_names(:), 'sDFA_gamma'))] = ...
-            DFA_main2(coordinates.(field_names{i}).shuffled_rho(:,j),...
-            'Shuffled_DFA_', dfahandle) ;
+            DFA_main2(coordinates.(field_names{i}).shuffled_rho(:,j), 'Shuffled_DFA_', dfahandle) ;
 
         legend('Original data','Shuffled data (Gaussian noise)',...
             'Original DFA \gamma','Shuffled DFA \gamma',...
@@ -314,13 +312,13 @@ for i = 1:length(field_names)
 
         % MSDbeta
         [results.(field_names{i})(j,strcmp(stat_names(:), 'MSD_beta'))] = ...
-            msd(coordinates.(field_names{i}).scaled_x(:,j),...
-            coordinates.(field_names{i}).scaled_y(:,j),msdhandle) ;
+            msd(coordinates.(field_names{i}).scaled_x(:,j), coordinates.(field_names{i}).scaled_y(:,j), ...
+            msdhandle) ;
         
         % Shuffled MSDbeta
         [results.(field_names{i})(j,strcmp(stat_names(:), 'sMSD_beta'))] = ...
-            msd(coordinates.(field_names{i}).shuffled_x(:,j),...
-            coordinates.(field_names{i}).shuffled_y(:,j),Shuffmsdhandle) ;
+            msd(coordinates.(field_names{i}).shuffled_x(:,j), coordinates.(field_names{i}).shuffled_y(:,j), ...
+            Shuffmsdhandle) ;
 
         % Approximate entropy (Kolmogorov-Sinai entropy)
         results.(field_names{i})(j,strcmp(stat_names(:), 'AppEn')) = ...
@@ -347,7 +345,7 @@ tCalcSec = num2str(toc(tCalcSec)) ;
 save(strcat(destination_folder, '\', run_date, '_rmsf_', num2str(tc2), 'tmax_calculations&figures.mat'),...
     'tCalcSec', 'results', 'figures') ;
 
-['Calculations section runtime FINISHED in ' tCalcSec ' seconds']
+['Calculations section runtime was ' tCalcSec ' seconds']
 
 %% Statistical analysis
 
@@ -485,7 +483,7 @@ figures.GraphAbs = GraphAbs_subaxis_def(field_names, results, figures, destinati
 % GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
 
 % Figure 1
-[figures.figure1_4Panels,results.cosines] = fig1_4PanelsNoZooms(coordinates, destination_folder) ;
+figures.figure1_4Panels = fig1_4PanelsNoZooms(coordinates, destination_folder) ;
 figures.figure1_12Panels3x4 = fig1_12Panels3x4NoZooms(coordinates, destination_folder) ;
 figures.figure1_12Panels4x3 = fig1_12Panels4x3NoZooms(coordinates, destination_folder) ;
 
