@@ -275,9 +275,11 @@ for i = 1:length(field_names)
         % RMSFalpha
 		figures.(field_names{i}).rmsf.(strcat('number', num2str(j))) = ...
 		figure('Name',strcat(field_names{i}, '_amoeba_number_',...
-		num2str(j),'_','_steps_'),'NumberTitle','off','Visible','off');
+		num2str(j)),'NumberTitle','off','Visible','off');
 		
 		rmsfhandle = gca;
+        set(rmsfhandle,'xscale','log')
+        set(rmsfhandle,'yscale','log')
 		
         [results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF_alpha')),...
             results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF_R2')),...
@@ -480,14 +482,12 @@ plot_tracks_iterator(coordinates)
 
 % Graphical Abstract
 figures.GraphAbs = GraphAbs_subaxis_def(field_names, results, figures, destination_folder) ;
-% figures = GraphAbs_TiledLayout_def(field_names,results,figures) ;
-% figures = GraphicalAbstract_TiledLayout(field_names,results,figures) ;
-% GraphicalAbstract_IndividualLayout(field_names, results, figures) ;
 
 % Figure 1
-[figures.figure1_4Panels,results.cosines] = fig1_4PanelsNoZooms(coordinates, destination_folder) ;
-figures.figure1_12Panels3x4 = fig1_12Panels3x4NoZooms(coordinates, destination_folder) ;
-figures.figure1_12Panels4x3 = fig1_12Panels4x3NoZooms(coordinates, destination_folder) ;
+figures.figure1_4Panels = fig1_5Panels(coordinates, destination_folder) ;
+
+% Figure 2
+
+
 
 diary off
-

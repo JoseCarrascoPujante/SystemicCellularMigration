@@ -1,4 +1,4 @@
-function [Rsq,slope,intercept]=rsquare (x,y)
+function [Rsq,slope,intercept]=rsquare(x,y)
 
 p = polyfit(x,y,1);  % linear coefficients, p(1) is the slope, p(2) the intercept 
 

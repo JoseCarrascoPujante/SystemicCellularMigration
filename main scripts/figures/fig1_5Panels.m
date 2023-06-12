@@ -1,10 +1,9 @@
-function [fig1,cosines] = fig1_4PanelsNoZooms(coordinates, destination_folder)
+function fig = fig1_5Panels(coordinates, destination_folder)
 
 field_names = fieldnames(coordinates) ;
-fig1 = figure('Position',[10 10 650 1000]);
+fig = figure('Position',[10 10 650 1000]);
 layout0 = tiledlayout(2,2,'TileSpacing','tight','Padding','tight') ;
 layouts = struct;
-cosines = struct;
 %% Panels 1-4
 
 panels = {'SinEstimulo','Galvanotaxis','Quimiotaxis','Induccion'};
