@@ -19,7 +19,8 @@ function plot_tracks_iterator(coordinates)
                 'ko','MarkerFaceColor','k','MarkerSize', 1.75)
             text(.05,.95,[f_n{f},'\_nº',num2str(i)],'Units','normalized')
             axis equal
-%             if MaxX > MaxY % Uncomment this to "square" up the plots
+%%% Uncomment the following lines to "square" up the plots
+%             if MaxX > MaxY 
 %                 axis([-MaxX MaxX -MaxY*(MaxX/MaxY) MaxY*(MaxX/MaxY)]);
 %             elseif MaxY > MaxX
 %                 axis([-MaxX*(MaxY/MaxX) MaxX*(MaxY/MaxX) -MaxY MaxY]);

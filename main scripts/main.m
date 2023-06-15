@@ -233,6 +233,7 @@ end
 
 tImportSec = num2str(toc(tImportSec)) ;
 
+% Save data
 save(strcat(destination_folder, '\', run_date, '_coordinates.mat'),...
     'coordinates','figures','stat_names','shuffles','tImportSec','destination_folder') ;
 
@@ -265,7 +266,7 @@ for i = 1:length(field_names)
     ylabel('Log(\tau(s))');
     Shuffmsdhandle = gca;
     
-    N = length(coordinates.(field_names{i}).original_x(1,:)) ; % N trajectories in condition
+    N = length(coordinates.(field_names{i}).original_x(1,:)); % Trajectories in condition
     for j = 1:N 
         
         tic
@@ -342,16 +343,16 @@ for i = 1:length(field_names)
 
 end
 
-%# Save files
+%# Save data
 
 tCalcSec = num2str(toc(tCalcSec)) ;
 
-save(strcat(destination_folder, '\', run_date, '_rmsf_', num2str(tc2), 'tmax_calculations&figures.mat'),...
-    'tCalcSec', 'results', 'figures') ;
+save(strcat(destination_folder, '\', run_date ,'_numeric_results.mat'),...
+    'tCalcSec', 'results') ;
 
 ['Calculations section runtime FINISHED in ' tCalcSec ' seconds']
 
-%% Statistical analysis
+%% Statistical analyses
 
 tStatsSec=tic;
 
@@ -454,6 +455,7 @@ end
 
 tStatsSec = num2str(toc(tStatsSec)) ;
 
+% Save data
 save(strcat(destination_folder, '\', run_date, '_statistics.mat'), ...
     'kolmogorov_smirnov','kruskal_groups','kruskal_results','multcomp_results','dunn_results','tStatsSec') ;
 
@@ -487,7 +489,11 @@ figures.GraphAbs = GraphAbs_subaxis_def(field_names, results, figures, destinati
 figures.figure1_4Panels = fig1_5Panels(coordinates, destination_folder) ;
 
 % Figure 2
+Figure2
 
 
+% Save data
+save(strcat(destination_folder, '\', run_date, '_figures.mat'), ...
+    'figures') ;
 
 diary off
