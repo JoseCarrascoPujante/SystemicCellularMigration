@@ -92,7 +92,7 @@ boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3},rmsfs{4});
 boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
     repmat(3,length(rmsfs{3}),1); repmat(4,length(rmsfs{4}),1)],boxChart_rmsf,...
     'GroupByColor',colorgroups)
-colororder([0,0,1;0,0,0;1,0,0]); 
+colororder([0,0,0;1,0,0;0,0,1]'); 
 h=gca;
 h.XTick = [1 2 3 4];
 xticklabels(conditions)

@@ -1,5 +1,4 @@
-%% raincloud_plot - plots a combination of half-violin, boxplot,  and raw
-% datapoints (1d scatter).
+%% raincloud_plot - plots a combination of half-violin, boxplot,  and raw datapoints (1d scatter).
 % Use as h = raincloud_plot(X), where X is a data vector is a cell array of handles for the various figure parts.
 % See below for optional inputs.
 % Based on https://micahallen.org/2018/03/15/introducing-raincloud-plots/

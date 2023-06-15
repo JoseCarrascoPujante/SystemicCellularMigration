@@ -52,10 +52,10 @@ hold on
 % {'\itSin estímulo','\itGalvanotaxis','\itQuimiotaxis','\itInduccion'}, ...
 %     'ylabel',{'RMSF\alpha'},'FontSize',4,'facecolor',...
 %     [[0,0,0];[1,0,0];[0,0,1];[0,1,0]],'facealpha',0.15,'mc','y','medc','r')
-% boxplot()
+% boxplot(rmsfs_pad)
 
 %%%More elaborate violin plots
-% violinplot(rmsfs_pad),
+% violinplot(rmsfs_pad,...
 %     {'\itSin estímulo','\itGalvanotaxis','\itQuimiotaxis','\itInducción'}, ...
 %     'ViolinColor',[0,0,0;1,0,0;0,1,0;0,0,1],'ViolinAlpha',0.15,'ShowData',...
 %     false,'ShowNotches',false,'ShowMean',true,'ShowMedian',true,'MedianColor',...
@@ -64,35 +64,39 @@ hold on
 
 
 %%%"Superviolin" plots
-rmsf_conds = {{[],[],[]},{[],[],[]},{[],[],[]},{[],[],[]}};
-for i=1:length(conditions) % main boxes (conditions)
-    f = find(contains(field_names(:),conditions(i)))'; % condition indexes
-    for j = 1:length(f) % secondary boxes (species)
-        rmsf_conds{i}{j} = results.(field_names{f(j)})(:,1);
-    end
-end
-for i=1:length(conditions) % main boxes (conditions)
-    superviolin(rmsf_conds{i},'Parent',ax,'Xposition',i,'FaceAlpha',0.15,...
-        'Errorbars','ci','LUT',[[0,0,1];[0,0,0];[1,0,0]],'LineWidth',0.1)
-end
-colorgroups = [repmat({'Amoeba borokensis'},length(rmsf_conds{1}{1}),1);
-    repmat({'Amoeba proteus'},length(rmsf_conds{1}{2}),1);
-    repmat({'Metamoeba leningradensis'},length(rmsf_conds{1}{3}),1);
-    repmat({'Amoeba borokensis'},length(rmsf_conds{2}{1}),1);
-    repmat({'Amoeba proteus'},length(rmsf_conds{2}{2}),1);
-    repmat({'Metamoeba leningradensis'},length(rmsf_conds{2}{3}),1);
-    repmat({'Amoeba borokensis'},length(rmsf_conds{3}{1}),1);
-    repmat({'Amoeba proteus'},length(rmsf_conds{3}{2}),1);
-    repmat({'Metamoeba leningradensis'},length(rmsf_conds{3}{3}),1);
-    repmat({'Amoeba borokensis'},length(rmsf_conds{4}{1}),1);
-    repmat({'Amoeba proteus'},length(rmsf_conds{4}{2}),1);
-    repmat({'Metamoeba leningradensis'},length(rmsf_conds{4}{3}),1)];
+% rmsf_conds = {{[],[],[]},{[],[],[]},{[],[],[]},{[],[],[]}};
+% for i=1:length(conditions) % main boxes (conditions)
+%     f = find(contains(field_names(:),conditions(i)))'; % condition indexes
+%     for j = 1:length(f) % secondary boxes (species)
+%         rmsf_conds{i}{j} = results.(field_names{f(j)})(:,1);
+%     end
+% end
+% for i=1:length(conditions) % main boxes (conditions)
+%     superviolin(rmsf_conds{i},'Parent',ax,'Xposition',i,'FaceAlpha',0.15,...
+%         'Errorbars','ci','LUT',[[0,0,1];[0,0,0];[1,0,0]],'LineWidth',0.1)
+% end
+% colorgroups = [repmat({'Amoeba borokensis'},length(rmsf_conds{1}{1}),1);
+%     repmat({'Amoeba proteus'},length(rmsf_conds{1}{2}),1);
+%     repmat({'Metamoeba leningradensis'},length(rmsf_conds{1}{3}),1);
+%     repmat({'Amoeba borokensis'},length(rmsf_conds{2}{1}),1);
+%     repmat({'Amoeba proteus'},length(rmsf_conds{2}{2}),1);
+%     repmat({'Metamoeba leningradensis'},length(rmsf_conds{2}{3}),1);
+%     repmat({'Amoeba borokensis'},length(rmsf_conds{3}{1}),1);
+%     repmat({'Amoeba proteus'},length(rmsf_conds{3}{2}),1);
+%     repmat({'Metamoeba leningradensis'},length(rmsf_conds{3}{3}),1);
+%     repmat({'Amoeba borokensis'},length(rmsf_conds{4}{1}),1);
+%     repmat({'Amoeba proteus'},length(rmsf_conds{4}{2}),1);
+%     repmat({'Metamoeba leningradensis'},length(rmsf_conds{4}{3}),1)];
+% 
+% boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3},rmsfs{4});
+% boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
+%     repmat(3,length(rmsfs{3}),1); repmat(4,length(rmsfs{4}),1)],boxChart_rmsf,...
+%     'GroupByColor',colorgroups)
+% colororder([0,0,1;0,0,0;1,0,0]); 
 
-boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3},rmsfs{4});
-boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
-    repmat(3,length(rmsfs{3}),1); repmat(4,length(rmsfs{4}),1)],boxChart_rmsf,...
-    'GroupByColor',colorgroups)
-colororder([0,0,0;1,0,0;0,0,1]); 
+%%%RainCloud plot
+
+
 h=gca;
 h.XTick = [1 2 3 4];
 xticklabels(conditions)

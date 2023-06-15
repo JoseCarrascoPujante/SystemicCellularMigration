@@ -99,8 +99,8 @@ end
 %
 % plot summary statistics (mean with error bars), see function below
 [mhistall,~,sall]=getstatisticsdat(yp,sampledpoints,'mean',p.Errorbars);
-errorbar(p.Xposition,mhistall,sall(1),sall(2),'k','LineWidth',1,'CapSize',8);
-errorbar(p.Xposition,mhistall,0.00,'k','LineWidth',1,'CapSize',18);
+% errorbar(p.Xposition,mhistall,sall(1),sall(2),'k','LineWidth',1,'CapSize',8);
+% errorbar(p.Xposition,mhistall,0.00,'k','LineWidth',1,'CapSize',18);
 %
 end
 
