@@ -1,10 +1,10 @@
 % Figure 2
 %% Layouts
-fig = figure('Position',[350 10 750 950]);
-layout0 = tiledlayout(3,1,'TileSpacing','tight','Padding','tight') ;
-layout1 = tiledlayout(layout0,1,3,'TileSpacing','tight','Padding','tight') ;
+fig = figure('Position',[350 10 750 1000]);
+layout0 = tiledlayout(3,1,'TileSpacing','tight','Padding','none') ;
+layout1 = tiledlayout(layout0,1,3,'TileSpacing','tight','Padding','none') ;
 layout1.Layout.Tile = 1;
-layout2 = tiledlayout(layout0,3,1,'TileSpacing','tight','Padding','tight') ;
+layout2 = tiledlayout(layout0,8,8,'TileSpacing','none','Padding','none') ;
 layout2.Layout.Tile = 2;
 
 %% Panel 1 - RMSF max_correlation
@@ -20,84 +20,163 @@ end
 
 %% Panel 2 - RMSF \alpha
 field_names = fieldnames(results) ;
-species = {'Proteus','Leningradensis','Borokensis'};
 
-for i=1:length(species) % subpanels (species)
-    nexttile(layout2);
-    t = gca;
-    hold on
-    for f = find(contains(field_names(:),species(i)))' % condition indexes
-        exes = zeros(size(results.(field_names{f}),1));
-        plot(results.(field_names{f})(:,1),exes,'ro','MarkerSize',6)
-    end
-    ylim([0 eps])
-    t.YAxis.Visible = 'off'; % remove y-axis
+t = gca;
+tiles = [17,49,33,1;25,57,41,9];
+idx = find(contains(field_names(:),'Leningradensis'))';
+for f = 1:length(idx)
+    t = nexttile(layout2,tiles(1,f),[1,5]);
+    exes = zeros(size(results.(field_names{idx(f)}),1));
+    plot(results.(field_names{idx(f)})(:,1),exes,'ro','MarkerSize',6)
+    box off
+    ylim([0 eps]) % minimize y-axis height
+    xlim([0.5 0.9])
+    t.YAxis.Visible = 'off'; % hide y-axis
     t.Color = 'None';
-    hold off
+    
+    t2 = nexttile(layout2,tiles(2,f),[1,5]);
+    datamean = mean(results.(field_names{idx(f)})(:,1));
+    datastd = std(results.(field_names{idx(f)})(:,1));
+    line([datamean-datastd datamean+datastd],[0.05 0.05],'Color','red',...
+        'LineWidth',.5)
+    text(t2,datamean,-.35,[num2str(round(mean(results.(field_names{idx(f)})(:,1)),2))...
+        ' ' char(177) ' ' num2str(round(datastd,2))],'HorizontalAlignment',...
+        'center','FontSize',9)
+    ylim([0 1]) % minimize y-axis height
+    xlim([0.5 0.9])
+    t2.YAxis.Visible = 'off'; % hide y-axis
+    t2.XAxis.Visible = 'off'; % hide y-axis
+    t2.Color = 'None';
 end
+
+
 
 %% Panel 3 - RMSF Violin plots
 ax=nexttile(layout0,3);
+hold on
+species = {'Proteus','Leningradensis','Borokensis'};
 conditions = {'SinEstimulo','Galvanotaxis','Quimiotaxis','Induccion'};
-rmsfs = {[],[],[],[]};
-for i=1:length(conditions) % subpanels (conditions)    
-    for f = find(contains(field_names(:),conditions(i)))' % condition indexes
-        rmsfs{i} = [rmsfs{i}; results.(field_names{f})(:,1)];
+rmsfs = {[],[],[]};
+for i=1:length(species) % species    
+    for f = find(contains(field_names(:),species(i)))' % conditions
+        rmsfs{i} = [rmsfs{i}; results.(field_names{f})(:,5)/120];
     end
 end
-rmsfs_pad = padcat(rmsfs{1},rmsfs{2},rmsfs{3},rmsfs{4});
-hold on
+
 %%%Simple violin plots
 % violin(rmsfs,'xlabel',...
-% {'\itSin estímulo','\itGalvanotaxis','\itQuimiotaxis','\itInduccion'}, ...
+% {'\itAmoeba proteus','\itMetamoeba leningradensis','\itAmoeba borokensis'}, ...
 %     'ylabel',{'RMSF\alpha'},'FontSize',4,'facecolor',...
-%     [[0,0,0];[1,0,0];[0,0,1];[0,1,0]],'facealpha',0.15,'mc','y','medc','r')
+%     [[0,0,0];[1,0,0];[0,0,1]],'facealpha',0.15,'mc','y','medc','r')
+% rmsfs_pad = padcat(rmsfs{1},rmsfs{2},rmsfs{3});
 % boxplot(rmsfs_pad)
 
 %%%More elaborate violin plots
+% rmsfs_pad = padcat(rmsfs{1},rmsfs{2},rmsfs{3});
 % violinplot(rmsfs_pad,...
-%     {'\itSin estímulo','\itGalvanotaxis','\itQuimiotaxis','\itInducción'}, ...
-%     'ViolinColor',[0,0,0;1,0,0;0,1,0;0,0,1],'ViolinAlpha',0.15,'ShowData',...
+%     {'\itAmoeba proteus','\itMetamoeba leningradensis','\itAmoeba borokensis'}, ...
+%     'ViolinColor',[1,0,0;0,0,0;0,0,1],'ViolinAlpha',0.15,'ShowData',...
 %     false,'ShowNotches',false,'ShowMean',true,'ShowMedian',true,'MedianColor',...
 %     [1 1 0],'HalfViolin','left','BoxColor',[0 0 0],'BoxWidth',0.02)
 % boxplot(rmsfs_pad)
 
-
 %%%"Superviolin" plots
-% rmsf_conds = {{[],[],[]},{[],[],[]},{[],[],[]},{[],[],[]}};
-% for i=1:length(conditions) % main boxes (conditions)
-%     f = find(contains(field_names(:),conditions(i)))'; % condition indexes
-%     for j = 1:length(f) % secondary boxes (species)
-%         rmsf_conds{i}{j} = results.(field_names{f(j)})(:,1);
+rmsf_conds = {{[],[],[]},{[],[],[]},{[],[],[]}};
+for i=1:length(species) % main boxes (species)
+    f = find(contains(field_names(:),species(i)))'; % condition indexes
+    for j = 1:length(f) % secondary boxes (conditions)
+        rmsf_conds{i}{j} = results.(field_names{f(j)})(:,5)/120;
+    end
+end
+for i=1:length(species) % main boxes (species)
+    superviolin(rmsf_conds{i},'Parent',ax,'Xposition',i,'FaceAlpha',0.15,...
+        'Errorbars','ci','Centrals','mean','LineWidth',0.1)
+end
+colorgroups = [repmat({'Galvanotaxis'},length(rmsf_conds{1}{1}),1);
+    repmat({'Inducción'},length(rmsf_conds{1}{2}),1);
+    repmat({'Quimiotaxis'},length(rmsf_conds{1}{3}),1);
+    repmat({'Sin estímulo'},length(rmsf_conds{1}{4}),1);
+    repmat({'Galvanotaxis'},length(rmsf_conds{2}{1}),1);
+    repmat({'Inducción'},length(rmsf_conds{2}{2}),1);
+    repmat({'Quimiotaxis'},length(rmsf_conds{2}{3}),1);
+    repmat({'Sin estímulo'},length(rmsf_conds{2}{4}),1);
+    repmat({'Galvanotaxis'},length(rmsf_conds{3}{1}),1);
+    repmat({'Inducción'},length(rmsf_conds{3}{2}),1);
+    repmat({'Quimiotaxis'},length(rmsf_conds{3}{3}),1);
+    repmat({'Sin estímulo'},length(rmsf_conds{3}{4}),1)];
+boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3});
+boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
+    repmat(3,length(rmsfs{3}),1)],boxChart_rmsf,'Notch','off',...
+    'GroupByColor',colorgroups,'BoxFaceAlpha',0) %Box charts whose notches do not overlap have different medians at the 5% significance level.
+h=gca;
+xlim([.5 3.5])
+h.XTick = [1 2 3];
+xticklabels([{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
+    {'\itAmoeba borokensis'}])
+h.XAxis.TickLength = [0 0];
+
+%%%RainCloud plots
+% h=gca;
+% xlim([.5 3.5])
+% ylim([-8.35 30])
+% h.XTick = [1 2 3];
+% xticklabels([{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
+%     {'\itAmoeba borokensis'}])
+% h.XAxis.TickLength = [0 0];
+% 
+% data = cell(3,4);
+% for i=1:length(species) % species    
+%     f = find(contains(field_names(:),species(i))); % conditions
+%     for j = 1:length(f)
+%         data{i,j} = [data{i}; results.(field_names{f(j)})(:,5)/120];
 %     end
 % end
-% for i=1:length(conditions) % main boxes (conditions)
-%     superviolin(rmsf_conds{i},'Parent',ax,'Xposition',i,'FaceAlpha',0.15,...
-%         'Errorbars','ci','LUT',[[0,0,1];[0,0,0];[1,0,0]],'LineWidth',0.1)
+% cb = [.2,.2,.2;.4,.4,.4;.6,.6,.6;.8,.8,.8;
+%     1,0,0;1,.25,.25;1,.5,.5; 1,.75,.75;
+%     0,0,1;.25,.25,1;.5,.5,1;.75,.75,1];
+% % plot
+% count = 0;
+% for p = 1:(size(data,1)) % species
+%     for q = 1:size(data,2) % conditions
+%         count = count+1;
+%         plot_rainclouds(data{p,q},cb,count);
+%     end
 % end
-% colorgroups = [repmat({'Amoeba borokensis'},length(rmsf_conds{1}{1}),1);
-%     repmat({'Amoeba proteus'},length(rmsf_conds{1}{2}),1);
-%     repmat({'Metamoeba leningradensis'},length(rmsf_conds{1}{3}),1);
-%     repmat({'Amoeba borokensis'},length(rmsf_conds{2}{1}),1);
-%     repmat({'Amoeba proteus'},length(rmsf_conds{2}{2}),1);
-%     repmat({'Metamoeba leningradensis'},length(rmsf_conds{2}{3}),1);
-%     repmat({'Amoeba borokensis'},length(rmsf_conds{3}{1}),1);
-%     repmat({'Amoeba proteus'},length(rmsf_conds{3}{2}),1);
-%     repmat({'Metamoeba leningradensis'},length(rmsf_conds{3}{3}),1);
-%     repmat({'Amoeba borokensis'},length(rmsf_conds{4}{1}),1);
-%     repmat({'Amoeba proteus'},length(rmsf_conds{4}{2}),1);
-%     repmat({'Metamoeba leningradensis'},length(rmsf_conds{4}{3}),1)];
-% 
-% boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3},rmsfs{4});
-% boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
-%     repmat(3,length(rmsfs{3}),1); repmat(4,length(rmsfs{4}),1)],boxChart_rmsf,...
-%     'GroupByColor',colorgroups)
-% colororder([0,0,1;0,0,0;1,0,0]); 
 
-%%%RainCloud plot
+%% Export as jpg, tiff and vector graphics pdf
 
+if ~exist(strcat(destination_folder,'\Figures'), 'dir')
+   mkdir(strcat(destination_folder,'\Figures'))
+end
 
-h=gca;
-h.XTick = [1 2 3 4];
-xticklabels(conditions)
-h.XAxis.TickLength = [0 0];
+versions = dir(strcat(destination_folder,'\Figures')) ;
+gabs = 1 ;
+for v = 1:length(versions)
+    if  contains(versions(v).name, 'Fig2'+wildcardPattern)
+        gabs = gabs + 1 ;
+    end
+end
+
+disp(strcat(num2str(gabs),' Fig2 files found'))
+
+FigList = findobj(allchild(0), 'flat', 'Type', 'figure') ;
+for iFig = 1:length(FigList)
+  FigHandle = FigList(iFig) ;
+  FigName = get(FigHandle, 'Name') ;
+  set(0, 'CurrentFigure', FigHandle) ;
+  exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig2(',num2str(iFig+gabs),').jpg') ...
+    ,"Resolution",600)
+  exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig2(',num2str(iFig)+gabs,').pdf'), ...
+    'BackgroundColor','white', 'ContentType','vector')
+end
+
+function plot_rainclouds(data,cb,count)
+    figure    
+    raincloud_plot(data,'box_on',1,'box_dodge',1,...
+        'box_dodge_amount',-.08,'dot_dodge_amount',.15,'alpha',0.2,...
+        'bxcl',[0 0 0],'color',cb(count,:),'LineWidth',1);
+    view([90 -90])
+    xlim([-8.35 30])
+    ylim([-.03 .095])
+    box off
+end

@@ -66,6 +66,7 @@ addOptional(p, 'lwr_bnd', 1, @isnumeric)
 addOptional(p, 'bxcl', [0 0 0], @isnumeric)
 addOptional(p, 'bxfacecl', [1 1 1], @isnumeric)
 addOptional(p, 'cloud_edge_col', [0 0 0], @isnumeric)
+addOptional(p, 'count', 1, @isnumeric)
 
 
 % parse the input
@@ -86,6 +87,7 @@ bxcl                = p.Results.bxcl;
 bxfacecl            = p.Results.bxfacecl;
 cloud_edge_col      = p.Results.cloud_edge_col;
 band_width          = p.Results.band_width;
+count               = p.Results.count;
 
 % calculate kernel density
 switch density_type
@@ -104,15 +106,21 @@ switch density_type
 end
 
 % density plot
-h{1} = area(Xi, f); hold on
+if count > 1
+    yl = ylim();
+    h{1} = area(Xi, f+yl(2)+.0002,f(1)+yl(2)+.0002); hold on
+else
+    h{1} = area(Xi, f); hold on
+end
 set(h{1}, 'FaceColor', color);
 set(h{1}, 'EdgeColor', cloud_edge_col);
 set(h{1}, 'LineWidth', line_width);
 set(h{1}, 'FaceAlpha', alpha);
 
 % make some space under the density plot for the boxplot and raindrops
+axis auto
 yl = get(gca, 'YLim');
-set(gca, 'YLim', [-yl(2)*lwr_bnd yl(2)]);
+% set(gca, 'YLim', [-0.0005*lwr_bnd yl(2)]);
 
 % width of boxplot
 wdth = yl(2) * 0.25;
@@ -135,7 +143,12 @@ else
     drops_pos = jit - yl(2) / 2;
 end
 
-h{2} = scatter(X, drops_pos);
+if count > 1
+    yl = ylim();
+    h{2} = scatter(X, drops_pos+yl(2)/2);
+else
+    h{2} = scatter(X, drops_pos);
+end
 h{2}.SizeData = 10;
 h{2}.MarkerFaceColor = color;
 h{2}.MarkerEdgeColor = 'none';
@@ -159,7 +172,7 @@ if box_on
         h{6} = line([Y(1) Y(4)], [(-yl(2) * box_dodge_amount) (-yl(2) * box_dodge_amount)], 'col', bxcl, 'LineWidth', line_width);
         
         % mean line
-        h{7} = line([mean(X) mean(X)], [((-yl(2) * box_dodge_amount) - (wdth * 0.3)) ((-yl(2) * box_dodge_amount) + (wdth * 0.3))], 'col', 'g', 'LineWidth', line_width);
+        h{7} = line([mean(X) mean(X)], [((-yl(2) * box_dodge_amount) - (wdth * 0.3)) ((-yl(2) * box_dodge_amount) + (wdth * 0.3))], 'col', 'r', 'LineWidth', line_width);
     else
         box_pos = [Y(1) -yl(2)/2-(wdth * 0.5) Y(2)-Y(1) wdth];
         % median line
@@ -170,7 +183,7 @@ if box_on
         h{6} = line([Y(1) Y(4)], [-yl(2)/2 -yl(2)/2], 'col', bxcl, 'LineWidth', line_width);
         
         % mean line
-        h{7} = line([mean(X) mean(X)], [-yl(2)/2-(wdth * 0.5) -yl(2) / 2 + (wdth * 0.5)], 'col', 'g', 'LineWidth', line_width);
+        h{7} = line([mean(Xs) mean(X)], [-yl(2)/2-(wdth * 0.5) -yl(2) / 2 + (wdth * 0.5)], 'col', 'r', 'LineWidth', line_width);
     end
     % 'box' of 'boxplot'
     h{3} = rectangle('Position', box_pos);

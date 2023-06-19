@@ -69,9 +69,9 @@ histp=hcum-medval;
 histp=histp/max(hcum(:,end))*p.Width;
 %
 %%% plot stripes for violin
-% lutf=str2func(p.LUT);
-% colors=lutf(numhist);
-colors=p.LUT;
+lutf=str2func(p.LUT);
+colors=lutf(numhist);
+% colors=p.LUT;
 for k=1:numhist
     hvalh=[histp(:,k) histp(end:-1:1,k+1)];
     edgeh=[sampledpoints sampledpoints(end:-1:1)];
