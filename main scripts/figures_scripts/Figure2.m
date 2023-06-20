@@ -7,7 +7,7 @@ layout1.Layout.Tile = 1;
 layout2 = tiledlayout(layout0,8,8,'TileSpacing','none','Padding','none') ;
 layout2.Layout.Tile = 2;
 
-%% Panel 1 - RMSF max_correlation
+%% Panel 1 - RMSF max_correlations
 fields = {"InduccionProteus11_63","InduccionLeningradensis11_63","QuimiotaxisBorokensis23_44"};
 amoebas = {8,55,44};
 for i=1:3 % subpanels (species)
@@ -20,14 +20,13 @@ end
 
 %% Panel 2 - RMSF \alpha
 field_names = fieldnames(results) ;
-
 t = gca;
 tiles = [17,49,33,1;25,57,41,9];
 idx = find(contains(field_names(:),'Leningradensis'))';
 for f = 1:length(idx)
     t = nexttile(layout2,tiles(1,f),[1,5]);
     exes = zeros(size(results.(field_names{idx(f)}),1));
-    plot(results.(field_names{idx(f)})(:,1),exes,'ro','MarkerSize',6)
+    plot(results.(field_names{idx(f)})(:,1),exes,'ro','MarkerSize',7)
     box off
     ylim([0 eps]) % minimize y-axis height
     xlim([0.5 0.9])
@@ -48,8 +47,6 @@ for f = 1:length(idx)
     t2.XAxis.Visible = 'off'; % hide y-axis
     t2.Color = 'None';
 end
-
-
 
 %% Panel 3 - RMSF Violin plots
 ax=nexttile(layout0,3);
@@ -81,67 +78,68 @@ end
 % boxplot(rmsfs_pad)
 
 %%%"Superviolin" plots
-rmsf_conds = {{[],[],[]},{[],[],[]},{[],[],[]}};
-for i=1:length(species) % main boxes (species)
-    f = find(contains(field_names(:),species(i)))'; % condition indexes
-    for j = 1:length(f) % secondary boxes (conditions)
-        rmsf_conds{i}{j} = results.(field_names{f(j)})(:,5)/120;
-    end
-end
-for i=1:length(species) % main boxes (species)
-    superviolin(rmsf_conds{i},'Parent',ax,'Xposition',i,'FaceAlpha',0.15,...
-        'Errorbars','ci','Centrals','mean','LineWidth',0.1)
-end
-colorgroups = [repmat({'Galvanotaxis'},length(rmsf_conds{1}{1}),1);
-    repmat({'Inducción'},length(rmsf_conds{1}{2}),1);
-    repmat({'Quimiotaxis'},length(rmsf_conds{1}{3}),1);
-    repmat({'Sin estímulo'},length(rmsf_conds{1}{4}),1);
-    repmat({'Galvanotaxis'},length(rmsf_conds{2}{1}),1);
-    repmat({'Inducción'},length(rmsf_conds{2}{2}),1);
-    repmat({'Quimiotaxis'},length(rmsf_conds{2}{3}),1);
-    repmat({'Sin estímulo'},length(rmsf_conds{2}{4}),1);
-    repmat({'Galvanotaxis'},length(rmsf_conds{3}{1}),1);
-    repmat({'Inducción'},length(rmsf_conds{3}{2}),1);
-    repmat({'Quimiotaxis'},length(rmsf_conds{3}{3}),1);
-    repmat({'Sin estímulo'},length(rmsf_conds{3}{4}),1)];
-boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3});
-boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
-    repmat(3,length(rmsfs{3}),1)],boxChart_rmsf,'Notch','off',...
-    'GroupByColor',colorgroups,'BoxFaceAlpha',0) %Box charts whose notches do not overlap have different medians at the 5% significance level.
+% rmsf_conds = {{[],[],[]},{[],[],[]},{[],[],[]}};
+% for i=1:length(species) % main boxes (species)
+%     f = find(contains(field_names(:),species(i)))'; % condition indexes
+%     for j = 1:length(f) % secondary boxes (conditions)
+%         rmsf_conds{i}{j} = results.(field_names{f(j)})(:,5)/120;
+%     end
+% end
+% for i=1:length(species) % main boxes (species)
+%     superviolin(rmsf_conds{i},'Parent',ax,'Xposition',i,'FaceAlpha',0.15,...
+%         'Errorbars','ci','Centrals','mean','LineWidth',0.1)
+% end
+% colorgroups = [repmat({'Galvanotaxis'},length(rmsf_conds{1}{1}),1);
+%     repmat({'Inducción'},length(rmsf_conds{1}{2}),1);
+%     repmat({'Quimiotaxis'},length(rmsf_conds{1}{3}),1);
+%     repmat({'Sin estímulo'},length(rmsf_conds{1}{4}),1);
+%     repmat({'Galvanotaxis'},length(rmsf_conds{2}{1}),1);
+%     repmat({'Inducción'},length(rmsf_conds{2}{2}),1);
+%     repmat({'Quimiotaxis'},length(rmsf_conds{2}{3}),1);
+%     repmat({'Sin estímulo'},length(rmsf_conds{2}{4}),1);
+%     repmat({'Galvanotaxis'},length(rmsf_conds{3}{1}),1);
+%     repmat({'Inducción'},length(rmsf_conds{3}{2}),1);
+%     repmat({'Quimiotaxis'},length(rmsf_conds{3}{3}),1);
+%     repmat({'Sin estímulo'},length(rmsf_conds{3}{4}),1)];
+% boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3});
+% boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
+%     repmat(3,length(rmsfs{3}),1)],boxChart_rmsf,'Notch','off',...
+%     'GroupByColor',colorgroups,'BoxFaceAlpha',0) %Box charts whose notches do not overlap have different medians at the 5% significance level.
+% h=gca;
+% xlim([.5 3.5])
+% h.XTick = [1 2 3];
+% xticklabels([{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
+%     {'\itAmoeba borokensis'}])
+% h.XAxis.TickLength = [0 0];
+
+%%%RainCloud plots
 h=gca;
 xlim([.5 3.5])
+ylim([-8.35 30])
 h.XTick = [1 2 3];
 xticklabels([{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
     {'\itAmoeba borokensis'}])
 h.XAxis.TickLength = [0 0];
 
-%%%RainCloud plots
-% h=gca;
-% xlim([.5 3.5])
-% ylim([-8.35 30])
-% h.XTick = [1 2 3];
-% xticklabels([{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
-%     {'\itAmoeba borokensis'}])
-% h.XAxis.TickLength = [0 0];
-% 
-% data = cell(3,4);
-% for i=1:length(species) % species    
-%     f = find(contains(field_names(:),species(i))); % conditions
-%     for j = 1:length(f)
-%         data{i,j} = [data{i}; results.(field_names{f(j)})(:,5)/120];
-%     end
-% end
-% cb = [.2,.2,.2;.4,.4,.4;.6,.6,.6;.8,.8,.8;
-%     1,0,0;1,.25,.25;1,.5,.5; 1,.75,.75;
-%     0,0,1;.25,.25,1;.5,.5,1;.75,.75,1];
-% % plot
-% count = 0;
-% for p = 1:(size(data,1)) % species
-%     for q = 1:size(data,2) % conditions
-%         count = count+1;
-%         plot_rainclouds(data{p,q},cb,count);
-%     end
-% end
+data = cell(3,4);
+for i=1:length(species) % species    
+    f = find(contains(field_names(:),species(i))); % conditions
+    for j = 1:length(f)
+        data{i,j} = [data{i}; results.(field_names{f(j)})(:,5)/120];
+        disp(min(results.(field_names{f(j)})(:,5)/120))
+    end
+end
+cb = [.2,.2,.2;.4,.4,.4;.6,.6,.6;.8,.8,.8;
+    1,0,0;1,.25,.25;1,.5,.5; 1,.75,.75;
+    0,0,1;.25,.25,1;.5,.5,1;.75,.75,1];
+% plot
+count = 0;
+for p = 1:(size(data,1)) % species
+    for q = 1:size(data,2) % conditions
+        count = count+1;
+        plot_rainclouds(data{p,q},cb,count);
+    end
+end
 
 %% Export as jpg, tiff and vector graphics pdf
 

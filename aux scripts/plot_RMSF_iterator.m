@@ -31,7 +31,6 @@ for i = 1:length(field_names)
         amebas5(coordinates.(field_names{i}).scaled_rho(:,j), rmsfhandle) ;
     end
 end
-toc
 
 FigList = findobj(allchild(0), 'flat', 'Type', 'figure') ;
 for iFig = 1:length(FigList)
@@ -42,3 +41,5 @@ for iFig = 1:length(FigList)
     "Resolution",300)
 end
 diary off
+
+toc

@@ -8,7 +8,7 @@ end
 %# Presets
 stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
     'sRMSFCorrelationTime', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta', 'AppEn', 'sAppEn'} ;
-conf = 68.27; %# set to either a STD value or confidence %
+conf = 68.27; %# set to either a confidence or STD value. 68.27% CI equates to 1xSTD
 ellipseFitType = '% confidence interval';  %# set to either STD or confidence %
 
 figures.GraphicalAbstract = figure('Name',strcat('GraphicalAbstract_',...

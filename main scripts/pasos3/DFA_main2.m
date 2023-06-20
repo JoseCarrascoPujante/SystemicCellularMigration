@@ -20,9 +20,9 @@ n=n';
 hold(fighandle, 'on')
 
 if contains(input_type, 'Original')
-    scatter(log10(n),log10(F_n), 'filled', 'Color', [1 0 0]);
+    scatter(log10(n),log10(F_n), 'filled', 'ro');
 elseif contains(input_type, 'Shuffled')
-    scatter(log10(n),log10(F_n), 'filled', 'Color', [0 0 1]);
+    scatter(log10(n),log10(F_n), 'filled', 'bo');
 end
 
 hold on
