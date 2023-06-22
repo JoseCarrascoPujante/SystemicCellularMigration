@@ -139,7 +139,8 @@ for i=1:size(x,2)
             
     end
 end
-grid on
+% grid on
+% set(gca,'GridLineStyle',':')
 box on
 end
 

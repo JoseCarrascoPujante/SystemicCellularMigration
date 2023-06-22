@@ -486,10 +486,13 @@ plot_tracks_iterator(coordinates)
 figures.GraphAbs = GraphAbs_subaxis_def(field_names, results, figures, destination_folder) ;
 
 % Figure 1
-figures.figure1_4Panels = fig1_5Panels(coordinates, destination_folder) ;
+figures.figure1_4Panels = Figure1(coordinates, destination_folder) ;
 
 % Figure 2
 Figure2
+
+% Figure 3
+Figure3
 
 
 % Save data

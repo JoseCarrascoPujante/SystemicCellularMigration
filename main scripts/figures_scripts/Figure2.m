@@ -78,7 +78,7 @@ end
 % boxplot(rmsfs_pad)
 
 %%%"Superviolin" plots
-% rmsf_conds = {{[],[],[]},{[],[],[]},{[],[],[]}};
+% rmsf_conds = {{[],[],[],[]},{[],[],[],[]},{[],[],[],[]}};
 % for i=1:length(species) % main boxes (species)
 %     f = find(contains(field_names(:),species(i)))'; % condition indexes
 %     for j = 1:length(f) % secondary boxes (conditions)
@@ -126,7 +126,7 @@ for i=1:length(species) % species
     f = find(contains(field_names(:),species(i))); % conditions
     for j = 1:length(f)
         data{i,j} = [data{i}; results.(field_names{f(j)})(:,5)/120];
-        disp(min(results.(field_names{f(j)})(:,5)/120))
+        disp(field_names{f(j)})
     end
 end
 cb = [.2,.2,.2;.4,.4,.4;.6,.6,.6;.8,.8,.8;
@@ -141,14 +141,14 @@ for p = 1:(size(data,1)) % species
     end
 end
 
-%% Export as jpg, tiff and vector graphics pdf
+%% Export as jpg and vector graphics pdf
 
 if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))
 end
 
 versions = dir(strcat(destination_folder,'\Figures')) ;
-gabs = 1 ;
+gabs = 0 ;
 for v = 1:length(versions)
     if  contains(versions(v).name, 'Fig2'+wildcardPattern)
         gabs = gabs + 1 ;
@@ -163,6 +163,8 @@ for iFig = 1:length(FigList)
   FigName = get(FigHandle, 'Name') ;
   set(0, 'CurrentFigure', FigHandle) ;
   exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig2(',num2str(iFig+gabs),').jpg') ...
+    ,"Resolution",600)
+  exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig2(',num2str(gabs),').tiff') ...
     ,"Resolution",600)
   exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig2(',num2str(iFig)+gabs,').pdf'), ...
     'BackgroundColor','white', 'ContentType','vector')

@@ -1,4 +1,4 @@
-function fig = fig1_5Panels(coordinates, destination_folder)
+function fig = Figure1(coordinates, destination_folder)
 
 field_names = fieldnames(coordinates) ;
 fig = figure('Position',[10 10 650 1000]);
@@ -154,7 +154,7 @@ disp(strcat(num2str(gabs),' Fig1 files found'))
 exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').jpg') ...
     ,"Resolution",600)
 exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').tiff') ...
-    ,"Resolution",400)
+    ,"Resolution",600)
 exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').pdf') ...
     ,'BackgroundColor','white', 'ContentType','vector')
 
