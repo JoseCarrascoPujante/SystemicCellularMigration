@@ -258,13 +258,13 @@ for i = 1:length(field_names)
         'Visible','off','NumberTitle','off') ;
     xlabel('Log(MSD(\tau))');
     ylabel('Log(\tau(s))');
-    msdhandle = gca;
+    msdhandleOr = gca;
 
     figures.(field_names{i}).msd_shuff = figure('Name',strcat('MSD_Shuffled_',...
         field_names{i}),'Visible','off','NumberTitle','off') ;
     xlabel('Log(MSD(\tau))');
     ylabel('Log(\tau(s))');
-    Shuffmsdhandle = gca;
+    msdhandleShuff = gca;
     
     N = length(coordinates.(field_names{i}).original_x(1,:)); % Trajectories in condition
     for j = 1:N 
@@ -318,12 +318,12 @@ for i = 1:length(field_names)
         % MSDbeta
         [results.(field_names{i})(j,strcmp(stat_names(:), 'MSD_beta'))] = ...
             msd(coordinates.(field_names{i}).scaled_x(:,j),...
-            coordinates.(field_names{i}).scaled_y(:,j),msdhandle) ;
+            coordinates.(field_names{i}).scaled_y(:,j),msdhandleOr,'orig') ;
         
         % Shuffled MSDbeta
         [results.(field_names{i})(j,strcmp(stat_names(:), 'sMSD_beta'))] = ...
             msd(coordinates.(field_names{i}).shuffled_x(:,j),...
-            coordinates.(field_names{i}).shuffled_y(:,j),Shuffmsdhandle) ;
+            coordinates.(field_names{i}).shuffled_y(:,j),msdhandleShuff, 'shuff') ;
 
         % Approximate entropy (Kolmogorov-Sinai entropy)
         results.(field_names{i})(j,strcmp(stat_names(:), 'AppEn')) = ...
@@ -347,10 +347,10 @@ end
 
 tCalcSec = num2str(toc(tCalcSec)) ;
 
-save(strcat(destination_folder, '\', run_date ,'_numeric_results.mat'),...
-    'tCalcSec', 'results') ;
-
 ['Calculations section runtime FINISHED in ' tCalcSec ' seconds']
+
+save(strcat(destination_folder, '\', run_date ,'_numerical_results.mat'),...
+    'tCalcSec', 'results') ;
 
 %% Statistical analyses
 

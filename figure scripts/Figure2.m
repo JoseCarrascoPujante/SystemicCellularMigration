@@ -52,7 +52,6 @@ end
 ax=nexttile(layout0,3);
 hold on
 species = {'Proteus','Leningradensis','Borokensis'};
-conditions = {'SinEstimulo','Galvanotaxis','Quimiotaxis','Induccion'};
 rmsfs = {[],[],[]};
 for i=1:length(species) % species    
     for f = find(contains(field_names(:),species(i)))' % conditions
@@ -141,7 +140,7 @@ for p = 1:(size(data,1)) % species
     end
 end
 
-%% Export as jpg and vector graphics pdf
+%% Export as jpg, tiff and vector graphics pdf
 
 if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))

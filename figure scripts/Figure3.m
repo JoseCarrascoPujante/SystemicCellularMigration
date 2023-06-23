@@ -1,6 +1,6 @@
-% Figure 2
+% Figure 3
 %% Layouts
-fig = figure('Position',[350 10 650 1000]);
+fig = figure('Position',[350 10 750 1000]);
 layout0 = tiledlayout(3,1,'TileSpacing','tight','Padding','none') ;
 layout1 = tiledlayout(layout0,2,3,'TileSpacing','none','Padding','none') ;
 layout1.Layout.Tile = 1;
@@ -8,20 +8,20 @@ layout2 = tiledlayout(layout0,8,12,'TileSpacing','tight','Padding','none') ;
 layout2.Layout.Tile = 2;
 
 %% Panel 1 - DFA correlations
-fields = {"InduccionProteus11_63","QuimiotaxisLeningradensisVariosPpmm","GalvanotaxisBorokensis11_63"};
+scenarios = {"InduccionProteus11_63","QuimiotaxisLeningradensisVariosPpmm","GalvanotaxisBorokensis11_63"};
 amoebas = {39,10,51};
 for i=1:3 % subpanels (species)
     nexttile(layout1,i)
     box on
     dfahandle = gca;
-    gamma = DFA_main2(coordinates.(fields{i}).scaled_rho(:,amoebas{i}),'Original_DFA_', dfahandle) ;
+    gamma = DFA_main2(coordinates.(scenarios{i}).scaled_rho(:,amoebas{i}),'Original_DFA_', dfahandle) ;
     yl = ylim();
     xl = xlim();
     text(xl(1)+1,yl(1)+.5,strcat('\gamma=',num2str(round(gamma,2))))
     nexttile(layout1,i+3)
     box on
     dfahandle = gca;
-    gamma = DFA_main2(coordinates.(fields{i}).shuffled_rho(:,amoebas{i}),'Shuffled_DFA_', dfahandle) ;
+    gamma = DFA_main2(coordinates.(scenarios{i}).shuffled_rho(:,amoebas{i}),'Shuffled_DFA_', dfahandle) ;
     yl = ylim();
     xl = xlim();
     text(xl(1)+1,yl(1)+.5,strcat('\gamma=',num2str(round(gamma,2))))
@@ -30,7 +30,6 @@ end
 %% Panel 2 - DFA \gamma original vs shuffled
 field_names = fieldnames(results) ;
 species = {'Proteus','Leningradensis','Borokensis'};
-t = gca;
 tiles = {
 [25,73,49,1;37,85,61,13]
 [29,77,53,5;41,89,65,17]
@@ -59,9 +58,8 @@ for i = 1:length(species)
         datastdshuff = std(results.(field_names{idx(f)})(:,8));
         line([datamean-datastd datamean+datastd],[12 12],'Color','red',...
             'LineWidth',.5)
-        text(t2,datamean,-10,[num2str(round(mean(results.(field_names{idx(f)})(:,7)),2))...
-            ' ' char(177) ' ' num2str(round(datastd,2))],'HorizontalAlignment',...
-            'center','FontSize',9)
+        text(t2,datamean,-10,[num2str(round(datamean,2)) ' ' char(177) ' '...
+            num2str(round(datastd,2))],'HorizontalAlignment', 'center','FontSize',9)
         line([datameanshuff-datastdshuff datameanshuff+datastdshuff],[12 12],'Color','blue',...
             'LineWidth',.5)
         text(t2,datameanshuff,-10,[num2str(round(datameanshuff,2)) ' ' char(177)...
@@ -99,7 +97,7 @@ xticklabels([{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},{'\itAmoeba b
 h.XAxis.TickLength = [0 0];
 ylabel('DFA\gamma')
 
-%% Export as jpg and vector graphics pdf
+%% Export as jpg, tiff and vector graphics pdf
 
 if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))

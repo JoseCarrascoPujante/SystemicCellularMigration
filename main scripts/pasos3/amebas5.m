@@ -105,7 +105,10 @@ for time_max=step:step:tc2   % plot one graph every "step" data points
         loglog(time(1:max_corr),(k/v2(1))*v2(1:max_corr),'k--','LineWidth',1);
         text(time(4),(k/v2(1))*v2(2),'\alpha=0.5, uncorrelated',...
             'FontName','times new roman')
-        disp(goodness(1))
+        h = gca;
+        set(h,'xscale','log')
+        set(h,'yscale','log')
+        % disp(goodness(1))
     end
     % medias(zz)=mean(exponents(zz,:));
     % standard(zz)=std(exponents(zz,:));

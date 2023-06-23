@@ -33,9 +33,9 @@ for iFig = 1:length(FigList)
   FigHandle = FigList(iFig) ;
   FigName = get(FigHandle, 'Name') ;
   set(0, 'CurrentFigure', FigHandle) ;
-  exportgraphics(FigHandle,fullfile(destination_folder, [FigName '.jpg']), ...
+  exportgraphics(FigHandle,fullfile(destination_folder, '\Figures', [FigName '.jpg']), ...
     "Resolution",200)
 end
-diary off
-
 toc
+
+diary off
