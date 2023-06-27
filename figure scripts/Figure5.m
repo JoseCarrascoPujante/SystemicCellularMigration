@@ -3,17 +3,18 @@
 %% Layouts
 set(groot,'defaultFigurePaperPositionMode','manual')
 
-fig = figure('Visible','off','Position', [0 0 1200 900]);
+fig = figure('Visible','off','Position', [0 0 1254 1000]);
 layout0 = tiledlayout(2,1,'TileSpacing','tight','Padding','none') ;
 layout1 = tiledlayout(layout0,2,3,'TileSpacing','tight','Padding','none') ;
 layout1.Layout.Tile = 1;
-layout2 = tiledlayout(layout0,2,1,'TileSpacing','none','Padding','none') ;
+layout2 = tiledlayout(layout0,2,1,'TileSpacing','compact','Padding','none') ;
 layout2.Layout.Tile = 2;
 
 %% Panel 1 - ApEn heatmaps
 
 fields = {"SinEstimuloProteus11_63","SinEstimuloLeningradensis11_63","SinEstimuloBorokensis23_44"};
 
+% Calculate Approximate Entropy
 % AE = struct;
 % AESh = struct;
 % for i = 1:length(fields)
@@ -28,17 +29,19 @@ fields = {"SinEstimuloProteus11_63","SinEstimuloLeningradensis11_63","SinEstimul
 %     end
 % end
 
-Zmin = min([min(min(AE.SinEstimuloBorokensis23_44)),min(min(AE.SinEstimuloLeningradensis11_63)),min(min(AE.SinEstimuloProteus11_63)), ...
-    min(min(AESh.SinEstimuloBorokensis23_44)),min(min(AESh.SinEstimuloLeningradensis11_63)),min(min(AESh.SinEstimuloProteus11_63))]);
-
-Zmax = max([max(max(AE.SinEstimuloBorokensis23_44)),max(max(AE.SinEstimuloLeningradensis11_63)),max(max(AE.SinEstimuloProteus11_63)), ...
-    max(max(AESh.SinEstimuloBorokensis23_44)),max(max(AESh.SinEstimuloLeningradensis11_63)),max(max(AESh.SinEstimuloProteus11_63))]);
+% Zmin = min([min(min(AE.SinEstimuloBorokensis23_44)),min(min(AE.SinEstimuloLeningradensis11_63)),min(min(AE.SinEstimuloProteus11_63)), ...
+%     min(min(AESh.SinEstimuloBorokensis23_44)),min(min(AESh.SinEstimuloLeningradensis11_63)),min(min(AESh.SinEstimuloProteus11_63))]);
+% 
+% Zmax = max([max(max(AE.SinEstimuloBorokensis23_44)),max(max(AE.SinEstimuloLeningradensis11_63)),max(max(AE.SinEstimuloProteus11_63)), ...
+%     max(max(AESh.SinEstimuloBorokensis23_44)),max(max(AESh.SinEstimuloLeningradensis11_63)),max(max(AESh.SinEstimuloProteus11_63))]);
 
 for i = 1:length(fields)
     nexttile(layout1,i)
     h = gca;
-    imagesc(AE.(fields{i}),[Zmin Zmax])
+    imagesc(AE.(fields{i}))
     colormap(jet)
+    a=colorbar;
+    ylabel(a,'Approximate Entropy','FontSize',7.5,'Rotation',270);
     xticklabels(h,{});
     if i == 1
         ylabel(h,'Series');
@@ -49,9 +52,14 @@ for i = 1:length(fields)
 
     nexttile(layout1,i+3)
     h = gca;
-    imagesc(AESh.(fields{i}),[Zmin Zmax])
+    imagesc(AESh.(fields{i}))
     colormap(jet)
-    xticklabels(h,{'720','1440','2160','2880','3600'});
+    a=colorbar;
+    ylabel(a,'Approximate Entropy','FontSize',7.5,'Rotation',270);
+    % a.Label.Position(1) = 3.2;
+    % clim([Zmin Zmax]);
+    xticks(10:10:50)
+    xticklabels(h,compose('%d',720:720:3600));
     if i == 1
         ylabel(h,'Series (shuffled)');
     elseif i == 2
@@ -59,10 +67,6 @@ for i = 1:length(fields)
         xlabel(h,'time(s)');
     elseif i == 3
         yticklabels(h,{});
-        a=colorbar;
-        % a.Label.Position(1) = 3.2;
-        clim([Zmin Zmax]);
-        ylabel(a,'Approximate Entropy','FontSize',7,'Rotation',270);
     end
 end
 
@@ -82,13 +86,15 @@ for i=1:length(species) % main boxes (species)
         c = c+1;
         count = count+2;
         disp(field_names{f(j)})
-        al_goodplot(results.(field_names{f(j)})(:,11), count, [], col(c,:),'bilateral', [], [], 0); % original
+        al_goodplot(results.(field_names{f(j)})(:,12), count, [], col(c,:),'bilateral', [], [], 0); %Shuffled
     end
 end
 xlim([1.5 28])
 xticklabels([])
 h.XAxis.TickLength = [0 0];
-ylabel('Approximate Entropy','FontSize',8)
+h.YAxis.FontSize = 8;
+ylabel('Approximate Entropy (Shuffled)','FontSize',8)
+
 
 h = nexttile(layout2,2);
 count = 0;
@@ -100,15 +106,16 @@ for i=1:length(species) % main boxes (species)
         c = c+1;
         count = count+2;
         disp(field_names{f(j)})
-        al_goodplot(results.(field_names{f(j)})(:,12), count, [], col(c,:),'bilateral', [], [], 0); %Shuffled
+        al_goodplot(results.(field_names{f(j)})(:,11), count, [], col(c,:),'bilateral', [], [], 0); % original
     end
 end
 xlim([1.5 28])
 xticks([5.9 15 24])
+h.XAxis.TickLength = [0 0];
 set(gca,'XTickLabel',[{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
     {'\itAmoeba borokensis'}],'fontsize',12)
-h.XAxis.TickLength = [0 0];
-ylabel('Approximate Entropy (Shuffled)','FontSize',8)
+h.YAxis.FontSize = 8;
+ylabel('Approximate Entropy','FontSize',8)
 
 %% Export as jpg, tiff and vector graphics pdf
 
@@ -119,7 +126,7 @@ end
 versions = dir(strcat(destination_folder,'\Figures')) ;
 gabs = 0 ;
 for v = 1:length(versions)
-    if  contains(versions(v).name, 'Fig5'+wildcardPattern+'.jpg')
+    if  contains(versions(v).name, 'Fig5'+wildcardPattern+'.svg')
         gabs = gabs + 1 ;
     end
 end
@@ -131,8 +138,8 @@ for iFig = 1:length(FigList)
   FigHandle = FigList(iFig) ;
   FigName = get(FigHandle, 'Name') ;
   set(0, 'CurrentFigure', FigHandle) ;
-  % set(FigHandle,'units','pixels','Position',[0 0 900 900])
-  set(FigHandle,'PaperSize',[22 16.5],'PaperPosition',[0 0 22 16.5]);
+  % set(FigHandle,'units','pixels','Position',[0 0 1254 1000])
+  set(FigHandle,'PaperSize',[23 18.33],'PaperPosition',[0 0 23 18.33]);
   set(FigHandle, 'Renderer', 'painters');
   saveas(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(iFig+gabs),')'),'svg')
   % exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(iFig+gabs),').jpg') ...
