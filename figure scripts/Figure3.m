@@ -1,6 +1,7 @@
 % Figure 3
 %% Layouts
-fig = figure('Position',[350 10 750 1000]);
+set(groot,'defaultFigurePaperPositionMode','manual')
+fig = figure('Visible','off','Position',[0 0 900 1200]);
 layout0 = tiledlayout(3,1,'TileSpacing','tight','Padding','none') ;
 layout1 = tiledlayout(layout0,2,3,'TileSpacing','none','Padding','none') ;
 layout1.Layout.Tile = 1;
@@ -106,7 +107,7 @@ end
 versions = dir(strcat(destination_folder,'\Figures')) ;
 gabs = 0 ;
 for v = 1:length(versions)
-    if  contains(versions(v).name, 'Fig3'+wildcardPattern)
+    if  contains(versions(v).name, 'Fig3'+wildcardPattern+'.jpg')
         gabs = gabs + 1 ;
     end
 end
@@ -118,10 +119,13 @@ for iFig = 1:length(FigList)
   FigHandle = FigList(iFig) ;
   FigName = get(FigHandle, 'Name') ;
   set(0, 'CurrentFigure', FigHandle) ;
+  set(FigHandle,'PaperSize',[16.5 22],'PaperPosition',[0 0 16.5 22]);
+  set(FigHandle, 'Renderer', 'painters');
+  saveas(FigHandle,strcat(destination_folder, '\Figures\Fig3(',num2str(iFig+gabs),')'),'svg')
   exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig3(',num2str(iFig+gabs),').jpg') ...
     ,"Resolution",600)
-  exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig3(',num2str(gabs),').tiff') ...
-    ,"Resolution",600)
-  exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig3(',num2str(iFig)+gabs,').pdf'), ...
-    'BackgroundColor','white', 'ContentType','vector')
+  % exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig3(',num2str(gabs),').tiff') ...
+  %   ,"Resolution",600)
+  % exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig3(',num2str(iFig)+gabs,').pdf'), ...
+  %   'BackgroundColor','white', 'ContentType','vector')
 end

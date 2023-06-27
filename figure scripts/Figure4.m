@@ -1,7 +1,9 @@
 % Figure 4
 %% Layouts
-fig = figure('Position',[350 10 900 1200],'Visible','off');
-layout0 = tiledlayout(3,1,'TileSpacing','tight','Padding','none') ;
+set(groot,'defaultFigurePaperPositionMode','manual')
+fig = figure('Visible','off','Position', [0 0 900 1200]);
+
+layout0 = tiledlayout(3,1,'TileSpacing','compact','Padding','none') ;
 layout1 = tiledlayout(layout0,2,3,'TileSpacing','none','Padding','none') ;
 layout1.Layout.Tile = 1;
 layout2 = tiledlayout(layout0,10,3,'TileSpacing','compact','Padding','none') ;
@@ -78,13 +80,13 @@ for i = 1:length(species)
             'LineWidth',4)
         line([datamean+datastd datamean+datastd+.01],[0 0],'Color','red',...
             'LineWidth',4)
-        text(t2,datamean,-1,[num2str(round(datamean,2)) ' ' char(177) ' '...
+        text(t2,datamean,-1.5,[num2str(round(datamean,2)) ' ' char(177) ' '...
             num2str(round(datastd,2))],'HorizontalAlignment','center','FontSize',8)
         line([datameanshuff-datastdshuff+.01 datameanshuff-datastdshuff],[0 0],'Color','blue',...
             'LineWidth',4)
         line([datameanshuff+datastdshuff datameanshuff+datastdshuff+.01],[0 0],'Color','blue',...
             'LineWidth',4)
-        text(t2,datameanshuff,-1,[num2str(round(datameanshuff,2)) ' ' char(177)...
+        text(t2,datameanshuff,-1.5,[num2str(round(datameanshuff,2)) ' ' char(177)...
             ' ' num2str(datastdshuff,'%.e')],'HorizontalAlignment','center','FontSize',8)
         ylim([-0.08 0]) % minimize y-axis height
         xlim([-0.1 2.1])
@@ -113,14 +115,14 @@ for i = 1:length(species)
                 'LineWidth',4)
             line([datamean+datastd datamean+datastd+.01],[0 0],'Color','red',...
                 'LineWidth',4)
-            text(t,datamean,-1,[num2str(round(datamean,2)) ' ' char(177)...
+            text(t,datamean,-1.5,[num2str(round(datamean,2)) ' ' char(177)...
                 ' ' num2str(round(datastd,2))],'HorizontalAlignment',...
                 'center','FontSize',8)
             line([datameanshuff-datastdshuff+.01 datameanshuff-datastdshuff],[0 0],'Color','blue',...
                 'LineWidth',4)
             line([datameanshuff+datastdshuff datameanshuff+datastdshuff+.01],[0 0],'Color','blue',...
                 'LineWidth',4)
-            text(t,datameanshuff,-1,[num2str(round(datameanshuff,2)) ' ' char(177)...
+            text(t,datameanshuff,-1.5,[num2str(round(datameanshuff,2)) ' ' char(177)...
                 ' ' num2str(datastdshuff,'%.e')],'HorizontalAlignment',...
                 'center','FontSize',8)
             ylim([-0.08 0]) % minimize y-axis height
@@ -182,7 +184,7 @@ box on
 h.XTick = [1 2 3];
 xticklabels(h,[{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
     {'\itAmoeba borokensis'}])
-h.XAxis.FontSize = 16;
+h.XAxis.FontSize = 14;
 h.XAxis.TickLength = [0 0];
 
 %% Export as jpg, tiff and vector graphics pdf
@@ -194,7 +196,7 @@ end
 versions = dir(strcat(destination_folder,'\Figures')) ;
 gabs = 0 ;
 for v = 1:length(versions)
-    if  contains(versions(v).name, 'Fig4'+wildcardPattern)
+    if  contains(versions(v).name, 'Fig4'+wildcardPattern+'.jpg')
         gabs = gabs + 1 ;
     end
 end
@@ -206,10 +208,13 @@ for iFig = 1:length(FigList)
   FigHandle = FigList(iFig) ;
   FigName = get(FigHandle, 'Name') ;
   set(0, 'CurrentFigure', FigHandle) ;
-  exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig4(',num2str(iFig+gabs),').jpg') ...
-    ,"Resolution",600)
-  exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig4(',num2str(iFig+gabs),').tiff') ...
-    ,"Resolution",600)
-  exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig4(',num2str(iFig)+gabs,').pdf'), ...
-    'BackgroundColor','white', 'ContentType','vector')
+  set(FigHandle,'PaperSize',[16.5 22],'PaperPosition',[0 0 16.5 22]);
+  set(FigHandle, 'Renderer', 'painters');
+  saveas(FigHandle,strcat(destination_folder, '\Figures\Fig4(',num2str(iFig+gabs),')'),'svg')
+  % exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig4(',num2str(iFig+gabs),').jpg') ...
+      % ,"Resolution",600)
+  % exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig4(',num2str(iFig+gabs),').tiff') ...
+  %     ,"Resolution",600)
+  % exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig4(',num2str(iFig+gabs),').pdf'), ...
+  %   'Resolution',600,'ContentType','vector')
 end

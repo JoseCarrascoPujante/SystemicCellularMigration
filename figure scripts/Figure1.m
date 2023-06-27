@@ -1,7 +1,8 @@
 function fig = Figure1(coordinates, destination_folder)
-
+%% Layouts
+set(groot,'defaultFigurePaperPositionMode','manual')
 field_names = fieldnames(coordinates) ;
-fig = figure('Position',[10 10 650 1000]);
+fig = figure('Visible','off','Position',[0 0 900 1200]);
 layout0 = tiledlayout(2,2,'TileSpacing','tight','Padding','tight') ;
 layouts = struct;
 %% Panels 1-4
@@ -151,11 +152,14 @@ end
 
 disp(strcat(num2str(gabs),' Fig1 files found'))
 
+set(FigHandle,'PaperSize',[16.5 22],'PaperPosition',[0 0 16.5 22]);
+set(FigHandle, 'Renderer', 'painters');
+saveas(FigHandle,strcat(destination_folder, '\Figures\Fig1(',num2str(iFig+gabs),')'),'svg')
 exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').jpg') ...
     ,"Resolution",600)
-exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').tiff') ...
-    ,"Resolution",600)
-exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').pdf') ...
-    ,'BackgroundColor','white', 'ContentType','vector')
+% exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').tiff') ...
+%     ,"Resolution",600)
+% exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').pdf') ...
+%     ,'BackgroundColor','white', 'ContentType','vector')
 
 end
