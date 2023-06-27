@@ -2,7 +2,7 @@ function fig = Figure1(coordinates, destination_folder)
 %% Layouts
 set(groot,'defaultFigurePaperPositionMode','manual')
 field_names = fieldnames(coordinates) ;
-fig = figure('Visible','off','Position',[0 0 900 1200]);
+fig = figure('Visible','off','Position',[0 0 1000 1000]);
 layout0 = tiledlayout(2,2,'TileSpacing','tight','Padding','tight') ;
 layouts = struct;
 %% Panels 1-4
@@ -145,18 +145,21 @@ end
 versions = dir(strcat(destination_folder,'\Figures')) ;
 gabs = 1 ;
 for v = 1:length(versions)
-    if  contains(versions(v).name, 'Fig1'+wildcardPattern+'.jpg')
+    if  contains(versions(v).name, 'Fig1'+wildcardPattern+'.svg')
         gabs = gabs + 1 ;
     end
 end
 
 disp(strcat(num2str(gabs),' Fig1 files found'))
 
-set(FigHandle,'PaperSize',[16.5 22],'PaperPosition',[0 0 16.5 22]);
-set(FigHandle, 'Renderer', 'painters');
-saveas(FigHandle,strcat(destination_folder, '\Figures\Fig1(',num2str(iFig+gabs),')'),'svg')
-exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').jpg') ...
-    ,"Resolution",600)
+fig.Units = 'centimeters';        % set figure units to cm
+fig.PaperUnits = 'centimeters';   % set pdf printing paper units to cm
+fig.PaperSize = fig.Position(3:4);  % assign to the pdf printing paper the size of the figure
+fig.PaperPosition = [0 0 fig.Position(3:4)];
+set(fig, 'Renderer', 'painters');
+saveas(fig,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),')'),'svg')
+% exportgraphics(fig,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').jpg') ...
+%     ,"Resolution",600)
 % exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').tiff') ...
 %     ,"Resolution",600)
 % exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig1(',num2str(gabs),').pdf') ...

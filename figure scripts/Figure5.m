@@ -1,9 +1,14 @@
 %% Figure5
+close all
+clear all
+load('2023-06-07_14.16''19''''_coordinates.mat')
+load('2023-06-07_14.16''19''''_numerical_results.mat')
+load('ApEn.mat')
 
 %% Layouts
 set(groot,'defaultFigurePaperPositionMode','manual')
 
-fig = figure('Visible','off','Position', [0 0 1254 1000]);
+fig = figure('Visible','off','Position', [0 0 850 800]);
 layout0 = tiledlayout(2,1,'TileSpacing','tight','Padding','none') ;
 layout1 = tiledlayout(layout0,2,3,'TileSpacing','tight','Padding','none') ;
 layout1.Layout.Tile = 1;
@@ -133,20 +138,16 @@ end
 
 disp(strcat(num2str(gabs),' Fig5 files found'))
 
-FigList = findobj(allchild(0), 'flat', 'Type', 'figure') ;
-for iFig = 1:length(FigList)
-  FigHandle = FigList(iFig) ;
-  FigName = get(FigHandle, 'Name') ;
-  set(0, 'CurrentFigure', FigHandle) ;
-  % set(FigHandle,'units','pixels','Position',[0 0 1254 1000])
-  set(FigHandle,'PaperSize',[23 18.33],'PaperPosition',[0 0 23 18.33]);
-  set(FigHandle, 'Renderer', 'painters');
-  saveas(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(iFig+gabs),')'),'svg')
-  % exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(iFig+gabs),').jpg') ...
-      % ,"Resolution",600)
-  % exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(iFig+gabs),').tiff') ...
-  %     ,"Resolution",600)
-  % exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(iFig+gabs),').pdf'), ...
-  %   'Resolution',600,'ContentType','vector')
-end
+fig.Units = 'centimeters';        % set figure units to cm
+fig.PaperUnits = 'centimeters';   % set pdf printing paper units to cm
+fig.PaperSize = fig.Position(3:4);  % assign to the pdf printing paper the size of the figure
+fig.PaperPosition = [0 0 fig.Position(3:4)];
+set(fig, 'Renderer', 'painters');
+saveas(fig,strcat(destination_folder, '\Figures\Fig5(',num2str(gabs),')'),'svg')
+% exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(gabs),').jpg') ...
+    % ,"Resolution",600)
+% exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(gabs),').tiff') ...
+%     ,"Resolution",600)
+% exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(gabs),').pdf'), ...
+%   'Resolution',600,'ContentType','vector')
 

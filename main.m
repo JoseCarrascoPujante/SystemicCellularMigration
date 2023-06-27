@@ -494,8 +494,13 @@ Figure2
 % Figure 3
 Figure3
 
+% Figure 4
+Figure4
 
-% Save data
+% Figure 5
+Figure5
+
+% Save figures
 save(strcat(destination_folder, '\', run_date, '_figures.mat'), ...
     'figures') ;
 
