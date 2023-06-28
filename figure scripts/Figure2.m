@@ -101,6 +101,7 @@ end
 %     repmat({'Inducción'},length(rmsf_conds{3}{2}),1);
 %     repmat({'Quimiotaxis'},length(rmsf_conds{3}{3}),1);
 %     repmat({'Sin estímulo'},length(rmsf_conds{3}{4}),1)];
+% Plot boxchart
 % boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3});
 % boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
 %     repmat(3,length(rmsfs{3}),1)],boxChart_rmsf,'Notch','off',...
@@ -141,7 +142,7 @@ for p = 1:(size(data,1)) % species
     end
 end
 
-%% Export as jpg, tiff and vector graphics pdf
+%% Export as jpg and vector graphics pdf
 
 if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))

@@ -40,7 +40,8 @@ end
 
 % List the parameters to be calculated by the script
 stat_names = {'RMSF_alpha', 'sRMSF_alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
-    'sRMSFCorrelationTime', 'DFA_gamma', 'sDFA_gamma', 'MSD_beta', 'sMSD_beta', 'AppEn', 'sAppEn'} ;
+    'sRMSFCorrelationTime', 'DFA_gamma', 'sDFA_gamma', 'MSD_beta', 'sMSD_beta', 'ApEn', ...
+    'sApEn','Intensity','sIntensity','DR','sDR','AvgSpeed','sAvgSpeed'} ;
 
 % Initialize bulk data structures
 tracks = struct ;
@@ -326,14 +327,45 @@ for i = 1:length(field_names)
             coordinates.(field_names{i}).shuffled_y(:,j),msdhandleShuff, 'shuff') ;
 
         % Approximate entropy (Kolmogorov-Sinai entropy)
-        results.(field_names{i})(j,strcmp(stat_names(:), 'AppEn')) = ...
+        results.(field_names{i})(j,strcmp(stat_names(:), 'ApEn')) = ...
             ApEn(2, 0.2*std(coordinates.(field_names{i}).scaled_rho(:,j)),...
             coordinates.(field_names{i}).scaled_rho(:,j)) ;
 
         % Shuffled Approximate entropy (Kolmogorov-Sinai entropy)
-        results.(field_names{i})(j,strcmp(stat_names(:), 'sAppEn')) = ...
+        results.(field_names{i})(j,strcmp(stat_names(:), 'sApEn')) = ...
             ApEn(2, 0.2*std(coordinates.(field_names{i}).shuffled_rho(:,j)),...
             coordinates.(field_names{i}).shuffled_rho(:,j)) ;
+
+        % Intensity of response (mm)
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'Intensity'))] = ...
+            norm([coordinates.(field_names{i}).scaled_x(end,j) coordinates.(field_names{i}).scaled_y(end,j)]...
+            - [coordinates.(field_names{i}).scaled_x(1,j) coordinates.(field_names{i}).scaled_y(1,j)]);
+
+        % Shuffled intensity of response (mm)
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'sIntensity'))] = ...
+            norm([coordinates.(field_names{i}).shuffled_x(1,j) coordinates.(field_names{i}).shuffled_y(1,j)]...
+            - [coordinates.(field_names{i}).shuffled_x(end,j) coordinates.(field_names{i}).shuffled_y(end,j)]);
+
+        % Directionality ratio (straightness)
+        d = hypot(diff(coordinates.(field_names{i}).scaled_x(:,j)), diff(coordinates.(field_names{i}).scaled_y(:,j))) ;
+        distTrav = sum(d);
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'DR'))] = ...
+            results.(field_names{i})(j,strcmp(stat_names(:), 'Intensity'))/distTrav;
+        
+        % Shuffled Directionality ratio (straightness)
+        d = hypot(diff(coordinates.(field_names{i}).shuffled_x(:,j)), diff(coordinates.(field_names{i}).shuffled_y(:,j))) ;
+        SdistTrav = sum(d);
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'sDR'))] = ...
+            results.(field_names{i})(j,strcmp(stat_names(:), 'sIntensity'))/SdistTrav;
+
+        % Average speed (mm/s)
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'AvgSpeed'))] = ...
+            distTrav/1800;
+
+        % Shuffled average speed (mm/s)
+        [results.(field_names{i})(j,strcmp(stat_names(:), 'sAvgSpeed'))] = ...
+            SdistTrav/1800;
+
 
         [field_names{i} ' amoeba ' num2str(j) ' runtime was ' num2str(toc) ' seconds']
 

@@ -4,7 +4,7 @@ set(0,'DiaryFile',diary_filename)
 clear diary_filename
 diary on
 tic
-field_names = fieldnames(coordinates) ;
+field_names = fieldnames(results) ;
 % List the parameters to be calculated by the script
 stat_names = {'RMSF_alpha', 'sRMSF_alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
     'sRMSFCorrelationTime', 'DFA_gamma', 'sDFA_gamma', 'MSD_beta', 'sMSD_beta', 'AppEn', 'sAppEn'} ;
@@ -19,15 +19,15 @@ for i = 1:length(field_names)
         bar2 = waitbar(j/N, bar2, strcat('Track number', ' ', num2str(j))) ;
         
         figure('Name',strcat('RMSF_Original_',field_names{i}, '_amoeba_number_',...
-            num2str(j)),'NumberTitle','off','Visible','off');   
+            num2str(j)),'NumberTitle','off','Visible','on');   
         hrmsfOr = gca;
-        [alpha,R2,CorrelationTime, ~] = amebas5(coordinates.(field_names{i}).scaled_rho(:,j), hrmsfOr) ;
+        [alpha,R2,CorrelationTime, ~] = amebas5(coordinates.(field_names{i}).scaled_rho(:,j), hrmsfOr, 'orig') ;
         
         
         figure('Name',strcat('RMSF_Shuffled_',field_names{i}, '_amoeba_number_',...
-            num2str(j)),'NumberTitle','off','Visible','off');   
+            num2str(j)),'NumberTitle','off','Visible','on');   
         hrmsfshuff = gca;
-        [Salpha,SR2,SCorrelationTime, ~] = amebas5(coordinates.(field_names{i}).shuffled_rho(:,j), hrmsfOr) ;
+        [Salpha,SR2,SCorrelationTime, ~] = amebas5(coordinates.(field_names{i}).shuffled_rho(:,j), hrmsfshuff,'shuff');
 
         [field_names{i} 'nº' num2str(j) ':' newline 'alpha:' num2str(alpha)...
             newline 'R2:' num2str(R2) newline 'MaxCorrTime:' num2str(CorrelationTime)...

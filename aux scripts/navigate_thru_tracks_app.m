@@ -1,6 +1,6 @@
-function plot_tracks_iterator(coordinates)
+function navigate_thru_tracks_app(coordinates)
     fig = figure('Position', [10 600 200 50]);
-    f_n = fieldnames(coordinates);
+    f_n = fieldnames(results);
     button = '';
     Previous = uicontrol('String','Previous','Position',[30 10 90 30]);
     Next = uicontrol('String','Next','Position',[130 10 90 30]);

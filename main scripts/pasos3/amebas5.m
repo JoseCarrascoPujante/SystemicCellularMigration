@@ -1,5 +1,5 @@
 
-function [dev1,dev2,dev3,tc2]=amebas5(u_all, rmsfhandle)
+function [dev1,dev2,dev3,tc2]=amebas5(u_all, rmsfhandle, type)
 
 scale_time=0.5; %time between frames (seconds)
 
@@ -89,7 +89,11 @@ for time_max=step:step:tc2   % plot one graph every "step" data points
     if time_max == tc2
         max_corr = res(end,3); % Use last time when R2>0.99   
         hold(rmsfhandle, 'on')
-        loglog(time(1:max_corr), F(1:max_corr), 'or', 'MarkerSize', 2);
+        if strcmp(type,'orig')
+            loglog(time(1:max_corr), F(1:max_corr), 'or', 'MarkerSize', 2);
+        elseif strcmp(type,'shuff')
+            loglog(time(1:max_corr), F(1:max_corr), 'ob', 'MarkerSize', 2);
+        end
         xlabel('Log({\itl}(s))','FontName','times new roman');
         ylabel('Log(F({\itl}))','FontName','times new roman');
         
@@ -105,9 +109,8 @@ for time_max=step:step:tc2   % plot one graph every "step" data points
         loglog(time(1:max_corr),(k/v2(1))*v2(1:max_corr),'k--','LineWidth',1);
         text(time(4),(k/v2(1))*v2(2),'\alpha=0.5, uncorrelated',...
             'FontName','times new roman')
-        h = gca;
-        set(h,'xscale','log')
-        set(h,'yscale','log')
+        set(rmsfhandle,'xscale','log')
+        set(rmsfhandle,'yscale','log')
         % disp(goodness(1))
     end
     % medias(zz)=mean(exponents(zz,:));

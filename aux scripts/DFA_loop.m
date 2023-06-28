@@ -4,7 +4,7 @@ set(0,'DiaryFile',diary_filename)
 clear diary_filename
 diary on
 tic
-field_names = fieldnames(coordinates) ;
+field_names = fieldnames(results) ;
 
 bar1 = waitbar(0,'In progress...','Name','Condition...') ;
 bar2 = waitbar(0,'In progress...','Name','Track number...') ;

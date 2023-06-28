@@ -1,6 +1,6 @@
 %% Figure5
 close all
-clear all
+clear
 load('2023-06-07_14.16''19''''_coordinates.mat')
 load('2023-06-07_14.16''19''''_numerical_results.mat')
 load('ApEn.mat')
@@ -122,7 +122,7 @@ set(gca,'XTickLabel',[{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
 h.YAxis.FontSize = 8;
 ylabel('Approximate Entropy','FontSize',8)
 
-%% Export as jpg, tiff and vector graphics pdf
+%% Export as jpg and vector graphics pdf
 
 if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))
@@ -144,10 +144,4 @@ fig.PaperSize = fig.Position(3:4);  % assign to the pdf printing paper the size 
 fig.PaperPosition = [0 0 fig.Position(3:4)];
 set(fig, 'Renderer', 'painters');
 saveas(fig,strcat(destination_folder, '\Figures\Fig5(',num2str(gabs),')'),'svg')
-% exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(gabs),').jpg') ...
-    % ,"Resolution",600)
-% exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(gabs),').tiff') ...
-%     ,"Resolution",600)
-% exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig5(',num2str(gabs),').pdf'), ...
-%   'Resolution',600,'ContentType','vector')
 
