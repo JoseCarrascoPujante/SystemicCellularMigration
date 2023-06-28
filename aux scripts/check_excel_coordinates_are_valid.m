@@ -18,13 +18,6 @@ for k = 1 : length(UsefulSubFolderNames)
 	fprintf('Sub folder #%d = %s\n', k, UsefulSubFolderNames{k}) ;
 end
 
-% List the parameters to be calculated by the script
-parameters = {'alpha','r2','time_max','dfa_gamma','msd_beta','ApEn'} ;
-
-% Initialize bulk data structures
-coordinates = struct ;
-results = struct ;
-
 % Custom pixel/mm ratio list for Chemotaxis of Metamoeba leningradensis
 ratio_list = [23.44,23.44,23.44,23.44,23.44,23.44,23.44,11.63,11.63,11.63,...
     11.63,11.63,11.63,11.63,11.63,23.44,23.44,23.44,23.44,23.44,23.44,...
@@ -84,54 +77,6 @@ for f=1:length(UsefulSubFolderNames)
                 temp_y(k1) = str2double(separatethousands(temp_y(k1),'.',0)) ;
             end
         end
-        
-        % Save original X and Y coordinates as x(i) and y(i)
-        coordinates.(condition_ValidName).original_x(:,i) = temp_x ;
-        coordinates.(condition_ValidName).original_y(:,i) = temp_y ;
-        
-        % Center X and Y coordinates
-        coordinates.(condition_ValidName).centered_x(:,i) = temp_x-temp_x(1) ;
-        coordinates.(condition_ValidName).centered_y(:,i) = temp_y-temp_y(1) ;
-        
-        % Convert centered X and Y coordinates to polar coordinates
-        [coordinates.(condition_ValidName).teta(:,i),...
-            coordinates.(condition_ValidName).rho(:,i)] = ...
-            cart2pol(coordinates.(condition_ValidName).centered_x(:,i),...
-            coordinates.(condition_ValidName).centered_y(:,i)) ;
-        
-        % Scale Rho, X and Y
-        if contains(condition, '11.63')
-            coordinates.(condition_ValidName).scaled_rho(:,i) = coordinates.(condition_ValidName).rho(:,i)/11.63 ;
-            coordinates.(condition_ValidName).scaled_x(:,i) = coordinates.(condition_ValidName).centered_x(:,i)/11.63 ;
-            coordinates.(condition_ValidName).scaled_y(:,i) = coordinates.(condition_ValidName).centered_y(:,i)/11.63 ;
-        elseif contains(condition, '23.44')
-            coordinates.(condition_ValidName).scaled_rho(:,i) = coordinates.(condition_ValidName).rho(:,i)/23.44 ;
-            coordinates.(condition_ValidName).scaled_x(:,i) = coordinates.(condition_ValidName).centered_x(:,i)/23.44 ;
-            coordinates.(condition_ValidName).scaled_y(:,i) = coordinates.(condition_ValidName).centered_y(:,i)/23.44 ;
-        elseif contains(condition, 'en nombre de cada')
-            coordinates.(condition_ValidName).scaled_rho(:,i) = coordinates.(condition_ValidName).rho(:,i)/ratio_list(i) ;
-            coordinates.(condition_ValidName).scaled_x(:,i) = coordinates.(condition_ValidName).centered_x(:,i)/ratio_list(i) ;
-            coordinates.(condition_ValidName).scaled_y(:,i) = coordinates.(condition_ValidName).centered_y(:,i)/ratio_list(i) ;
-        end
-        
-        % RMSF
-        [results.(condition_ValidName)(i,strcmp(parameters(:), 'alpha'))...
-            ,results.(condition_ValidName)(i,strcmp(parameters(:), 'r2')),...
-            results.(condition_ValidName)(i,strcmp(parameters(:), 'time_max'))] = ...
-            amebas5(coordinates.(condition_ValidName).scaled_rho(:,i)) ;
-        
-        % DFA
-        results.(condition_ValidName)(i,strcmp(parameters(:), 'dfa_gamma')) = ...
-            DFA_main2(coordinates.(condition_ValidName).scaled_rho(:,i)) ;
-
-        % MSD
-        results.(condition_ValidName)(i,strcmp(parameters(:), 'msd_beta')) =...
-            msd(coordinates.(condition_ValidName).scaled_x(:,i),coordinates.(condition_ValidName).scaled_y(:,i)) ;
-        
-        % Approximate entropy (Kolmogorov-Sinai entropy)
-        results.(condition_ValidName)(i,strcmp(parameters(:), 'ApEn')) = ...
-            ApEn(2, 0.2*std(coordinates.(condition_ValidName).scaled_rho(:,i)),...
-            coordinates.(condition_ValidName).scaled_rho(:,i)) ;
     end
 end
 
