@@ -75,10 +75,25 @@ for i = 1:length(fields)
     end
 end
 
-%% Panel 2 - Approximate Entropy and Shuffled Violin plots
+%% Panel 2 - Violin plots
 
 h = nexttile(layout2,1);
-field_names = fieldnames(results) ;
+
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
+
 species = {'Proteus','Leningradensis','Borokensis'};
 col = [.1,.1,.1;.3,.3,.3;.5,.5,.5;.7,.7,.7;1,0,0;1,.25,.25;1,.5,.5; 1,.7,.7;0,0,1;.25,.25,1;.5,.5,1;.7,.7,1];
 
@@ -105,6 +120,7 @@ h = nexttile(layout2,2);
 count = 0;
 c = 0;
 for i=1:length(species) % main boxes (species)
+    disp(species(i))
     count = count + 1;
     f = find(contains(field_names(:),species(i)))'; % condition indexes
     for j = 1:length(f) % secondary boxes (conditions)

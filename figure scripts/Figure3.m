@@ -1,4 +1,9 @@
-% Figure 3
+%% Figure 3
+clear
+close all
+load('2023-06-07_14.16''19''''_coordinates.mat')
+load('2023-06-07_14.16''19''''_numerical_results.mat')
+
 %% Layouts
 set(groot,'defaultFigurePaperPositionMode','manual')
 fig = figure('Visible','off','Position',[0 0 900 1200]);
@@ -57,16 +62,16 @@ for i = 1:length(species)
         datastd = std(results.(field_names{idx(f)})(:,7));
         datameanshuff = mean(results.(field_names{idx(f)})(:,8));
         datastdshuff = std(results.(field_names{idx(f)})(:,8));
-        line([datamean-datastd datamean+datastd],[12 12],'Color','red',...
+        line([datamean-datastd datamean+datastd],[0 0],'Color','red',...
             'LineWidth',.5)
-        text(t2,datamean,-10,[num2str(round(datamean,2)) ' ' char(177) ' '...
+        text(t2,datamean,-1.5,[num2str(round(datamean,2)) ' ' char(177) ' '...
             num2str(round(datastd,2))],'HorizontalAlignment', 'center','FontSize',9)
-        line([datameanshuff-datastdshuff datameanshuff+datastdshuff],[12 12],'Color','blue',...
+        line([datameanshuff-datastdshuff datameanshuff+datastdshuff],[0 0],'Color','blue',...
             'LineWidth',.5)
-        text(t2,datameanshuff,-10,[num2str(round(datameanshuff,2)) ' ' char(177)...
+        text(t2,datameanshuff,-1.5,[num2str(round(datameanshuff,2)) ' ' char(177)...
             ' ' num2str(round(datastdshuff,2))],'HorizontalAlignment',...
             'center','FontSize',9)
-        ylim([6 12]) % minimize y-axis height
+        ylim([-0.08 0]) % minimize y-axis height
         xlim([0 2])
         t2.YAxis.Visible = 'off'; % hide y-axis
         t2.XAxis.Visible = 'off'; % hide y-axis
@@ -77,12 +82,28 @@ end
 
 %% Panel 3 - DFA \gamma Violin plots
 
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
+
 h = nexttile(layout0,3);
 
 col = [.2,.2,.2;.4,.4,.4;.6,.6,.6;.8,.8,.8;1,0,0;1,.25,.25;1,.5,.5; 1,.75,.75;0,0,1;.25,.25,1;.5,.5,1;.75,.75,1];
 count = 0;
 c = 0;
-for i=1:length(species) % main boxes (species)ç
+for i=1:length(species) % main boxes (species)
+    disp(species(i))
     count = count + 1;
     f = find(contains(field_names(:),species(i)))'; % condition indexes
     for j = 1:length(f) % secondary boxes (conditions)

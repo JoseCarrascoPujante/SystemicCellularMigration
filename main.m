@@ -506,7 +506,6 @@ copyfile('C:\Users\pc\Desktop\mov_sist\code', strcat(destination_folder, '\Scrip
 %   FigName = get(FigHandle, 'Name') ;
 %   set(0, 'CurrentFigure', FigHandle) ;
 %   export_fig(strcat(destination_folder,'\',FigName),'-svg')
-% %   exportgraphics(FigHandle, fullfile(destination_folder, [FigName '.pdf']), 'Resolution', 600) ;
 % end
 
 %% Generate publishable figures

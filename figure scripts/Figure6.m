@@ -11,30 +11,30 @@ layout0 = tiledlayout(3,2,'TileSpacing','compact','Padding','none') ;
 
 % Intensity of response (mm)
 ax = nexttile(layout0,1);
-kyneticBoxplots(ax,13)
+kyneticBoxplots(ax,13,'Intensity of response (mm)')
 
 % Shuffled Intensity of response (mm)
 ax = nexttile(layout0,2);
-kyneticBoxplots(ax,14)
+kyneticBoxplots(ax,14,'Shuffled Intensity of response (mm)')
 
 % Directionality ratio (straightness)
 ax = nexttile(layout0,3);
-kyneticBoxplots(ax,15)
+kyneticBoxplots(ax,15,'Directionality ratio')
 
 % Shuffled Directionality ratio (straightness)
 ax = nexttile(layout0,4);
-kyneticBoxplots(ax,16)
+kyneticBoxplots(ax,16,'Shuffled Directionality ratio')
 
 % Average speed (mm/s)
 ax = nexttile(layout0,5);
-kyneticBoxplots(ax,17)
+kyneticBoxplots(ax,17,'Average speed (mm/s)')
 
 % Shuffled Average speed (mm/s)
 ax = nexttile(layout0,6);
-kyneticBoxplots(ax,18)
+kyneticBoxplots(ax,18,'Shuffled average speed (mm/s)')
 
 
-%% Export as jpg and vector graphics pdf
+%% Export as jpg and vector graphics svg
 
 load '2023-06-07_14.16''19''''_coordinates.mat' destination_folder 
 
@@ -61,9 +61,10 @@ saveas(fig,strcat(destination_folder, '\Figures\Fig6(',num2str(gabs),')'),'svg')
 
 
 %% Define functions
-function kyneticBoxplots(ax,parameter_index)
+function kyneticBoxplots(ax,parameter_index,string)
     
     load '2023-06-07_14.16''19''''_numerical_results.mat' results
+    
     field_names = ...
     {'SinEstimuloProteus11_63'
     'GalvanotaxisProteus11_63'
@@ -165,4 +166,5 @@ function kyneticBoxplots(ax,parameter_index)
     xlim(ax,[0 17])
     ylim(ax,[-yl(2)*.05 yl(2)*1.01])
     box off
+    ylabel(string,"FontSize",9)
 end

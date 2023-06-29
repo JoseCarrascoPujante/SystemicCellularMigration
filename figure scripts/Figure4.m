@@ -1,4 +1,10 @@
-% Figure 4
+%% Figure 4
+
+close all
+clear
+load('2023-06-07_14.16''19''''_coordinates.mat')
+load('2023-06-07_14.16''19''''_numerical_results.mat')
+
 %% Layouts
 set(groot,'defaultFigurePaperPositionMode','manual')
 fig = figure('Visible','off','Position', [0 0 900 1200]);
@@ -139,6 +145,21 @@ end
 %% "Superviolin" plots of MSD \Beta
 ax=nexttile(layout0,3);
 
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
+
 rmsf_conds = {{[],[],[],[]},{[],[],[],[]},{[],[],[],[]}};
 
 for i=1:length(species) % main boxes (species)
@@ -152,18 +173,18 @@ for i=1:length(species) % main boxes (species)
     superviolin(rmsf_conds{i},'Parent',ax,'Xposition',i,'FaceAlpha',0.15,...
         'Errorbars','ci','Centrals','mean','LineWidth',0.1)
 end
-colorgroups = [repmat({'Galvanotaxis'},length(rmsf_conds{1}{1}),1);
-    repmat({'Inducción'},length(rmsf_conds{1}{2}),1);
-    repmat({'Quimiotaxis'},length(rmsf_conds{1}{3}),1);
-    repmat({'Sin estímulo'},length(rmsf_conds{1}{4}),1);
-    repmat({'Galvanotaxis'},length(rmsf_conds{2}{1}),1);
-    repmat({'Inducción'},length(rmsf_conds{2}{2}),1);
-    repmat({'Quimiotaxis'},length(rmsf_conds{2}{3}),1);
-    repmat({'Sin estímulo'},length(rmsf_conds{2}{4}),1);
-    repmat({'Galvanotaxis'},length(rmsf_conds{3}{1}),1);
-    repmat({'Inducción'},length(rmsf_conds{3}{2}),1);
-    repmat({'Quimiotaxis'},length(rmsf_conds{3}{3}),1);
-    repmat({'Sin estímulo'},length(rmsf_conds{3}{4}),1)];
+colorgroups = [ones(length(rmsf_conds{1}{1}),1);
+    repmat(2,length(rmsf_conds{1}{2}),1);
+    repmat(3,length(rmsf_conds{1}{3}),1);
+    repmat(4,length(rmsf_conds{1}{4}),1);
+    ones(length(rmsf_conds{2}{1}),1);
+    repmat(2,length(rmsf_conds{2}{2}),1);
+    repmat(3,length(rmsf_conds{2}{3}),1);
+    repmat(4,length(rmsf_conds{2}{4}),1);
+    ones(length(rmsf_conds{3}{1}),1);
+    repmat(2,length(rmsf_conds{3}{2}),1);
+    repmat(3,length(rmsf_conds{3}{3}),1);
+    repmat(4,length(rmsf_conds{3}{4}),1)];
 
 rmsfs = {[],[],[]};
 for i=1:length(species) % species    
