@@ -514,7 +514,7 @@ copyfile('C:\Users\pc\Desktop\mov_sist\code', strcat(destination_folder, '\Scrip
 plot_tracks_iterator(coordinates)
 
 % Graphical Abstract
-figures.GraphAbs = GraphAbs_subaxis_def(field_names, results, figures, destination_folder) ;
+figures.GraphAbs = GraphicalAbstract(field_names, results, destination_folder) ;
 
 % Figure 1
 figures.figure1_4Panels = Figure1(coordinates, destination_folder) ;
