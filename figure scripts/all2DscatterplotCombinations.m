@@ -14,8 +14,9 @@ end
 
 results.full(:,[5,6]) = results.full(:,[5,6])/120; % convert frames to minutes
 
-stat_names = ["rmsfAlpha" "srmsfAlpha" "rmsfR2" "srmsfR2" "rmsfTimeMax" ...
-    "srmsfTimeMax" "dfaGamma" "sdfaGamma" "msdBeta" "smsdBeta" "ApEn" "sApEn"];
+stat_names = ["RMSF\alpha" "sRMSF\alpha" "rmsfR2" "srmsfR2" "rmsfTimeMax" ...
+    "srmsfTimeMax" "DFA\gamma" "sdfaGamma" "MSD\beta" "smsdBeta"...
+    "Approximate Entropy" "sApproximate Entropy"];
 indexes = 1:length(stat_names);
 pairs = nchoosek(indexes(1:2:end),2);
 
@@ -26,22 +27,22 @@ fig.InvertHardcopy = 'off';
 tiledlayout(3,5,'TileSpacing','tight','Padding','tight')
 
 for ej=1:length(pairs)
-    % if dfaGamma substract 1 else do not
     nexttile;
     disp(ej)
-    if pairs(ej,1) == 7
-        metric1 = cat(1,results.full(:,pairs(ej,1))-1, results.full(:,pairs(ej,1)+1));
-    else 
-        metric1 = cat(1,results.full(:,pairs(ej,1)), results.full(:,pairs(ej,1)+1));
-    end
-    if pairs(ej,2) == 7
-        metric2 = cat(1,results.full(:,pairs(ej,2))-1, results.full(:,pairs(ej,2)+1));
-    else
-        metric2 = cat(1,results.full(:,pairs(ej,2)), results.full(:,pairs(ej,2)+1));
-    end
+    
+    % if pairs(ej,1) == 7   % if X-axis metric is dfa\Gamma substract 1, else do not
+    %     metric1 = cat(1,results.full(:,pairs(ej,1))-1, results.full(:,pairs(ej,1)+1));
+    % else 
+    metric1 = cat(1,results.full(:,pairs(ej,1)), results.full(:,pairs(ej,1)+1));
+    % end
+    % if pairs(ej,2) == 7   % if Y-axis metric is dfa\Gamma substract 1, else do not
+    %     metric2 = cat(1,results.full(:,pairs(ej,2))-1, results.full(:,pairs(ej,2)+1));
+    % else
+    metric2 = cat(1,results.full(:,pairs(ej,2)), results.full(:,pairs(ej,2)+1));
+    % end
     G = [1*ones(length(metric1)/2,1) ; 2*ones(length(metric2)/2,1)];
     gscatter(metric1,metric2, G,'gy','..',2,'off') ;
-    disp(strcat(stat_names(pairs(ej,1)),' & ',stat_names(pairs(ej,2))))
+    disp(strcat(stat_names(pairs(ej,1)),' ','vs',' ',stat_names(pairs(ej,2))))
     set(gca, 'Color','k', 'XColor','w', 'YColor','w')
     set(gcf, 'Color','k') 
     precision_vals = 1;
@@ -73,14 +74,14 @@ if ~exist(strcat(destination_folder,'\Figures'), 'dir')
 end
 
 versions = dir(strcat(destination_folder,'\Figures')) ;
-gabs = 0 ;
+gabs = 1 ;
 for v = 1:length(versions)
     if  contains(versions(v).name, 'All2Dscats'+wildcardPattern+'.jpg')
         gabs = gabs + 1 ;
     end
 end
 
-disp(strcat(num2str(gabs),' All2Dscats files found'))
+disp(strcat(num2str(gabs-1),' All2Dscats files found'))
 
 fig.Units = 'centimeters';          % set figure units to cm
 fig.PaperUnits = 'centimeters';     % set pdf printing paper units to cm

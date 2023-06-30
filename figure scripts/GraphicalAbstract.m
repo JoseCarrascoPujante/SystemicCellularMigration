@@ -1,7 +1,8 @@
-function fig = GraphicalAbstract(field_names, results, destination_folder)
+function fig = GraphicalAbstract(field_names, results)
 
 close all
-fig = figure('Position',[0 0 645 650],'NumberTitle','off','Visible','off') ;
+load '2023-06-07_14.16''19''''_coordinates.mat' destination_folder 
+fig = figure('Position',[0 0 650 650],'NumberTitle','off','Visible','off') ;
 fig.InvertHardcopy = 'off';  % To saveas white axes
 
 %% Presets
@@ -15,14 +16,15 @@ end
 results.full(:,[5,6]) = results.full(:,[5,6])/120; % convert frames to minutes
 
 stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
-    'sRMSFCorrelationTime', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta', 'Approximate Entropy', 'sAppEn'} ;
+    'sRMSFCorrelationTime', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta',...
+    'Approximate Entropy', 'sApproximate Entropy'} ;
 conf = 68.27; %# set to either a confidence or STD value. 68.27% CI equates to 1xSTD
 ellipseFitType = '% confidence interval';  %# set to either STD or confidence %
 
 % pair stats
 indexes = 1:length(stat_names);
 pairs = nchoosek(indexes([1,7:2:end]),2); % choose metrics to compare
-pairs([5,6],:) = []; % leave best 4 metrics to display on the GraphicalAbstract
+pairs([5,6],:) = [];                      % remove the two least worst metrics from the GraphicalAbstract
 
 %# build axes positions
 props = {'sh', 0.02, 'sv', 0.03, 'padding', 0.03 'margin', 0.03};
@@ -32,9 +34,10 @@ hBig = [subaxis(2,2,1, props{:})...         %# create big axes
     subaxis(2,2,4, props{:})];
 posBig = get(hBig, 'Position');             %# record their positions
 delete(hBig)                                %# delete them
-posSmall{1} = [0.85 0.62 0.13 0.13];
-posSmall{2} = [0.339 0.18 0.13 0.13];
-posSmall{3} = [0.85 0.17 0.13 0.13];
+% establish small axes' position
+posSmall{1} = [0.85 0.61 0.13 0.13];
+posSmall{2} = [0.335 0.27 0.13 0.13];
+posSmall{3} = [0.61 0.27 0.13 0.13];
 
 %# Create axes (big/small)
 hAxB(1) = axes('Position',posBig{1});
@@ -56,7 +59,7 @@ for ej=1:length(pairs)
     elseif ej == 3
         gscatter(hAxB(ej),metric1,metric2, G,'gy','..',2.2,'off')
     else
-        gscatter(hAxB(ej),metric1,metric2, G,'gy','..',1.9,'off') ;
+        gscatter(hAxB(ej),metric1,metric2, G,'gy','..',2.1,'off') ;
     end
     hold(hAxB(ej),'on')
     ellipse_gscatter(hAxB(ej),cat(2,metric1,metric2),G,conf,'r')
@@ -76,9 +79,9 @@ for ek=1:length(pairs)-1 % for number of small axes do...
         ellipse_scatter(hAxS(ek),cat(2,results.full(:,pairs(ek+1,1)+1),results.full(:,pairs(ek+1,2)+1)),conf, 'r')
     end
     box(hAxS(ek),'on')
-    xl= xlim(hAxS(ek));
-    yl= ylim(hAxS(ek));
-    rPos = [xl(1)-(((xl(2)-xl(1)))-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))*7)-((yl(2)-yl(1))))/2 (xl(2)-xl(1)) (yl(2)-yl(1))*7];
+    xl = xlim(hAxS(ek));
+    yl = ylim(hAxS(ek));
+    rPos = [xl(1)-(((xl(2)-xl(1)))-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))+.07)-((yl(2)-yl(1))))/2 (xl(2)-xl(1)) (yl(2)-yl(1))+.07];
     hold(hAxB(ek+1),'on')
     rectangle(hAxB(ek+1),'Position', rPos,'EdgeColor', 'r','FaceColor','none','LineWidth',.5);
     [Xor,Yor] = ds2nfu(hAxB(ek+1),rPos(1),rPos(2));
@@ -91,7 +94,7 @@ for ek=1:length(pairs)-1 % for number of small axes do...
         'Color','w','LineStyle','--','LineWidth',.5);
     annotation(fig,'line',[Xor posSmall{ek}(1)], [Yfr posSmall{ek}(2)+posSmall{ek}(4)], ...
         'Color','w','LineStyle','--','LineWidth',.5);
-    alpha(hAxS(ek),1)
+    alpha(hAxS(ek),1) % make small axes' background invisible
 end
 
 %# set axes properties
@@ -128,7 +131,7 @@ for v = 1:length(versions)
     end
 end
 
-disp(strcat(num2str(gabs),' Graphical Abstract files found'))
+disp(strcat(num2str(gabs-1),' Graphical Abstract files found'))
 
 fig.Units = 'centimeters';        % set figure units to cm
 fig.PaperUnits = 'centimeters';   % set pdf printing paper units to cm

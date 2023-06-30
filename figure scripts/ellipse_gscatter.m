@@ -31,7 +31,7 @@ for k=1:2
     e = bsxfun(@plus, VV*e, Mu'); %#' project circle back to orig space
     
     %# plot cov and major/minor axes
-    plot(h,e(1,:), e(2,:),'Color',colr,'LineWidth', 1,'LineStyle','--');
+    plot(h,e(1,:), e(2,:),'Color',colr,'LineWidth', 1.25,'LineStyle','--');
     %#quiver(h,Mu(1),Mu(2), VV(1,1),VV(2,1), 'Color','k')
     %#quiver(h,Mu(1),Mu(2), VV(1,2),VV(2,2), 'Color','k')
 end
