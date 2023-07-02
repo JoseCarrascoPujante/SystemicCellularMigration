@@ -37,8 +37,8 @@ indexes = {
 {1,2,3,4,6,12,14,18,19,20,21,22,23,26,27,28,29,42,45,59}%Leningradensis
 };
 {%Induction
-{41:60}%Borokensis
-{1,4,5,7,8,9,11,16,20,22,24,25,26,28,32,33,35,36,43,47}%Proteus
+{2,32,37,38,40,42,44,47,50,52,57,59,52,68,69,72,75,76,77,78}%Borokensis
+{1,4,5,7,8,9,11,16,20,22,24,25,26,28,30,32,33,35,36,70}%Proteus
 {1,8,18,24,30,38,39,40,41,42,43,44,48,49,50,51,52,53,54,57}%Leningradensis
 }
 };
@@ -154,47 +154,90 @@ end
 
 ax1 = nexttile(layout2,[3 3]);
 
-% import trajectory
+% import and plot trajectory
 original_x = readmatrix('C:\Users\pc\Desktop\mov_sist\Track fig1.xlsx', "Range", "A:A");
 original_y = readmatrix('C:\Users\pc\Desktop\mov_sist\Track fig1.xlsx', "Range", "B:B");
 
-centered_x = original_x - original_x(1);
-centered_y = original_y - original_y(1);
-
-scaled_x = centered_x/11.63;
-scaled_y = centered_y/11.63;
+% Do not center this trajectory
+scaled_x = original_x/11.63;
+scaled_y = original_y/11.63;
 
 plot(scaled_x, scaled_y, 'Color', 'b') ;
 
-% Define bounds of the rectangle
-left = 2.97;
-bottom = 0.2;
-width = 0.2;
-height = 0.2;
+ax1.FontSize = 13;
+xlabel('x(mm)','FontSize',17)
+ylabel('y(mm)','FontSize',17)
+ax1.XAxis.TickLength = [0 0];
+ax1.YAxis.TickLength = [0 0];
+axis image
+axis padded
 
-% Display the rectangle
+% Define bounds of the first rectangle
+left = 20.4;
+bottom = 15.4;
+width = 0.2;
+height = 0.23;
+
+% Display the first rectangle
 hold(ax1,'on');
 rectangle('Position',[left bottom width height], ...
     'EdgeColor','red','LineWidth',0.75);
 
-% Create axes for zoomed-in view
+% Create first axes for zoomed-in view
 ax2 = axes(layout2);
 ax2.Layout.Tile = 1;
-plot(scaled_x, scaled_y, 'Color', 'b') 
+plot(scaled_x, scaled_y, 'Color', 'b')
 
-% Adjust axis limits and remove ticks
+% Adjust first axis limits and remove ticks
+axis padded
+axis equal
 ax2.XLim = [left left+width];
 ax2.YLim = [bottom bottom+height];
-% ax2.XTick = [];
-% ax2.YTick = [];
+ax2.XAxis.TickLength = [0 0];
+ax2.YAxis.TickLength = [0 0];
 
-% Set other properties on the axes
+% Set other properties on the first axes
 ax2.Box = 'on';
 ax2.XAxis.Color = 'k';
 ax2.YAxis.Color = 'k';
-ax1.FontSize = 7;
 ax2.FontSize = 6;
-% title(ax1,'Trajectory in the absence of stimuli','Color','red','FontSize',9);
+xlabel('x(mm)','FontSize',7)
+ylabel('y(mm)','FontSize',7)
+
+% Define bounds of the second rectangle
+left = 20.422;
+bottom = 15.54;
+width = .07;
+height = .08;
+
+% Display the second rectangle
+hold(ax2,'on');
+rectangle('Position',[left bottom width height], ...
+    'EdgeColor','red','LineWidth',0.5);
+
+% Create second axes for zoomed-in view
+ax3 = axes(layout2);
+ax3.Layout.Tile = 7;
+plot(scaled_x, scaled_y, 'Color', 'b')
+
+% Adjust second axis limits and remove ticks
+axis image
+axis padded
+ax3.XLim = [left left+width];
+ax3.YLim = [bottom bottom+height];
+ax3.XAxis.TickLength = [0 0];
+ax3.YAxis.TickLength = [0 0];
+
+% Set other properties on the second axes
+ax3.Box = 'on';
+ax3.XAxis.Color = 'k';
+ax3.YAxis.Color = 'k';
+ax3.FontSize = 6;
+xlabel('x(mm)','FontSize',7)
+ylabel('y(mm)','FontSize',7)
+
+
+
 
 %% Export as jpg, tiff and vector graphics pdf
 
