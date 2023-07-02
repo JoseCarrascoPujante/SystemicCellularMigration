@@ -37,8 +37,8 @@ indexes = {
 {1,2,3,4,6,12,14,18,19,20,21,22,23,26,27,28,29,42,45,59}%Leningradensis
 };
 {%Induction
-{41:60}%Borokensis
-{1,4,5,7,8,9,11,16,20,22,24,25,26,28,32,33,35,36,43,47}%Proteus
+{21:40}%Borokensis
+{1,2,3,4,5,7,8,9,11,20,22,24,25,26,28,32,33,35,36,43}%Proteus
 {1,8,18,24,30,38,39,40,41,42,43,44,48,49,50,51,52,53,54,57}%Leningradensis
 }
 };
@@ -81,8 +81,7 @@ for i = 1:length(panels)
                 'HorizontalAlignment','left','FontSize',12)
         end
     end
-    axis tight
-    axis square
+    axis equal
     text(ax,.1,.9,['N=60(20-\color{red}20\color{black}-\color{blue}20)',"\color{black}t=30'"],'Units','normalized',...
         'HorizontalAlignment','left','FontSize',12)
     ax.FontSize = 7;
@@ -143,7 +142,7 @@ for i = 1:length(panels)
             xticks([-1 0 1])
             xlim([-1,1])
             yticks([min(b.Values) max(b.Values)])
-            ylim([0 max(b.Values)])
+            ylim([min(b.Values) max(b.Values)])
             axis square
         end
         cn=cn+1;
@@ -210,7 +209,7 @@ for v = 1:length(versions)
     end
 end
 
-disp(strcat(num2str(gabs-1),' Fig1 files found'))
+disp(strcat(num2str(gabs),' Fig1 files found'))
 
 fig.Units = 'centimeters';        % set figure units to cm
 fig.PaperUnits = 'centimeters';   % set pdf printing paper units to cm
