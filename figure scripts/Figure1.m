@@ -4,7 +4,7 @@ close all
 load '2023-06-07_14.16''19''''_coordinates.mat' coordinates destination_folder
 
 set(groot,'defaultFigurePaperPositionMode','manual')
-field_names = fieldnames(coordinates) ;
+
 fig = figure('NumberTitle','off','Visible','off','Position',[0 0 1000 1500]);
 
 %% Layouts
@@ -19,27 +19,42 @@ layouts = struct;
 
 %% Panels 1-4
 
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
+
 panels = {'SinEstimulo','Galvanotaxis','Quimiotaxis','Induccion'};
 indexes = {
 {%No stimulus
-{1,2,4,6,12,13,14,15,17,18,20,22,24,27,28,29,30,32,34,35}%Borokensis
 {1,3,7,8,9,10,11,12,13,14,15,16,18,19,20,24,25,28,33,39}%Proteus
 {1,4,6,7,9,10,14,16,17,18,20,21,22,23,24,26,27,28,29,31}%Leningradensis
+{1,2,4,6,12,13,14,15,17,18,20,22,24,27,28,29,30,32,34,35}%Borokensis
 };
 {%Galvanotaxis
-{1:20}%Borokensis
 {1,2,3,4,5,6,8,9,12,15,16,17,18,20,22,23,24,25,26,27}%Proteus
 {1:20}%Leningradensis
+{1:20}%Borokensis
 };
 {%Chemotaxis
-{8,9,11,13,15,19,22,25,29,31,32,33,34,44,45,47,50,51,53,55}%Borokensis
 {2,3,5,6,7,13,14,16,17,18,19,20,21,22,25,26,27,28,29,38}%Proteus
 {1,2,3,4,6,12,14,18,19,20,21,22,23,26,27,28,29,42,45,59}%Leningradensis
+{8,9,11,13,15,19,22,25,29,31,32,33,34,44,45,47,50,51,53,55}%Borokensis
 };
 {%Induction
-{2,32,37,38,40,42,44,47,50,52,57,59,52,68,69,72,75,76,77,78}%Borokensis
 {1,4,5,7,8,9,11,16,20,22,24,25,26,28,30,32,33,35,36,70}%Proteus
 {1,8,18,24,30,38,39,40,41,42,43,44,48,49,50,51,52,53,54,57}%Leningradensis
+{2,32,37,38,40,42,44,47,50,52,57,59,52,68,69,72,75,76,77,78}%Borokensis
 }
 };
 dim = [[.1 .1];[.1 .3];[.1 .2]];
@@ -120,7 +135,7 @@ for i = 1:length(panels)
             pax.Layout.Tile = 25+cn; %Initialize tile
             pax.Layout.TileSpan = [2 1];
             thetaIn360 = mod(coordinates.(field_names{cond(sp)}).theta(...
-                end,cell2mat(indexes{i}{sp})) + 2*pi, 2*pi);
+                end,:) + 2*pi, 2*pi);
             pol = polarhistogram(pax,thetaIn360,'Normalization','probability','LineWidth',1,...
                 'FaceColor','None','DisplayStyle','bar','BinEdges',linspace(-pi, pi, 9));
             rlim([0 .35])
@@ -139,7 +154,7 @@ for i = 1:length(panels)
         else
             ax2 = nexttile(layouts.(strcat('x',num2str(i))),25+cn,[2,1]); %Initialize tile
             b = histogram(ax2,cos(coordinates.(field_names{cond(sp)}).theta(...
-                end,cell2mat(indexes{i}{sp}))),10,"BinEdges",-1:.2:1,'FaceColor',colr);
+                end,:)),10,"BinEdges",-1:.2:1,'FaceColor',colr);
             xticks([-1 0 1])
             xlim([-1,1])
             yticks([min(b.Values) max(b.Values)])

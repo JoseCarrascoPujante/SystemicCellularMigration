@@ -12,7 +12,7 @@ fig = figure('Visible','off','Position', [0 0 900 1200]);
 layout0 = tiledlayout(3,1,'TileSpacing','compact','Padding','none') ;
 layout1 = tiledlayout(layout0,2,3,'TileSpacing','none','Padding','none') ;
 layout1.Layout.Tile = 1;
-layout2 = tiledlayout(layout0,10,3,'TileSpacing','compact','Padding','none') ;
+layout2 = tiledlayout(layout0,8,3,'TileSpacing','compact','Padding','none') ;
 layout2.Layout.Tile = 2;
 
 %% Panel 1 - MSD \Beta plots
@@ -45,15 +45,29 @@ end
 
 %% Panel 2 - MSD \Beta circles
 
-field_names = fieldnames(results) ;
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
+
 species = {'Proteus','Leningradensis','Borokensis'};
 dataSpecies = {[] [] []};
 dataSpeciesShuff = {[] [] []};
 tiles = {
-[7,19,13,1;10,22,16,4]
-[8,20,14,2;11,23,17,5]
-[9,21,15,3;12,24,18,6]
-[25,26,27;28,29,30]};
+[1,7,13,19;4,10,16,22]
+[2,8,14,20;5,11,17,23]
+[3,9,15,21;6,12,18,24]
+};
 
 for i = 1:length(species)
     idx = find(contains(field_names(:),species{i}))';
@@ -83,15 +97,17 @@ for i = 1:length(species)
         line([datamean-datastd datamean+datastd],[0 0],'Color','red',...
             'LineWidth',.5)
         line([datamean-datastd+.01 datamean-datastd],[0 0],'Color','red',...
-            'LineWidth',4)
+            'LineWidth',5)
         line([datamean+datastd datamean+datastd+.01],[0 0],'Color','red',...
-            'LineWidth',4)
+            'LineWidth',5)
         text(t2,datamean,-1.5,[num2str(round(datamean,2)) ' ' char(177) ' '...
             num2str(round(datastd,2))],'HorizontalAlignment','center','FontSize',8)
+        line([datameanshuff-datastdshuff datameanshuff+datastdshuff],[0 0],'Color','blue',...
+            'LineWidth',.5)
         line([datameanshuff-datastdshuff+.01 datameanshuff-datastdshuff],[0 0],'Color','blue',...
-            'LineWidth',4)
+            'LineWidth',5)
         line([datameanshuff+datastdshuff datameanshuff+datastdshuff+.01],[0 0],'Color','blue',...
-            'LineWidth',4)
+            'LineWidth',5)
         text(t2,datameanshuff,-1.5,[num2str(round(datameanshuff,2)) ' ' char(177)...
             ' ' num2str(datastdshuff,'%.e')],'HorizontalAlignment','center','FontSize',8)
         ylim([-0.08 0]) % minimize y-axis height
@@ -100,65 +116,12 @@ for i = 1:length(species)
         t2.XAxis.Visible = 'off'; % hide y-axis
         t2.Color = 'None';
         hold off
-
-        t = nexttile(layout2,tiles{4}(1,i));
-        hold on
-        plot(results.(field_names{idx(f)})(:,9),exes,'ro','MarkerSize',7)
-        plot(results.(field_names{idx(f)})(:,10),exes,'bo','MarkerSize',7)
-        ylim([0 eps]) % minimize y-axis height
-        xlim([-0.1 2.1])
-        t.YAxis.Visible = 'off'; % hide y-axis
-        t.Color = 'None';
-        if f == 4
-            t = nexttile(layout2,tiles{4}(2,i));
-            datamean = mean(dataSpecies{i});
-            datastd = std(dataSpecies{i});
-            datameanshuff = mean(dataSpeciesShuff{i});
-            datastdshuff = std(dataSpeciesShuff{i});
-            line([datamean-datastd datamean+datastd],[0 0],'Color','red',...
-                'LineWidth',.5)
-            line([datamean-datastd+.01 datamean-datastd],[0 0],'Color','red',...
-                'LineWidth',4)
-            line([datamean+datastd datamean+datastd+.01],[0 0],'Color','red',...
-                'LineWidth',4)
-            text(t,datamean,-1.5,[num2str(round(datamean,2)) ' ' char(177)...
-                ' ' num2str(round(datastd,2))],'HorizontalAlignment',...
-                'center','FontSize',8)
-            line([datameanshuff-datastdshuff+.01 datameanshuff-datastdshuff],[0 0],'Color','blue',...
-                'LineWidth',4)
-            line([datameanshuff+datastdshuff datameanshuff+datastdshuff+.01],[0 0],'Color','blue',...
-                'LineWidth',4)
-            text(t,datameanshuff,-1.5,[num2str(round(datameanshuff,2)) ' ' char(177)...
-                ' ' num2str(datastdshuff,'%.e')],'HorizontalAlignment',...
-                'center','FontSize',8)
-            ylim([-0.08 0]) % minimize y-axis height
-            xlim([-0.1 2.1])
-            t.YAxis.Visible = 'off'; % hide y-axis
-            t.XAxis.Visible = 'off'; % hide y-axis
-            t.Color = 'None';
-            hold off
-        end
     end
 end
 
 
 %% "Superviolin" plots of MSD \Beta
 ax=nexttile(layout0,3);
-
-field_names = ...
-    {'SinEstimuloProteus11_63'
-    'GalvanotaxisProteus11_63'
-    'QuimiotaxisProteus11_63'
-    'InduccionProteus11_63'
-    'SinEstimuloLeningradensis11_63'
-    'GalvanotaxisLeningradensis11_63'
-    'QuimiotaxisLeningradensisVariosPpmm'
-    'InduccionLeningradensis11_63'
-    'SinEstimuloBorokensis23_44'
-    'GalvanotaxisBorokensis11_63'
-    'QuimiotaxisBorokensis23_44'
-    'InduccionBorokensis11_63'
-    };
 
 rmsf_conds = {{[],[],[],[]},{[],[],[],[]},{[],[],[],[]}};
 

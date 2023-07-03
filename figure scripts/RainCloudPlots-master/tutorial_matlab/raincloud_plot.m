@@ -136,7 +136,7 @@ else
 end
 
 h{2} = scatter(X, drops_pos);
-h{2}.SizeData = 10;
+h{2}.SizeData = 5;
 h{2}.MarkerFaceColor = color;
 h{2}.MarkerEdgeColor = 'none';
 
