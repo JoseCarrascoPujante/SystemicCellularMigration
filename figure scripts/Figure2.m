@@ -175,17 +175,17 @@ end
 %% Define functions
 
 function plot_rainclouds(data,cb,count)
-    figure('Visible','off','Position', [0, 0, 40 250])
+    figure('Visible','off','Position', [0, 0, 110 250])
     raincloud_plot(data,'box_on',1,'box_dodge',1,...
         'box_dodge_amount',-.08,'dot_dodge_amount',.2,'alpha',0.2,...
-        'bxcl',[0 0 0],'color',cb(count,:),'LineWidth',.2);
+        'bxcl',[0 0 0],'color',cb(count,:),'LineWidth',10);
     view([90 -90])
     xlim([-8.35 30])
     ylim([-.03 .095])
     box off
     AxesH = gca;
-    set(AxesH, 'Units', 'pixels', 'Position', [0, 0, 40 250]);
+    set(AxesH, 'Units', 'pixels', 'Position', [0, 0, 110 250]);
     AxesH.XTick = [];
     AxesH.YTick = [];
-    axis padded
+    % axis padded
 end

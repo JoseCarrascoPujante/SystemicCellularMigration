@@ -57,33 +57,33 @@ indexes = {
 {2,32,37,38,40,42,44,47,50,52,57,59,52,68,69,72,75,76,77,78}%Borokensis
 }
 };
-dim = [[.1 .1];[.1 .3];[.1 .2]];
-dim2 = [[.75 .1];[.75 .3];[.75 .2]];
+dim = [[.1 .3];[.1 .2];[.1 .1]]; % text label locations on left side of chart
+dim2 = [[.75 .3];[.75 .2];[.75 .1]]; % text label locations on right side of chart
 for i = 1:length(panels)
     layouts.(strcat('x',num2str(i))) = tiledlayout(layout1,10,3,'TileSpacing','tight','Padding','tight');
     layouts.(strcat('x',num2str(i))).Layout.Tile = i;
-    cond = find(contains(field_names,panels{i}));
+    speciesScenarioIdx = find(contains(field_names,panels{i}));
     ax = nexttile(layouts.(strcat('x',num2str(i))),[8,3]);
-    for species = 1:length(cond)
+    for species = 1:length(speciesScenarioIdx)
         listx=[];
         if species == 1
-            colr = [0, 0, 1];
-        elseif species == 2
             colr = [0, 0, 0];
-        elseif species == 3
+        elseif species == 2
             colr = [1, 0, 0];
+        elseif species == 3
+            colr = [0, 0, 1];
         end
         for track = cell2mat(indexes{i}{species})
             %# Plot trajectory and a 'ko' marker at its tip      
-            plot(coordinates.(field_names{cond(species)}).scaled_x(:,track), ...
-                coordinates.(field_names{cond(species)}).scaled_y(:,track), 'Color', colr) ;
+            plot(coordinates.(field_names{speciesScenarioIdx(species)}).scaled_x(:,track), ...
+                coordinates.(field_names{speciesScenarioIdx(species)}).scaled_y(:,track), 'Color', colr) ;
             hold on;
-            plot(coordinates.(field_names{cond(species)}).scaled_x(end,track), ...
-                coordinates.(field_names{cond(species)}).scaled_y(end,track), ...
+            plot(coordinates.(field_names{speciesScenarioIdx(species)}).scaled_x(end,track), ...
+                coordinates.(field_names{speciesScenarioIdx(species)}).scaled_y(end,track), ...
                 'o', 'MarkerFaceColor', colr, 'MarkerEdgeColor', colr, 'MarkerSize', 1.75) ;
 %             rng('default')
-            listx = [listx,coordinates.(field_names{cond(species)}).original_x(end,track) ...
-                - coordinates.(field_names{cond(species)}).original_x(1,track)];
+            listx = [listx,coordinates.(field_names{speciesScenarioIdx(species)}).original_x(end,track) ...
+                - coordinates.(field_names{speciesScenarioIdx(species)}).original_x(1,track)];
         end
         if i ~= 1
             text(ax,dim(species,1),dim(species,2),...
@@ -123,27 +123,27 @@ for i = 1:length(panels)
     cn=0;
     for sp = 1:3
         if sp == 1
-            colr = [0, 0, 1];
-        elseif sp == 2
             colr = [0, 0, 0];
-        elseif sp == 3
+        elseif sp == 2
             colr = [1, 0, 0];
+        elseif sp == 3
+            colr = [0, 0, 1];
         end
         
         if i == 1
             pax = polaraxes(layouts.(strcat('x',num2str(i))));
             pax.Layout.Tile = 25+cn; %Initialize tile
             pax.Layout.TileSpan = [2 1];
-            thetaIn360 = mod(coordinates.(field_names{cond(sp)}).theta(...
+            thetaIn360 = mod(coordinates.(field_names{speciesScenarioIdx(sp)}).theta(...
                 end,:) + 2*pi, 2*pi);
             pol = polarhistogram(pax,thetaIn360,'Normalization','probability','LineWidth',1,...
-                'FaceColor','None','DisplayStyle','bar','BinEdges',linspace(-pi, pi, 9));
-            rlim([0 .35])
+                'FaceColor','None','EdgeColor',colr,'DisplayStyle','bar','BinEdges',linspace(-pi, pi, 9));
+            rlim([0 .39])
             x = pol.BinEdges ;
             y = pol.Values ;
             text(pax,x(1:end-1)+pi/9,zeros(length(y),1) + .3,...
-                strcat(num2str(round(y'*100,0)),'%'),'vert','bottom','horiz',...
-                'center','FontSize',7.5); %Add labels as percentages
+                strcat(num2str(round(y'*100,1)),'%'),'vert','bottom','horiz',...
+                'center','FontSize',4); %Add labels as percentages
             rticks([])
             thetaticks([])
             thetaticklabels([])
@@ -152,13 +152,14 @@ for i = 1:length(panels)
             pax.GridAlpha = 1;
             % pax.GridLineWidth = 2;
         else
-            ax2 = nexttile(layouts.(strcat('x',num2str(i))),25+cn,[2,1]); %Initialize tile
-            b = histogram(ax2,cos(coordinates.(field_names{cond(sp)}).theta(...
+            axh = nexttile(layouts.(strcat('x',num2str(i))),25+cn,[2,1]); %Initialize tile
+            b = histogram(axh,cos(coordinates.(field_names{speciesScenarioIdx(sp)}).theta(...
                 end,:)),10,"BinEdges",-1:.2:1,'FaceColor',colr);
             xticks([-1 0 1])
             xlim([-1,1])
             yticks([min(b.Values) max(b.Values)])
             ylim([0 max(b.Values)])
+            axh.FontSize = 5;
             axis square
         end
         cn=cn+1;

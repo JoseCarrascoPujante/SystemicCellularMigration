@@ -21,7 +21,7 @@ stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelati
     'sRMSFCorrelationTime', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta',...
     'Approximate Entropy', 'sApproximate Entropy'} ;
 conf = 68.27;                              % set to either a confidence or STD value. 68.27% CI equates to 1xSTD
-ellipseFitType = '% confidence interval';  % set to either STD or confidence %
+ellipseFitType = 'x STD';  % set to either STD or confidence %
 
 % pair stats
 indexes = 1:length(stat_names);
@@ -125,7 +125,7 @@ set(hAxS, 'Color','w', 'XColor','k', 'YColor','k','LineWidth',.5,'FontSize',6, .
 objhl = findobj(objh, 'type', 'line'); %// objects of legend #1 of type line
 set(objhl, 'Markersize', 30); %// set marker size as desired
 
-[h2,objh2] = legend(hAxB(4),'','',strcat(num2str(conf),ellipseFitType), Orientation='Vertical', ...
+[h2,objh2] = legend(hAxB(4),'','',strcat(num2str(1),' ',ellipseFitType), Orientation='Vertical', ...
     TextColor='k',FontSize=8.5);
 objhl2 = findobj(objh2, 'type', 'line'); %// objects of legend #2 of type line
 set(objhl2, 'Markersize', 15); %// set marker size as desired
