@@ -1,3 +1,6 @@
+clear
+close all
+
 diary off
 diary_filename = strcat(destination_folder,'\DFAvalues.txt') ;
 set(0,'DiaryFile',diary_filename)

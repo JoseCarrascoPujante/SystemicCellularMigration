@@ -1,3 +1,6 @@
+clear
+close all
+
 diary off
 diary_filename = strcat(destination_folder,'\RMSFvalues.txt') ;
 set(0,'DiaryFile',diary_filename)
@@ -29,6 +32,7 @@ for i = 1:length(field_names)
         hrmsfshuff = gca;
         [Salpha,SR2,SCorrelationTime, ~] = amebas5(coordinates.(field_names{i}).shuffled_rho(:,j), hrmsfshuff,'shuff');
 
+        % Print RMSF values
         [field_names{i} 'nº' num2str(j) ':' newline 'alpha:' num2str(alpha)...
             newline 'R2:' num2str(R2) newline 'MaxCorrTime:' num2str(CorrelationTime)...
             newline 'Shuff alpha:' num2str(Salpha) newline 'Shuff R2:' num2str(SR2) newline...

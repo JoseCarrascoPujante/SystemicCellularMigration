@@ -66,7 +66,7 @@ for i = 1:length(fields)
     xticks(10:10:50)
     xticklabels(h,compose('%d',720:720:3600));
     if i == 1
-        ylabel(h,'Series (shuffled)');
+        ylabel(h,'Series (shuffled)','FontSize',10);
     elseif i == 2
         yticklabels(h,{});
         xlabel(h,'time(s)');
@@ -113,7 +113,7 @@ xlim([1.5 28])
 xticklabels([])
 h.XAxis.TickLength = [0 0];
 h.YAxis.FontSize = 8;
-ylabel('Approximate Entropy (Shuffled)','FontSize',8)
+ylabel('Approximate Entropy (Shuffled)','FontSize',10)
 
 
 h = nexttile(layout2,2);
@@ -134,9 +134,9 @@ xlim([1.5 28])
 xticks([5.9 15 24])
 h.XAxis.TickLength = [0 0];
 set(gca,'XTickLabel',[{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
-    {'\itAmoeba borokensis'}],'fontsize',12)
+    {'\itAmoeba borokensis'}])
 h.YAxis.FontSize = 8;
-ylabel('Approximate Entropy','FontSize',8)
+ylabel('Approximate Entropy','FontSize',10)
 
 %% Export as jpg and vector graphics pdf
 

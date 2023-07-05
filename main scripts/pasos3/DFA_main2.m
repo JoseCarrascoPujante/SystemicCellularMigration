@@ -1,5 +1,5 @@
 
-function [Alpha1,D,F_n,z1,z2]=DFA_main2(DATA, input_type, fighandle)
+function [Alpha1,D,F_n,z1,z2]=DFA_main2(DATA, input_type, axeshandle)
 % DATA should be a time series of length(DATA) greater than 2000,and of column vector.
 %A is the alpha in the paper
 %D is the dimension of the time series
@@ -17,7 +17,7 @@ end
 
 n=n';
 
-hold(fighandle, 'on')
+hold(axeshandle, 'on')
 
 if contains(input_type, 'Original')
     scatter(log10(n),log10(F_n), 'filled', 'ro');
@@ -26,8 +26,8 @@ elseif contains(input_type, 'Shuffled')
 end
 
 hold on
-xlabel('log10(n)')
-ylabel('log10(F(n))')
+xlabel('log10(n)','FontSize',10)
+ylabel('log10(F(n))','FontSize',10)
 A=polyfit(log10(n(1:end)),log10(F_n(1:end)),1);
 B=polyval(A,log10(n(1:end)));
 

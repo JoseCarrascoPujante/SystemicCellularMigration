@@ -1,4 +1,4 @@
-function [slope] = msd(x, y, axis, type)
+function [slope,deltat] = msd(x, y, axis)
 % msd - calculates the msd curve for 2-D dissusion 
 %   x: vector of x positions
 %   y: vector of y positions
@@ -32,23 +32,3 @@ end
 hold(axis, 'on')
 
 plot(axis, log(deltat), log(msdpts),'color',rand(1,3))
-
-if strcmp(type,'orig')
-    plot(axis, log(deltat), log(deltat)-10, 'k--')
-    plot(axis, log(deltat), log(deltat.^2)-10, 'k--')
-    text(axis, log(deltat(5)),0,['\beta=2, ballistic' newline 'diffusion']...
-        ,'HorizontalAlignment', 'center','FontSize',8)
-    text(axis, log(deltat(5)),-4.5,'Superdiffusion'...
-        ,'HorizontalAlignment', 'center','FontSize',8)
-    text(axis, log(deltat(5)),-9,['\beta=1, normal' newline 'diffusion']...
-        ,'HorizontalAlignment', 'center','FontSize',8)
-else
-    plot(axis, log(deltat), log(deltat)-1.5, 'k--')
-    plot(axis, log(deltat), log(deltat.^2)-1.5, 'k--')
-    text(axis, log(deltat(5)),8,['\beta=2, ballistic' newline 'diffusion']...
-        ,'HorizontalAlignment', 'center','FontSize',8)
-    text(axis, log(deltat(5)),5,'Superdiffusion'...
-        ,'HorizontalAlignment', 'center','FontSize',8)
-    text(axis, log(deltat(5)),2,['\beta=1, normal' newline 'diffusion']...
-        ,'HorizontalAlignment', 'center','FontSize',8)
-end

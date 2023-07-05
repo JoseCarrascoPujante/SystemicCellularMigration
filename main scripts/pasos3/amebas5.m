@@ -87,7 +87,7 @@ for time_max=step:step:tc2   % plot one graph every "step" data points
 
     % loglog plot of rmsf F versus l step non-shuffled coordinates
     if time_max == tc2
-        max_corr = res(end,3); % Use last time when R2>0.99   
+        max_corr = res(end,3); % Use max tc2 when R2>0.99   
         hold(rmsfhandle, 'on')
         if strcmp(type,'orig')
             loglog(time(1:max_corr), F(1:max_corr), 'or', 'MarkerSize', 2);

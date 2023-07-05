@@ -7,11 +7,13 @@ load('2023-06-07_14.16''19''''_numerical_results.mat')
 %% Layouts
 set(groot,'defaultFigurePaperPositionMode','manual')
 fig = figure('Visible','off','Position',[0 0 900 1200]);
-layout0 = tiledlayout(3,1,'TileSpacing','tight','Padding','none') ;
-layout1 = tiledlayout(layout0,2,3,'TileSpacing','none','Padding','none') ;
+layout0 = tiledlayout(4,1,'TileSpacing','compact','Padding','none') ;
+layout1 = tiledlayout(layout0,2,3,'TileSpacing','compact','Padding','none') ;
 layout1.Layout.Tile = 1;
-layout2 = tiledlayout(layout0,8,12,'TileSpacing','tight','Padding','none') ;
+layout2 = tiledlayout(layout0,8,12,'TileSpacing','loose','Padding','none') ;
 layout2.Layout.Tile = 2;
+% layout3 = tiledlayout(layout0,2,1,'TileSpacing','compact','Padding','none') ;
+% layout3.Layout.Tile = 3;
 
 %% Panel 1 - DFA correlations
 scenarios = {"InduccionProteus11_63","QuimiotaxisLeningradensisVariosPpmm","GalvanotaxisBorokensis11_63"};
@@ -23,17 +25,18 @@ for i=1:3 % subpanels (species)
     gamma = DFA_main2(coordinates.(scenarios{i}).scaled_rho(:,amoebas{i}),'Original_DFA_', dfahandle) ;
     yl = ylim();
     xl = xlim();
-    text(xl(1)+1,yl(1)+.5,strcat('\gamma=',num2str(round(gamma,2))))
+    text(xl(1)+1,yl(1)+.25,strcat('\gamma=',num2str(round(gamma,2))))
     nexttile(layout1,i+3)
     box on
     dfahandle = gca;
     gamma = DFA_main2(coordinates.(scenarios{i}).shuffled_rho(:,amoebas{i}),'Shuffled_DFA_', dfahandle) ;
     yl = ylim();
     xl = xlim();
-    text(xl(1)+1,yl(1)+.5,strcat('\gamma=',num2str(round(gamma,2))))
+    text(xl(1)+1,yl(1)+.25,strcat('\gamma=',num2str(round(gamma,2))),"FontSize",10)
 end
 
 %% Panel 2 - DFA \gamma original vs shuffled
+
 field_names = fieldnames(results) ;
 species = {'Proteus','Leningradensis','Borokensis'};
 tiles = {
@@ -52,6 +55,7 @@ for i = 1:length(species)
         box off
         ylim([0 eps]) % minimize y-axis height
         xlim([0 2])
+        t.XRuler.TickLabelGapOffset = 2;
         t.YAxis.Visible = 'off'; % hide y-axis
         t.Color = 'None';
         hold off
@@ -62,17 +66,28 @@ for i = 1:length(species)
         datastd = std(results.(field_names{idx(f)})(:,7));
         datameanshuff = mean(results.(field_names{idx(f)})(:,8));
         datastdshuff = std(results.(field_names{idx(f)})(:,8));
+        
         % original
         line([datamean-datastd datamean+datastd],[0 0],'Color','red',...
             'LineWidth',.5)
-        text(t2,datamean,-1.5,[num2str(round(datamean,2)) ' ' char(177) ' '...
+        line([datamean-datastd+.005 datamean-datastd],[0 0],'Color','red',...
+            'LineWidth',5)
+        line([datamean+datastd datamean+datastd+.005],[0 0],'Color','red',...
+            'LineWidth',5)
+        text(t2,datamean,-.22,[num2str(round(datamean,2)) ' ' char(177) ' '...
             num2str(round(datastd,2))],'HorizontalAlignment', 'center','FontSize',9)
+        
         % shuffled
         line([datameanshuff-datastdshuff datameanshuff+datastdshuff],[0 0],'Color','blue',...
             'LineWidth',.5)
-        text(t2,datameanshuff,-1.5,[num2str(round(datameanshuff,2)) ' ' char(177)...
+        line([datameanshuff-datastdshuff+.005 datameanshuff-datastdshuff],[0 0],'Color','blue',...
+            'LineWidth',5)
+        line([datameanshuff+datastdshuff datameanshuff+datastdshuff+.005],[0 0],'Color','blue',...
+            'LineWidth',5)
+        text(t2,datameanshuff,-.22,[num2str(round(datameanshuff,2)) ' ' char(177)...
             ' ' num2str(round(datastdshuff,2))],'HorizontalAlignment',...
             'center','FontSize',9)
+
         ylim([-0.08 0]) % minimize y-axis height
         xlim([0 2])
         t2.YAxis.Visible = 'off'; % hide y-axis
@@ -82,7 +97,8 @@ for i = 1:length(species)
     end
 end
 
-%% Panel 3 - DFA \gamma Violin plots
+
+%% Panel 3A - DFA \gamma Violin plots original
 
 field_names = ...
     {'SinEstimuloProteus11_63'
@@ -101,7 +117,30 @@ field_names = ...
 
 h = nexttile(layout0,3);
 
-col = [.2,.2,.2;.4,.4,.4;.6,.6,.6;.8,.8,.8;1,0,0;1,.25,.25;1,.5,.5; 1,.75,.75;0,0,1;.25,.25,1;.5,.5,1;.75,.75,1];
+species = {'Proteus','Leningradensis','Borokensis'};
+col = [.1,.1,.1;.3,.3,.3;.5,.5,.5;.7,.7,.7;1,0,0;1,.25,.25;1,.5,.5; 1,.7,.7;0,0,1;.25,.25,1;.5,.5,1;.7,.7,1];
+
+count = 0;
+c = 0;
+for i=1:length(species) % main boxes (species)
+    count = count + 1;
+    f = find(contains(field_names(:),species(i)))'; % condition indexes
+    for j = 1:length(f) % secondary boxes (conditions)
+        c = c+1;
+        count = count+2;
+        disp(field_names{f(j)})
+        al_goodplot(results.(field_names{f(j)})(:,7), count, [], col(c,:),'bilateral', [], [], 0); %Shuffled
+    end
+end
+xlim([1.5 28])
+xticklabels([])
+h.XAxis.TickLength = [0 0];
+h.YAxis.FontSize = 8;
+ylabel('DFA\gamma','FontSize',10)
+
+%% Panel 3B - DFA \gamma Violin plots shuffled
+
+h = nexttile(layout0,4);
 count = 0;
 c = 0;
 for i=1:length(species) % main boxes (species)
@@ -110,16 +149,19 @@ for i=1:length(species) % main boxes (species)
     f = find(contains(field_names(:),species(i)))'; % condition indexes
     for j = 1:length(f) % secondary boxes (conditions)
         c = c+1;
-        count = count+1;
+        count = count+2;
         disp(field_names{f(j)})
-        al_goodplot(results.(field_names{f(j)})(:,7), count, [], col(c,:),'left', [], [], 0);
+        al_goodplot(results.(field_names{f(j)})(:,8), count, [], col(c,:),'bilateral', [], [], 0); % original
     end
 end
-xlim([.6 15.5])
-xticks([3.5 8.5 13.5])
-xticklabels([{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},{'\itAmoeba borokensis'}])
+xlim([1.5 28])
+xticks([5.9 15 24])
 h.XAxis.TickLength = [0 0];
-ylabel('DFA\gamma')
+h.YAxis.FontSize = 8;
+ylabel('DFA\gamma (Shuffled)','FontSize',10)
+set(h,'XTickLabel',[{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
+    {'\itAmoeba borokensis'}])
+
 
 %% Export as jpg, tiff and vector graphics pdf
 
