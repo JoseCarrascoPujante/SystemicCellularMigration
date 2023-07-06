@@ -451,16 +451,17 @@ for kwfield = 1:length(fields_krusk)
             kruskal_results.(fields_krusk{kwfield}){3, params}] = ... % test_stats
         kruskalwallis(padcat(kruskal_groups.(fields_krusk{kwfield}).(stat_names{params}){:}),kw_conds{subgroup}',"off") ;
         
-        % Run multicomparison post-hoc test with bonferroni correction
-        % on the 'stats' structure output by the Kruskal-Wallis function
+        % Run multicomparison post-hoc test with dunn-sidak correction
+        % on the 'stats' structure output by the Kruskal-Wallis function.
+        % According to mathworks this is identical to running Dunn's post-hoc test
         [multcomp_results.(fields_krusk{kwfield}){1, params},... % matrix of multiple comparison results
             multcomp_results.(fields_krusk{kwfield}){2, params},... % matrix of estimates
             multcomp_results.(fields_krusk{kwfield}){3, params},... % handle to the figure
             multcomp_results.(fields_krusk{kwfield}){4, params}] = ... % group names
         multcompare(kruskal_results.(fields_krusk{kwfield}){3, params},...
-            "Alpha",0.05,"Display","off","CriticalValueType","bonferroni");
+            "Alpha",0.05,"Display","off","CriticalValueType","dunn-sidak");
         
-        % Run Dunn's post-hoc test to benchmark "multcompare"
+        % Run Dunn's post-hoc test
         if kwfield <= 4
         [dunn_results.(fields_krusk{kwfield}){1, params},...
             dunn_results.(fields_krusk{kwfield}){2, params},...
@@ -517,7 +518,7 @@ plot_tracks_iterator(coordinates)
 figures.GraphAbs = GraphicalAbstract(field_names, results) ;
 
 % Figure 1
-figures.figure1_4Panels = Figure1(coordinates, destination_folder) ;
+Figure1
 
 % Figure 2
 Figure2
@@ -531,8 +532,10 @@ Figure4
 % Figure 5
 Figure5
 
-% Save figures
-save(strcat(destination_folder, '\', run_date, '_figures.mat'), ...
-    'figures') ;
+% Figure 6
+Figure6
+
+% Figure 7
+Figure7
 
 diary off
