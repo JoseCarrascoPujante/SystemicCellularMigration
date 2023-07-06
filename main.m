@@ -382,7 +382,7 @@ tCalcSec = num2str(toc(tCalcSec)) ;
 ['Calculations section runtime FINISHED in ' tCalcSec ' seconds']
 
 save(strcat(destination_folder, '\', run_date ,'_numerical_results.mat'),...
-    'tCalcSec', 'results') ;
+    'tCalcSec', 'results', 'field_names') ;
 
 %% Statistical analyses
 

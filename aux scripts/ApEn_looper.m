@@ -1,13 +1,10 @@
 clear
 close all
 
-diary off
-diary_filename = strcat(destination_folder,'\ApEnValues.txt') ;
-set(0,'DiaryFile',diary_filename)
-clear diary_filename
-diary on
+load coordinates.mat coordinates destination_folder
+
 elapsedApEn = tic;
-field_names = fieldnames(results) ;
+field_names = fieldnames(coordinates) ;
 
 bar1 = waitbar(0,'In progress...','Name','Condition...') ;
 bar2 = waitbar(0,'In progress...','Name','Track number...') ;

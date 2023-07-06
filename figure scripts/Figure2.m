@@ -2,8 +2,8 @@
 
 clear
 close all
-load('2023-06-07_14.16''19''''_coordinates.mat')
-load('2023-06-07_14.16''19''''_numerical_results.mat')
+load('coordinates.mat')
+load('numerical_results.mat')
 
 %% Layouts
 

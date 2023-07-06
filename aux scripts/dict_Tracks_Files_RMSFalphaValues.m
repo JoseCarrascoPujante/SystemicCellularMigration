@@ -1,7 +1,7 @@
 close all
 clear
 
-load '2023-06-07_14.16''19''''_coordinates.mat' destination_folder
+load 'coordinates.mat' destination_folder
 % Select dir containing .xlsx track files
 topLevelFolder = uigetdir('C:\') ;
 
@@ -103,14 +103,21 @@ for f = 1:length(UsefulSubFolderNames)
                 scaled_rho = rho/ratio_list(l);
             end
             
-            [RMSFalphaDictionary(strcat(conditionValidName,'_',thisxlsx,'_',num2str(condition_track_n))),~,~,~] = ...           
+            [RMSFalphaDictionary(strcat(conditionValidName,'_',thisxlsx,'_global_',num2str(condition_track_n),...
+                '_segment_',num2str(s))),~,~,~] = ...           
                 amebas5(scaled_rho, h,'orig') ;            
         end
     end
 end
 
-toc(tImportsec)
+zip = [RMSFalphaDictionary.values,RMSFalphaDictionary.keys];
+sort(zip)
+[sortedzip,I] = sort(zip(:,1));
+sortedKeys = zip(I,2);
+RMSFalphaRanking = [sortedKeys,sortedzip];
+
+toc(tImportSec)
 
 close(fg)
 
-save("C:\Users\pc\Desktop\mov_sist\2023-06-07_14.16'19''_200000_shuffles\RMSFalphaDictionary.mat",'RMSFalphaDictionary')
+save("C:\Users\pc\Desktop\mov_sist\2023-06-07_14.16'19''_200000_shuffles\RMSFalphaDictionary700Cells.mat",'RMSFalphaDictionary','RMSFalphaRanking')

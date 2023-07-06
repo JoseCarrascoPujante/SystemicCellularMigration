@@ -36,7 +36,7 @@ kyneticBoxplots(ax,17,'Average speed (mm/s)')
 
 %% Export as jpg and vector graphics svg
 
-load '2023-06-07_14.16''19''''_coordinates.mat' destination_folder 
+load 'coordinates.mat' destination_folder 
 
 if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))
@@ -64,7 +64,7 @@ saveas(fig,strcat(destination_folder, '\Figures\Fig6(',num2str(gabs+1),')'),'svg
 function kyneticBoxplots(ax,parameter_index,string)
 % Grouped boxplot chart of any of the 18 metrics
     
-    load '2023-06-07_14.16''19''''_numerical_results.mat' results
+    load 'numerical_results.mat' results
     
     field_names = ...
     {'SinEstimuloProteus11_63'

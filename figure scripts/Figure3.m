@@ -1,104 +1,65 @@
 %% Figure 3
-clear
+
 close all
-load('2023-06-07_14.16''19''''_coordinates.mat')
-load('2023-06-07_14.16''19''''_numerical_results.mat')
+clear
+load('coordinates.mat')
+load('numerical_results.mat')
 
 %% Layouts
 set(groot,'defaultFigurePaperPositionMode','manual')
-fig = figure('Visible','off','Position',[0 0 900 1200]);
-layout0 = tiledlayout(4,1,'TileSpacing','compact','Padding','none') ;
+fig = figure('Visible','off','Position', [0 0 900 1200]);
+
+layout0 = tiledlayout(3,1,'TileSpacing','loose','Padding','none') ;
 layout1 = tiledlayout(layout0,2,3,'TileSpacing','compact','Padding','none') ;
 layout1.Layout.Tile = 1;
-layout2 = tiledlayout(layout0,8,12,'TileSpacing','loose','Padding','none') ;
+layout2 = tiledlayout(layout0,8,3,'TileSpacing','compact','Padding','none') ;
 layout2.Layout.Tile = 2;
-% layout3 = tiledlayout(layout0,2,1,'TileSpacing','compact','Padding','none') ;
-% layout3.Layout.Tile = 3;
 
-%% Panel 1 - DFA correlations
-scenarios = {"InduccionProteus11_63","QuimiotaxisLeningradensisVariosPpmm","GalvanotaxisBorokensis11_63"};
-amoebas = {39,10,51};
-for i=1:3 % subpanels (species)
+%% Panel 1 - MSD \Beta plots
+fields = {"SinEstimuloProteus11_63","SinEstimuloLeningradensis11_63","SinEstimuloBorokensis23_44"};
+
+for i = 1:3
+
     nexttile(layout1,i)
-    box on
-    dfahandle = gca;
-    gamma = DFA_main2(coordinates.(scenarios{i}).scaled_rho(:,amoebas{i}),'Original_DFA_', dfahandle) ;
-    yl = ylim();
-    xl = xlim();
-    text(xl(1)+1,yl(1)+.25,strcat('\gamma=',num2str(round(gamma,2))))
-    nexttile(layout1,i+3)
-    box on
-    dfahandle = gca;
-    gamma = DFA_main2(coordinates.(scenarios{i}).shuffled_rho(:,amoebas{i}),'Shuffled_DFA_', dfahandle) ;
-    yl = ylim();
-    xl = xlim();
-    text(xl(1)+1,yl(1)+.25,strcat('\gamma=',num2str(round(gamma,2))),"FontSize",10)
-end
-
-%% Panel 2 - DFA \gamma original vs shuffled
-
-field_names = fieldnames(results) ;
-species = {'Proteus','Leningradensis','Borokensis'};
-tiles = {
-[25,73,49,1;37,85,61,13]
-[29,77,53,5;41,89,65,17]
-[33,81,57,9;45,93,69,21]};
-for i = 1:length(species)
-    idx = find(contains(field_names(:),species{i}))';
-    for f = 1:length(idx)
-        disp(field_names{idx(f)})
-        t = nexttile(layout2,tiles{i}(1,f),[1,4]);
-        hold on
-        exes = zeros(size(results.(field_names{idx(f)}),1));
-        plot(results.(field_names{idx(f)})(:,7),exes,'ro','MarkerSize',7)
-        plot(results.(field_names{idx(f)})(:,8),exes,'bo','MarkerSize',7)
-        box off
-        ylim([0 eps]) % minimize y-axis height
-        xlim([0 2])
-        t.XRuler.TickLabelGapOffset = 2;
-        t.YAxis.Visible = 'off'; % hide y-axis
-        t.Color = 'None';
-        hold off
-        
-        t2 = nexttile(layout2,tiles{i}(2,f),[1,4]);
-        hold on
-        datamean = mean(results.(field_names{idx(f)})(:,7));
-        datastd = std(results.(field_names{idx(f)})(:,7));
-        datameanshuff = mean(results.(field_names{idx(f)})(:,8));
-        datastdshuff = std(results.(field_names{idx(f)})(:,8));
-        
-        % original
-        line([datamean-datastd datamean+datastd],[0 0],'Color','red',...
-            'LineWidth',.5)
-        line([datamean-datastd+.005 datamean-datastd],[0 0],'Color','red',...
-            'LineWidth',5)
-        line([datamean+datastd datamean+datastd+.005],[0 0],'Color','red',...
-            'LineWidth',5)
-        text(t2,datamean,-.22,[num2str(round(datamean,2)) ' ' char(177) ' '...
-            num2str(round(datastd,2))],'HorizontalAlignment', 'center','FontSize',9)
-        
-        % shuffled
-        line([datameanshuff-datastdshuff datameanshuff+datastdshuff],[0 0],'Color','blue',...
-            'LineWidth',.5)
-        line([datameanshuff-datastdshuff+.005 datameanshuff-datastdshuff],[0 0],'Color','blue',...
-            'LineWidth',5)
-        line([datameanshuff+datastdshuff datameanshuff+datastdshuff+.005],[0 0],'Color','blue',...
-            'LineWidth',5)
-        text(t2,datameanshuff,-.22,[num2str(round(datameanshuff,2)) ' ' char(177)...
-            ' ' num2str(round(datastdshuff,2))],'HorizontalAlignment',...
-            'center','FontSize',9)
-
-        ylim([-0.08 0]) % minimize y-axis height
-        xlim([0 2])
-        t2.YAxis.Visible = 'off'; % hide y-axis
-        t2.XAxis.Visible = 'off'; % hide y-axis
-        t2.Color = 'None';
-        hold off
+    h = gca;
+    for j = 1:8
+        [~,deltat] = msd(coordinates.(fields{i}).scaled_x(:,j),...
+          coordinates.(fields{i}).scaled_y(:,j), h) ;
     end
+    plot(h, log(deltat), log(deltat)-10, 'k--')
+    plot(h, log(deltat), log(deltat.^2)-11, 'k--')
+    text(h, log(deltat(5)),0,['\beta=2, ballistic' newline 'diffusion']...
+        ,'HorizontalAlignment', 'center','FontSize',8)
+    text(h, log(deltat(5)),-4.5,'Superdiffusion'...
+        ,'HorizontalAlignment', 'center','FontSize',8)
+    text(h, log(deltat(5)),-9,['\beta=1, normal' newline 'diffusion']...
+        ,'HorizontalAlignment', 'center','FontSize',8)
+    xlabel('Log(MSD(\tau))');
+    ylabel('Log(\tau(s))');
+    xlim([-1    6.2])
+    ylim([-12.5230    2.2185])
+
+    nexttile(layout1,i+3)
+    h = gca;
+    for j=1:8
+        [~,deltat] = msd(coordinates.(fields{i}).shuffled_x(:,j),...
+            coordinates.(fields{i}).shuffled_y(:,j), h) ;
+    end
+    plot(h, log(deltat), log(deltat)-1.5, 'k--')
+    plot(h, log(deltat), log(deltat.^2)-1.5, 'k--')
+    text(h, log(deltat(5)),8,['\beta=2, ballistic' newline 'diffusion']...
+        ,'HorizontalAlignment', 'center','FontSize',8)
+    text(h, log(deltat(5)),5,'Superdiffusion'...
+        ,'HorizontalAlignment', 'center','FontSize',8)
+    text(h, log(deltat(5)),2,['\beta=1, normal' newline 'diffusion']...
+        ,'HorizontalAlignment', 'center','FontSize',8)
+    xlabel('Log(MSD(\tau))');
+    ylabel('Log(\tau(s))');
+    xlim([-1 6.2])
+    ylim([-2.3863    11.2185])
 end
 
-
-%% Panel 3A - DFA \gamma Violin plots original
+%% Panel 2 - MSD \Beta circles
 
 field_names = ...
     {'SinEstimuloProteus11_63'
@@ -115,53 +76,113 @@ field_names = ...
     'InduccionBorokensis11_63'
     };
 
-h = nexttile(layout0,3);
-
 species = {'Proteus','Leningradensis','Borokensis'};
-col = [.1,.1,.1;.3,.3,.3;.5,.5,.5;.7,.7,.7;1,0,0;1,.25,.25;1,.5,.5; 1,.7,.7;0,0,1;.25,.25,1;.5,.5,1;.7,.7,1];
+tiles = {
+[1,7,13,19;4,10,16,22]
+[2,8,14,20;5,11,17,23]
+[3,9,15,21;6,12,18,24]
+};
 
-count = 0;
-c = 0;
-for i=1:length(species) % main boxes (species)
-    count = count + 1;
-    f = find(contains(field_names(:),species(i)))'; % condition indexes
-    for j = 1:length(f) % secondary boxes (conditions)
-        c = c+1;
-        count = count+2;
-        disp(field_names{f(j)})
-        al_goodplot(results.(field_names{f(j)})(:,7), count, [], col(c,:),'bilateral', [], [], 0); %Shuffled
+for i = 1:length(species)
+    idx = find(contains(field_names(:),species{i}))';
+    for f = 1:length(idx)
+        disp(field_names{idx(f)})
+        t = nexttile(layout2,tiles{i}(1,f));
+        hold on
+        
+        exes = zeros(size(results.(field_names{idx(f)}),1));
+        plot(results.(field_names{idx(f)})(:,9),exes,'ro','MarkerSize',7)
+        plot(results.(field_names{idx(f)})(:,10),exes,'bo','MarkerSize',7)
+        ylim([0 eps]) % minimize y-axis height
+        xlim([-0.1 2.1])
+        t.XRuler.TickLabelGapOffset = 2;
+        t.YAxis.Visible = 'off'; % hide y-axis
+        t.Color = 'None';
+        hold off
+
+        t2 = nexttile(layout2,tiles{i}(2,f));
+        hold on
+        datamean = mean(results.(field_names{idx(f)})(:,9));
+        datastd = std(results.(field_names{idx(f)})(:,9));
+        datameanshuff = mean(results.(field_names{idx(f)})(:,10));
+        datastdshuff = std(results.(field_names{idx(f)})(:,10));
+        line([datamean-datastd datamean+datastd],[0 0],'Color','red',...
+            'LineWidth',.5)
+        line([datamean-datastd+.005 datamean-datastd],[0 0],'Color','red',...
+            'LineWidth',5)
+        line([datamean+datastd datamean+datastd+.005],[0 0],'Color','red',...
+            'LineWidth',5)
+        text(t2,datamean,-.075,[num2str(round(datamean,2)) ' ' char(177) ' '...
+            num2str(round(datastd,2))],'HorizontalAlignment','center','FontSize',8)
+        line([datameanshuff-datastdshuff datameanshuff+datastdshuff],[0 0],'Color','blue',...
+            'LineWidth',.5)
+        line([datameanshuff-datastdshuff+.005 datameanshuff-datastdshuff],[0 0],'Color','blue',...
+            'LineWidth',5)
+        line([datameanshuff+datastdshuff datameanshuff+datastdshuff+.005],[0 0],'Color','blue',...
+            'LineWidth',5)
+        text(t2,datameanshuff,-.075,[num2str(round(datameanshuff,2)) ' ' char(177)...
+            ' ' num2str(datastdshuff,'%.e')],'HorizontalAlignment','center','FontSize',8)
+        ylim([-0.08 0]) % minimize y-axis height
+        xlim([-0.1 2.1])
+        t2.YAxis.Visible = 'off'; % hide y-axis
+        t2.XAxis.Visible = 'off'; % hide y-axis
+        t2.Color = 'None';
+        hold off
     end
 end
-xlim([1.5 28])
-xticklabels([])
-h.XAxis.TickLength = [0 0];
-h.YAxis.FontSize = 8;
-ylabel('DFA\gamma','FontSize',10)
 
-%% Panel 3B - DFA \gamma Violin plots shuffled
 
-h = nexttile(layout0,4);
-count = 0;
-c = 0;
+%% "Superviolin" plots of MSD \beta
+ax=nexttile(layout0,3);
+
+rmsf_conds = {{[],[],[],[]},{[],[],[],[]},{[],[],[],[]}};
+
 for i=1:length(species) % main boxes (species)
-    disp(species(i))
-    count = count + 1;
     f = find(contains(field_names(:),species(i)))'; % condition indexes
     for j = 1:length(f) % secondary boxes (conditions)
-        c = c+1;
-        count = count+2;
-        disp(field_names{f(j)})
-        al_goodplot(results.(field_names{f(j)})(:,8), count, [], col(c,:),'bilateral', [], [], 0); % original
+        rmsf_conds{i}{j} = results.(field_names{f(j)})(:,9);
     end
 end
-xlim([1.5 28])
-xticks([5.9 15 24])
-h.XAxis.TickLength = [0 0];
-h.YAxis.FontSize = 8;
-ylabel('DFA\gamma (Shuffled)','FontSize',10)
-set(h,'XTickLabel',[{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
+
+for i=1:length(species) % main boxes (species)
+    superviolin(rmsf_conds{i},'Parent',ax,'Xposition',i,'FaceAlpha',0.15,...
+        'Errorbars','ci','Centrals','mean','LineWidth',0.1)
+end
+colorgroups = [ones(length(rmsf_conds{1}{1}),1);
+    repmat(2,length(rmsf_conds{1}{2}),1);
+    repmat(3,length(rmsf_conds{1}{3}),1);
+    repmat(4,length(rmsf_conds{1}{4}),1);
+    ones(length(rmsf_conds{2}{1}),1);
+    repmat(2,length(rmsf_conds{2}{2}),1);
+    repmat(3,length(rmsf_conds{2}{3}),1);
+    repmat(4,length(rmsf_conds{2}{4}),1);
+    ones(length(rmsf_conds{3}{1}),1);
+    repmat(2,length(rmsf_conds{3}{2}),1);
+    repmat(3,length(rmsf_conds{3}{3}),1);
+    repmat(4,length(rmsf_conds{3}{4}),1)];
+
+rmsfs = {[],[],[]};
+for i=1:length(species) % species    
+    for f = find(contains(field_names(:),species(i)))' % conditions
+        rmsfs{i} = [rmsfs{i}; results.(field_names{f})(:,9)];
+    end
+end
+
+boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3});
+boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
+    repmat(3,length(rmsfs{3}),1)],boxChart_rmsf,'Notch','off',...
+    'GroupByColor',colorgroups,'BoxFaceAlpha',0) %Box charts whose notches do not overlap have different medians at the 5% significance level.
+h=gca;
+xlim([.5 3.5])
+ylim([1 2.1])
+% h.XAxisLocation = 'top';
+box on
+h.XTick = [1 2 3];
+xticklabels(h,[{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
     {'\itAmoeba borokensis'}])
-
+h.XAxis.FontSize = 8;
+h.XAxis.TickLength = [0 0];
+ylabel('MSD\beta','FontSize',10)
 
 %% Export as jpg, tiff and vector graphics pdf
 
@@ -185,10 +206,10 @@ fig.PaperSize = fig.Position(3:4);  % assign to the pdf printing paper the size 
 fig.PaperPosition = [0 0 fig.Position(3:4)];
 set(fig, 'Renderer', 'painters');
 saveas(fig,strcat(destination_folder, '\Figures\Fig3(',num2str(gabs),')'),'svg')
-% exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig3(',num2str(gabs),').jpg') ...
-%   ,"Resolution",600)
-% exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig3(',num2str(gabs),').tiff') ...
-%   ,"Resolution",600)
-% exportgraphics(gcf,strcat(destination_folder, '\Figures\Fig3(',num2str(gabs),').pdf'), ...
-%   'BackgroundColor','white', 'ContentType','vector')
+% exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig3(',num2str(gabs),').jpg') ...
+    % ,"Resolution",600)
+% exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig3(',num2str(gabs),').tiff') ...
+%     ,"Resolution",600)
+% exportgraphics(FigHandle,strcat(destination_folder, '\Figures\Fig3(',num2str(gabs),').pdf'), ...
+%   'Resolution',600,'ContentType','vector')
 

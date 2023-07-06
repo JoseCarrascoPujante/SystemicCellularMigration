@@ -102,7 +102,7 @@ for time_max=step:step:tc2   % plot one graph every "step" data points
         loglog(time(1:max_corr),(k/vmax(1))*vmax(1:max_corr),'k--',...
             'LineWidth',1);
         text(time(7),(k/vmax(1))*vmax(200),strcat('\alpha=',...
-            num2str(res(end,1))),'FontName','times new roman')
+            num2str(round(res(end,1),3))),'FontName','times new roman')
     
         % Plot alpha=0.5 line with the original data
         v2 = time.^(.5);

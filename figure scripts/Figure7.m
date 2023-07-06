@@ -3,7 +3,7 @@
 clear 
 close all
 set(groot,'defaultFigurePaperPositionMode','manual')
-load '2023-06-07_14.16''19''''_numerical_results.mat' results
+load 'numerical_results.mat' results
 
 fig = figure('Visible','off','Position', [0 0 1070 650]);
 
@@ -135,7 +135,7 @@ h2.Position(1:2)=[0.4,0];
 
 %% Export as vector graphics svg
 
-load '2023-06-07_14.16''19''''_coordinates.mat' destination_folder 
+load 'coordinates.mat' destination_folder 
 
 if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))

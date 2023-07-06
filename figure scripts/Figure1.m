@@ -1,7 +1,7 @@
 
 clear
 close all
-load '2023-06-07_14.16''19''''_coordinates.mat' coordinates destination_folder
+load 'coordinates.mat' coordinates destination_folder
 
 set(groot,'defaultFigurePaperPositionMode','manual')
 
@@ -42,7 +42,7 @@ indexes = {
 {1,2,4,6,12,13,14,15,17,18,20,22,24,27,28,29,30,32,34,35}%Borokensis
 };
 {%Galvanotaxis
-{1,2,3,4,5,6,8,9,12,15,16,17,18,20,22,23,24,25,26,27}%Proteus
+{1,2,3,4,5,7,8,11,14,15,16,17,19,21,22,23,24,25,26,27}%Proteus
 {1:20}%Leningradensis
 {1:20}%Borokensis
 };
@@ -64,7 +64,7 @@ for i = 1:length(panels)
     layouts.(strcat('x',num2str(i))).Layout.Tile = i;
     speciesScenarioIdx = find(contains(field_names,panels{i}));
     ax = nexttile(layouts.(strcat('x',num2str(i))),[8,3]);
-    for species = 1:length(speciesScenarioIdx)
+    for species = [length(speciesScenarioIdx),1,2] % specify plotting zorder
         listx=[];
         if species == 1
             colr = [0, 0, 0];
@@ -98,7 +98,7 @@ for i = 1:length(panels)
     end
     axis tight
     axis square
-    text(ax,.1,.9,['N=60(20-\color{red}20\color{black}-\color{blue}20)',"\color{black}t=30'"],'Units','normalized',...
+    text(ax,.1,.9,["N=60(20-\color{red}20\color{black}-\color{blue}20)","\color{black}t=30'"],'Units','normalized',...
         'HorizontalAlignment','left','FontSize',12)
     ax.FontSize = 7;
     MaxX = max(abs(ax.XLim));    MaxY = max(abs(ax.YLim));
