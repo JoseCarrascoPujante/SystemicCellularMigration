@@ -59,7 +59,7 @@ for time_max=step:step:tc2   % plot one graph every "step" data points
     %%%%%%%%%%%%%
      
     time=(1:dim)'.*scale_time*du;
-    idx=find( time(1:time_max)>0  & F(1:time_max)>0 );
+    idx=find( time(1:time_max)>0 & F(1:time_max)>0 );
     [Rsq,slope,intercept]=rsquare (log10(time(idx)),log10(F(idx)));
     
     % alpha=slope;

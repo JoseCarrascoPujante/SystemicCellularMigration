@@ -41,7 +41,7 @@ end
 % List the parameters to be calculated by the script
 stat_names = {'RMSF_alpha', 'sRMSF_alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
     'sRMSFCorrelationTime', 'DFA_gamma', 'sDFA_gamma', 'MSD_beta', 'sMSD_beta', 'ApEn', ...
-    'sApEn','Intensity','sIntensity','DR','sDR','AvgSpeed','sAvgSpeed'} ;
+    'sApEn','Intensity','sIntensity','DR','sDR','AvgSpeed','sAvgSpeed','DispCos'} ;
 
 % Initialize bulk data structures
 tracks = struct ;

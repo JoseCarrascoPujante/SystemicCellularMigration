@@ -16,7 +16,7 @@ end
 
 results.full(:,[5,6]) = results.full(:,[5,6])/120; % convert frames to minutes
 
-% Presets
+% Presets, use non-kynetic metrics only
 stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
     'sRMSFCorrelationTime', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta',...
     'Approximate Entropy', 'sApproximate Entropy'} ;

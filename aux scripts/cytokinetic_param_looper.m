@@ -1,10 +1,15 @@
+clear
+close all
+load numerical_results.mat results field_names
+load coordinates.mat coordinates destination_folder stat_names
+
 diary off
 diary_filename = strcat(destination_folder,'\citokyneticValues.txt') ;
 set(0,'DiaryFile',diary_filename)
 clear diary_filename
 diary on
-elapsedCitoky = tic;
-field_names = fieldnames(results) ;
+elapsedCytoky = tic;
+
 
 bar1 = waitbar(0,'In progress...','Name','Condition...') ;
 bar2 = waitbar(0,'In progress...','Name','Track number...') ;
@@ -48,6 +53,6 @@ for i = 1:length(field_names)
     end
 end
 
-toc(elapsedCitoky)
+toc(elapsedCytoky)
 
 diary off

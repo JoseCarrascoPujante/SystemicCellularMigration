@@ -20,11 +20,11 @@ layout2.Layout.Tile = 2;
 fields = {"SinEstimuloProteus11_63","SinEstimuloLeningradensis11_63","SinEstimuloBorokensis23_44"};
 
 % Optionally use global min and global max as colormap range limits
-% Zmin = min([min(min(AE.SinEstimuloBorokensis23_44)),min(min(AE.SinEstimuloLeningradensis11_63)),min(min(AE.SinEstimuloProteus11_63)), ...
-%     min(min(AESh.SinEstimuloBorokensis23_44)),min(min(AESh.SinEstimuloLeningradensis11_63)),min(min(AESh.SinEstimuloProteus11_63))]);
-% 
-% Zmax = max([max(max(AE.SinEstimuloBorokensis23_44)),max(max(AE.SinEstimuloLeningradensis11_63)),max(max(AE.SinEstimuloProteus11_63)), ...
-%     max(max(AESh.SinEstimuloBorokensis23_44)),max(max(AESh.SinEstimuloLeningradensis11_63)),max(max(AESh.SinEstimuloProteus11_63))]);
+Zmin = min([min(min(AE.SinEstimuloBorokensis23_44)),min(min(AE.SinEstimuloLeningradensis11_63)),min(min(AE.SinEstimuloProteus11_63)), ...
+    min(min(AESh.SinEstimuloBorokensis23_44)),min(min(AESh.SinEstimuloLeningradensis11_63)),min(min(AESh.SinEstimuloProteus11_63))]);
+
+Zmax = max([max(max(AE.SinEstimuloBorokensis23_44)),max(max(AE.SinEstimuloLeningradensis11_63)),max(max(AE.SinEstimuloProteus11_63)), ...
+    max(max(AESh.SinEstimuloBorokensis23_44)),max(max(AESh.SinEstimuloLeningradensis11_63)),max(max(AESh.SinEstimuloProteus11_63))]);
 
 for i = 1:length(fields)
     nexttile(layout1,i)
@@ -32,6 +32,7 @@ for i = 1:length(fields)
     imagesc(AE.(fields{i}))
     colormap(jet)
     a=colorbar;
+    clim([Zmin Zmax])
     ylabel(a,'Approximate Entropy','FontSize',7.5,'Rotation',270);
     xticklabels(h,{});
     if i == 1
