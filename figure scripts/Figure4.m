@@ -3,7 +3,7 @@ close all
 clear
 load('coordinates.mat')
 load('numerical_results.mat')
-load('ApEn.mat')
+load('ApEN_50heatmapColumns.mat')
 
 %% Layouts
 set(groot,'defaultFigurePaperPositionMode','manual')
@@ -19,24 +19,32 @@ layout2.Layout.Tile = 2;
 
 fields = {"SinEstimuloProteus11_63","SinEstimuloLeningradensis11_63","SinEstimuloBorokensis23_44"};
 
-% Optionally use global min and global max as colormap range limits
-Zmin = min([min(min(AE.SinEstimuloBorokensis23_44)),min(min(AE.SinEstimuloLeningradensis11_63)),min(min(AE.SinEstimuloProteus11_63)), ...
-    min(min(AESh.SinEstimuloBorokensis23_44)),min(min(AESh.SinEstimuloLeningradensis11_63)),min(min(AESh.SinEstimuloProteus11_63))]);
+% Optionally use AE min and max as colormap range limits for non-shuffled
+% heatmaps
+Zmin = min([min(min(AE.SinEstimuloBorokensis23_44)),min(min(AE.SinEstimuloLeningradensis11_63)),min(min(AE.SinEstimuloProteus11_63))]);
 
-Zmax = max([max(max(AE.SinEstimuloBorokensis23_44)),max(max(AE.SinEstimuloLeningradensis11_63)),max(max(AE.SinEstimuloProteus11_63)), ...
-    max(max(AESh.SinEstimuloBorokensis23_44)),max(max(AESh.SinEstimuloLeningradensis11_63)),max(max(AESh.SinEstimuloProteus11_63))]);
+Zmax = max([max(max(AE.SinEstimuloBorokensis23_44)),max(max(AE.SinEstimuloLeningradensis11_63)),max(max(AE.SinEstimuloProteus11_63))]);
+
+% Optionally use AESh min and max as colormap range limits for shuffled
+% heatmaps
+sZmin = min([min(min(AESh.SinEstimuloBorokensis23_44)),min(min(AESh.SinEstimuloLeningradensis11_63)),min(min(AESh.SinEstimuloProteus11_63))]);
+
+sZmax = max([max(max(AESh.SinEstimuloBorokensis23_44)),max(max(AESh.SinEstimuloLeningradensis11_63)),max(max(AESh.SinEstimuloProteus11_63))]);
+
 
 for i = 1:length(fields)
     nexttile(layout1,i)
     h = gca;
     imagesc(AE.(fields{i}))
     colormap(jet)
-    a=colorbar;
-    clim([Zmin Zmax])
-    ylabel(a,'Approximate Entropy','FontSize',7.5,'Rotation',270);
     xticklabels(h,{});
     if i == 1
         ylabel(h,'Series');
+    elseif i == 3
+        yticklabels(h,{});
+        a=colorbar;
+        clim([Zmin Zmax])
+        ylabel(a,'Approximate Entropy','FontSize',7.5,'Rotation',270);
     else
         yticklabels(h,{});
     end
@@ -46,10 +54,6 @@ for i = 1:length(fields)
     h = gca;
     imagesc(AESh.(fields{i}))
     colormap(jet)
-    a=colorbar;
-    ylabel(a,'Approximate Entropy','FontSize',7.5,'Rotation',270);
-    % a.Label.Position(1) = 3.2;
-    % clim([Zmin Zmax]);
     xticks(10:10:50)
     xticklabels(h,compose('%d',720:720:3600));
     if i == 1
@@ -59,6 +63,10 @@ for i = 1:length(fields)
         xlabel(h,'time(s)');
     elseif i == 3
         yticklabels(h,{});
+        a=colorbar;
+        a.Label.Position(1) = 3.2;
+        clim([sZmin sZmax]);
+        ylabel(a,'Approximate Entropy','FontSize',7.5,'Rotation',270);
     end
 end
 

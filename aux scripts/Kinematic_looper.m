@@ -4,11 +4,11 @@ load numerical_results.mat results field_names
 load coordinates.mat coordinates destination_folder stat_names
 
 diary off
-diary_filename = strcat(destination_folder,'\citokyneticValues.txt') ;
+diary_filename = strcat(destination_folder,'\cytokineticValues.txt') ;
 set(0,'DiaryFile',diary_filename)
 clear diary_filename
 diary on
-elapsedCytoky = tic;
+elapsedCytoki = tic;
 
 
 bar1 = waitbar(0,'In progress...','Name','Condition...') ;
@@ -34,6 +34,7 @@ for i = 1:length(field_names)
         % Directionality ratio (straightness)
         d = hypot(diff(coordinates.(field_names{i}).scaled_x(:,j)), diff(coordinates.(field_names{i}).scaled_y(:,j))) ;
         distTrav = sum(d);
+        disp(strcat('distTrav:',' ',num2str(distTrav)))
         [results.(field_names{i})(j,strcmp(stat_names(:), 'DR'))] = ...
             results.(field_names{i})(j,strcmp(stat_names(:), 'Intensity'))/distTrav;
         
@@ -53,6 +54,6 @@ for i = 1:length(field_names)
     end
 end
 
-toc(elapsedCytoky)
+toc(elapsedCytoki)
 
 diary off

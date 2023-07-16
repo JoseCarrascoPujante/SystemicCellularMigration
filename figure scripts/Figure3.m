@@ -7,56 +7,58 @@ load('numerical_results.mat')
 
 %% Layouts
 set(groot,'defaultFigurePaperPositionMode','manual')
-fig = figure('Visible','off','Position', [0 0 900 1200]);
+fig = figure('Visible','off','Position', [0 0 1000 900]);
 
 layout0 = tiledlayout(3,1,'TileSpacing','loose','Padding','none') ;
-layout1 = tiledlayout(layout0,2,3,'TileSpacing','compact','Padding','none') ;
+layout1 = tiledlayout(layout0,1,3,'TileSpacing','compact','Padding','none') ;
 layout1.Layout.Tile = 1;
 layout2 = tiledlayout(layout0,8,3,'TileSpacing','compact','Padding','none') ;
 layout2.Layout.Tile = 2;
 
 %% Panel 1 - MSD \Beta plots
 fields = {"SinEstimuloProteus11_63","SinEstimuloLeningradensis11_63","SinEstimuloBorokensis23_44"};
+chosen = [1,2,4,5,8,13,27,29;3,8,19,28,37,44,46,50;2,3,4,5,32,35,36,45];
 
 for i = 1:3
 
     nexttile(layout1,i)
     h = gca;
-    for j = 1:8
+    for j = chosen(i,:)
         [~,deltat] = msd(coordinates.(fields{i}).scaled_x(:,j),...
           coordinates.(fields{i}).scaled_y(:,j), h) ;
     end
     plot(h, log(deltat), log(deltat)-10, 'k--')
     plot(h, log(deltat), log(deltat.^2)-11, 'k--')
     text(h, log(deltat(5)),0,['\beta=2, ballistic' newline 'diffusion']...
-        ,'HorizontalAlignment', 'center','FontSize',8)
-    text(h, log(deltat(5)),-4.5,'Superdiffusion'...
-        ,'HorizontalAlignment', 'center','FontSize',8)
+        ,'HorizontalAlignment', 'center','FontSize',10.5)
+    text(h, log(deltat(5)),-4.5,'Super-diffusion'...
+        ,'HorizontalAlignment', 'center','FontSize',10.5)
     text(h, log(deltat(5)),-9,['\beta=1, normal' newline 'diffusion']...
-        ,'HorizontalAlignment', 'center','FontSize',8)
+        ,'HorizontalAlignment', 'center','FontSize',10.5)
     xlabel('Log(MSD(\tau))');
     ylabel('Log(\tau(s))');
-    xlim([-1    6.2])
-    ylim([-12.5230    2.2185])
+    axis padded
+    xlim([-.8    6.11])
+    ylim([-14    2.2185])
 
-    nexttile(layout1,i+3)
-    h = gca;
-    for j=1:8
-        [~,deltat] = msd(coordinates.(fields{i}).shuffled_x(:,j),...
-            coordinates.(fields{i}).shuffled_y(:,j), h) ;
-    end
-    plot(h, log(deltat), log(deltat)-1.5, 'k--')
-    plot(h, log(deltat), log(deltat.^2)-1.5, 'k--')
-    text(h, log(deltat(5)),8,['\beta=2, ballistic' newline 'diffusion']...
-        ,'HorizontalAlignment', 'center','FontSize',8)
-    text(h, log(deltat(5)),5,'Superdiffusion'...
-        ,'HorizontalAlignment', 'center','FontSize',8)
-    text(h, log(deltat(5)),2,['\beta=1, normal' newline 'diffusion']...
-        ,'HorizontalAlignment', 'center','FontSize',8)
-    xlabel('Log(MSD(\tau))');
-    ylabel('Log(\tau(s))');
-    xlim([-1 6.2])
-    ylim([-2.3863    11.2185])
+    % nexttile(layout1,i+3)
+    % h = gca;
+    % for j=1:8
+    %     [~,deltat] = msd(coordinates.(fields{i}).shuffled_x(:,j),...
+    %         coordinates.(fields{i}).shuffled_y(:,j), h) ;
+    % end
+    % plot(h, log(deltat), log(deltat)-1.5, 'k--')
+    % plot(h, log(deltat), log(deltat.^2)-1.5, 'k--')
+    % text(h, log(deltat(5)),8,['\beta=2, ballistic' newline 'diffusion']...
+    %     ,'HorizontalAlignment', 'center','FontSize',8)
+    % text(h, log(deltat(5)),5,'Superdiffusion'...
+    %     ,'HorizontalAlignment', 'center','FontSize',8)
+    % text(h, log(deltat(5)),2,['\beta=1, normal' newline 'diffusion']...
+    %     ,'HorizontalAlignment', 'center','FontSize',8)
+    % xlabel('Log(MSD(\tau))');
+    % ylabel('Log(\tau(s))');
+    % xlim([-1 6.2])
+    % ylim([-2.3863    11.2185])
 end
 
 %% Panel 2 - MSD \Beta circles
@@ -171,7 +173,7 @@ end
 boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3});
 boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
     repmat(3,length(rmsfs{3}),1)],boxChart_rmsf,'Notch','off',...
-    'GroupByColor',colorgroups,'BoxFaceAlpha',0) %Box charts whose notches do not overlap have different medians at the 5% significance level.
+    'GroupByColor',colorgroups,'BoxFaceAlpha',0)
 h=gca;
 xlim([.5 3.5])
 ylim([1 2.1])

@@ -7,8 +7,20 @@ set(0,'DiaryFile',diary_filename)
 clear diary_filename
 diary on
 tic
-field_names = fieldnames(results) ;
-
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
 bar1 = waitbar(0,'In progress...','Name','Condition...') ;
 bar2 = waitbar(0,'In progress...','Name','Track number...') ;
 

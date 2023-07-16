@@ -32,3 +32,4 @@ end
 hold(axis, 'on')
 
 plot(axis, log(deltat), log(msdpts),'color',rand(1,3))
+% hold(axis, "off")

@@ -1,19 +1,35 @@
-function fig = GraphicalAbstract(field_names, results)
 
+clear
 close all
-load '2023-06-07_14.16''19''''_coordinates.mat' destination_folder 
+load 'coordinates.mat' destination_folder
+load numerical_results.mat results
 fig = figure('Position',[0 0 650 650],'NumberTitle','off','Visible','off') ;
 fig.InvertHardcopy = 'off';  % To saveas white axes
 
 %% Presets
 
 % create dataset
-results.full = [];
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
+
+full = [];
 for index = 1:length(field_names)
-        results.full = cat(1,results.full, results.(field_names{index}));
+        full = cat(1,full, results.(field_names{index}));
 end
 
-results.full(:,[5,6]) = results.full(:,[5,6])/120; % convert frames to minutes
+full(:,[5,6]) = full(:,[5,6])/120; % convert frames to minutes
 
 stat_names = {'RMSF\alpha', 'sRMSF\alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
     'sRMSFCorrelationTime', 'DFA\gamma', 'sDFA\gamma', 'MSD\beta', 'sMSD\beta',...
@@ -51,8 +67,8 @@ hAxS(3) = axes('Position',posSmall{3});
 %# Plot on big axes
 for ej=1:length(pairs)
     disp(strcat('Plot nº',num2str(ej),': ',stat_names{pairs(ej,1)},'_vs_',stat_names{pairs(ej,2)}))
-    metric1 = cat(1,results.full(:,pairs(ej,1)), results.full(:,pairs(ej,1)+1));
-    metric2 = cat(1,results.full(:,pairs(ej,2)), results.full(:,pairs(ej,2)+1));
+    metric1 = cat(1,full(:,pairs(ej,1)), full(:,pairs(ej,1)+1));
+    metric2 = cat(1,full(:,pairs(ej,2)), full(:,pairs(ej,2)+1));
     G = [1*ones(length(metric1)/2,1) ; 2*ones(length(metric2)/2,1)];
     if ej == 1
         gscatter(hAxB(ej),metric1,metric2, G,'gy','..',2.4,'off')
@@ -70,18 +86,18 @@ end
 %# plot on small axes
 for ek=1:length(pairs)-1 % for number of small axes do...
     if ek == 2
-        scatter(hAxS(ek),results.full(:,pairs(ek+1,1)),results.full(:,pairs(ek+1,2)),.7,'g','filled','o') ;
+        scatter(hAxS(ek),full(:,pairs(ek+1,1)),full(:,pairs(ek+1,2)),.7,'g','filled','o') ;
         hold(hAxS(ek),'on')
-        ellipse_scatter(hAxS(ek),cat(2,results.full(:,pairs(ek+1,1)),results.full(:,pairs(ek+1,2))),conf, 'r')
+        ellipse_scatter(hAxS(ek),cat(2,full(:,pairs(ek+1,1)),full(:,pairs(ek+1,2))),conf, 'r')
     else
-        scatter(hAxS(ek),results.full(:,pairs(ek+1,1)+1),results.full(:,pairs(ek+1,2)+1),.7,'y','filled','o') ;
+        scatter(hAxS(ek),full(:,pairs(ek+1,1)+1),full(:,pairs(ek+1,2)+1),.7,'y','filled','o') ;
         hold(hAxS(ek),'on')
-        ellipse_scatter(hAxS(ek),cat(2,results.full(:,pairs(ek+1,1)+1),results.full(:,pairs(ek+1,2)+1)),conf, 'r')
+        ellipse_scatter(hAxS(ek),cat(2,full(:,pairs(ek+1,1)+1),full(:,pairs(ek+1,2)+1)),conf, 'r')
     end
     box(hAxS(ek),'on')
     xl = xlim(hAxS(ek));
     yl = ylim(hAxS(ek));
-    rPos = [xl(1)-(((xl(2)-xl(1)))-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))+.07)-((yl(2)-yl(1))))/2 (xl(2)-xl(1)) (yl(2)-yl(1))+.07];
+    rPos = [xl(1)-(((xl(2)-xl(1))*1.05)-((xl(2)-xl(1))))/2 yl(1)-(((yl(2)-yl(1))+.07)-((yl(2)-yl(1))))/2 (xl(2)-xl(1))*1.05 (yl(2)-yl(1))+.07];
     hold(hAxB(ek+1),'on')
     rectangle(hAxB(ek+1),'Position', rPos,'EdgeColor', 'r','FaceColor','none','LineWidth',.5);
     [Xor,Yor] = ds2nfu(hAxB(ek+1),rPos(1),rPos(2));
@@ -139,5 +155,3 @@ fig.PaperSize = fig.Position(3:4);  % assign to the pdf printing paper the size 
 fig.PaperPosition = [0 0 fig.Position(3:4)];
 set(fig, 'Renderer', 'painters');
 saveas(fig, strcat(destination_folder,'\Figures\GraphicalAbstract(',num2str(gabs+1),').svg'))
-
-end
