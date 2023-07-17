@@ -617,6 +617,82 @@ results.SinEstimuloProteus11_63(:,17)...
 ,results.InduccionProteus11_63(:,17)))
 
 
+%% Supplemental tables
+
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
+
+% RMSF alpha
+for i = 1:length(field_names)
+    disp(field_names{i})
+    round(results.(field_names{i})(:,1),3)
+end
+
+% RMSF memory
+for i = 1:length(field_names)
+    disp(field_names{i})
+    round(results.(field_names{i})(:,5)/120,3)
+end
+
+% MSD beta
+for i = 1:length(field_names)
+    disp(field_names{i})
+    disp(size(results.(field_names{i}),1))
+    fprintf('\n %.3f', round(results.(field_names{i})(:,9),3))
+end
+
+% ApEn
+for i = 1:length(field_names)
+    disp(field_names{i})
+    disp(size(results.(field_names{i}),1))
+    fprintf('\n%.3f', round(results.(field_names{i})(:,11),3))
+end
+
+% DFA gamma
+for i = 1:length(field_names)
+    disp(field_names{i})
+    disp(size(results.(field_names{i}),1))
+    fprintf('\n%.3f', round(results.(field_names{i})(:,7),3))
+end
+
+% Kruskal-Wallis combinations
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

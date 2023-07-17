@@ -581,8 +581,7 @@ std([results.SinEstimuloBorokensis23_44(:,17)...
 ;results.QuimiotaxisBorokensis23_44(:,17)...
 ;results.InduccionBorokensis11_63(:,17)])
 
-%Kruskal-wallis between species for one scenario example 4)
-
+%Kruskal-wallis between species for one scenario example
 kruskalwallis(padcat(...
 results.InduccionProteus11_63(:,13)...
 ,results.InduccionLeningradensis11_63(:,13)...
@@ -599,7 +598,6 @@ results.InduccionProteus11_63(:,17)...
 ,results.InduccionBorokensis11_63(:,17)))
 
 % Kruskal-wallis between scenarios for one species (example)
-
 kruskalwallis(padcat(...
 results.SinEstimuloProteus11_63(:,13)...
 ,results.GalvanotaxisProteus11_63(:,13)...
@@ -619,8 +617,45 @@ results.SinEstimuloProteus11_63(:,17)...
 ,results.InduccionProteus11_63(:,17)))
 
 
+%% Supplemental tables
 
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
 
+% RMS
+for i = 1:length(field_names)
+    disp(field_names{i})
+    round(results.(field_names{i})(:,1),3)
+end
+
+for i = 1:length(field_names)
+    disp(field_names{i})
+    round(results.(field_names{i})(:,5)/120,3)
+end
+
+for i = 1:length(field_names)
+    disp(field_names{i})
+    disp(size(results.(field_names{i}),1))
+    fprintf('\n %.3f', round(results.(field_names{i})(:,9),3))
+end
+
+for i = 1:length(field_names)
+    disp(field_names{i})
+    disp(size(results.(field_names{i}),1))
+    fprintf('\n %.3f', round(results.(field_names{i})(:,11),3))
+end
 
 
 
