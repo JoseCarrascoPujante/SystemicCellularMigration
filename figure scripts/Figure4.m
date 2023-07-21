@@ -3,12 +3,12 @@ close all
 clear
 load('coordinates.mat')
 load('numerical_results.mat')
-load('ApEN_50heatmapColumns.mat')
+load('ApEN_72heatmapColumns.mat')
 
 %% Layouts
 set(groot,'defaultFigurePaperPositionMode','manual')
 
-fig = figure('Visible','off','Position', [0 0 850 800]);
+fig = figure('Visible','off','Position', [0 0 850 850]);
 layout0 = tiledlayout(2,1,'TileSpacing','tight','Padding','none') ;
 layout1 = tiledlayout(layout0,2,3,'TileSpacing','tight','Padding','none') ;
 layout1.Layout.Tile = 1;
@@ -17,62 +17,109 @@ layout2.Layout.Tile = 2;
 
 %% Panel 1 - ApEn heatmaps
 
-fields = {"SinEstimuloProteus11_63","SinEstimuloLeningradensis11_63","SinEstimuloBorokensis23_44"};
+% create "full" dataset
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
+
+AE.AmoebaProteus = [];
+AESh.AmoebaProteus = [];
+AE.MetamoebaLeningradensis = [];
+AESh.MetamoebaLeningradensis = [];
+AE.AmoebaBorokensis = [];
+AESh.AmoebaBorokensis = [];
+
+for index = 1:4
+        AE.AmoebaProteus = cat(1,AE.AmoebaProteus, AE.(field_names{index}));
+        AESh.AmoebaProteus = cat(1,AESh.AmoebaProteus, AESh.(field_names{index}));
+end
+
+for index = 5:8
+        AE.MetamoebaLeningradensis = cat(1,AE.MetamoebaLeningradensis, AE.(field_names{index}));
+        AESh.MetamoebaLeningradensis = cat(1,AESh.MetamoebaLeningradensis, AESh.(field_names{index}));
+end
+
+for index = 9:12
+        AE.AmoebaBorokensis = cat(1,AE.AmoebaBorokensis, AE.(field_names{index}));
+        AESh.AmoebaBorokensis = cat(1,AESh.AmoebaBorokensis, AESh.(field_names{index}));
+end
+
+fields = {"AmoebaProteus","MetamoebaLeningradensis","AmoebaBorokensis"};
 
 % Optionally use AE min and max as colormap range limits for non-shuffled
 % heatmaps
-Zmin = min([min(min(AE.SinEstimuloBorokensis23_44)),min(min(AE.SinEstimuloLeningradensis11_63)),min(min(AE.SinEstimuloProteus11_63))]);
+Zmin = min([min(min(AE.AmoebaProteus)),min(min(AE.MetamoebaLeningradensis)),min(min(AE.AmoebaBorokensis))]);
 
-Zmax = max([max(max(AE.SinEstimuloBorokensis23_44)),max(max(AE.SinEstimuloLeningradensis11_63)),max(max(AE.SinEstimuloProteus11_63))]);
+Zmax = max([max(max(AE.AmoebaProteus)),max(max(AE.MetamoebaLeningradensis)),max(max(AE.AmoebaBorokensis))]);
 
 % Optionally use AESh min and max as colormap range limits for shuffled
 % heatmaps
-sZmin = min([min(min(AESh.SinEstimuloBorokensis23_44)),min(min(AESh.SinEstimuloLeningradensis11_63)),min(min(AESh.SinEstimuloProteus11_63))]);
+sZmin = min([min(min(AESh.AmoebaProteus)),min(min(AESh.MetamoebaLeningradensis)),min(min(AESh.AmoebaBorokensis))]);
 
-sZmax = max([max(max(AESh.SinEstimuloBorokensis23_44)),max(max(AESh.SinEstimuloLeningradensis11_63)),max(max(AESh.SinEstimuloProteus11_63))]);
+sZmax = max([max(max(AESh.AmoebaProteus)),max(max(AESh.MetamoebaLeningradensis)),max(max(AESh.AmoebaBorokensis))]);
 
+columns = size(AESh.SinEstimuloProteus11_63,2);
 
 for i = 1:length(fields)
     nexttile(layout1,i)
     h = gca;
     imagesc(AE.(fields{i}))
+    set(h,'YDir','normal')
     colormap(jet)
     xticklabels(h,{});
+    h.XAxis.TickLength = [0 0];
     if i == 1
-        ylabel(h,'Series');
+        h.YAxis.FontSize = 8;
+        ylabel(h,'Series','FontSize',10);
     elseif i == 3
         yticklabels(h,{});
+        h.YAxis.TickLength = [0 0];
         a=colorbar;
         clim([Zmin Zmax])
-        ylabel(a,'Approximate Entropy','FontSize',7.5,'Rotation',270);
+        ylabel(a,'Approximate Entropy','FontSize',10,'Rotation',270);
     else
         yticklabels(h,{});
+        h.YAxis.TickLength = [0 0];
     end
 
 
     nexttile(layout1,i+3)
     h = gca;
     imagesc(AESh.(fields{i}))
+    set(h,'YDir','normal')
     colormap(jet)
-    xticks(10:10:50)
-    xticklabels(h,compose('%d',720:720:3600));
+    xticks(0:columns/6:columns)
+    xticklabels(h,compose('%d',0:600:3600));
+    h.XAxis.FontSize = 8;
     if i == 1
+        h.YAxis.FontSize = 8;
         ylabel(h,'Series (shuffled)','FontSize',10);
     elseif i == 2
         yticklabels(h,{});
-        xlabel(h,'time(s)');
+        h.YAxis.TickLength = [0 0];
+        xlabel(h,'time(s)','FontSize',10);
     elseif i == 3
         yticklabels(h,{});
+        h.YAxis.TickLength = [0 0];
         a=colorbar;
         a.Label.Position(1) = 3.2;
         clim([sZmin sZmax]);
-        ylabel(a,'Approximate Entropy','FontSize',7.5,'Rotation',270);
+        ylabel(a,'Approximate Entropy','FontSize',10,'Rotation',270);
     end
 end
 
 %% Panel 2 - Violin plots
-
-h = nexttile(layout2,1);
 
 field_names = ...
     {'SinEstimuloProteus11_63'
@@ -91,6 +138,8 @@ field_names = ...
 
 species = {'Proteus','Leningradensis','Borokensis'};
 col = [.1,.1,.1;.3,.3,.3;.5,.5,.5;.7,.7,.7;1,0,0;1,.25,.25;1,.5,.5; 1,.7,.7;0,0,1;.25,.25,1;.5,.5,1;.7,.7,1];
+
+h = nexttile(layout2,1);
 
 count = 0;
 c = 0;
@@ -133,7 +182,7 @@ set(gca,'XTickLabel',[{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
 h.YAxis.FontSize = 8;
 ylabel('Approximate Entropy','FontSize',10)
 
-%% Export as jpg and vector graphics pdf
+%% Export as vector graphics svg
 
 if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))

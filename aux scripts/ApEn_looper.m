@@ -4,7 +4,8 @@ close all
 load coordinates.mat coordinates destination_folder
 
 elapsedApEn = tic;
-step=200;
+step = 30;
+
 field_names = ...
     {'SinEstimuloProteus11_63'
     'GalvanotaxisProteus11_63'
@@ -19,6 +20,7 @@ field_names = ...
     'QuimiotaxisBorokensis23_44'
     'InduccionBorokensis11_63'
     };
+
 bar1 = waitbar(0,'In progress...','Name','Condition...') ;
 bar2 = waitbar(0,'In progress...','Name','Track number...') ;
 
