@@ -139,7 +139,7 @@ h.Position(1:2)=[0.15,0.953];
 h2.Position(1:2)=[0.35,0];
 
 %# save as .svg
-versions = dir(strcat(destination_folder,'\Figures')) ;
+versions = dir(strcat(destination_folder,'\Figures\')) ;
 gabs = 1 ;
 for v = 1:length(versions)
     if  contains(versions(v).name, 'GraphicalAbstract'+wildcardPattern+'.svg')

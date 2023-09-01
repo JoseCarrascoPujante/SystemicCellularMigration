@@ -188,7 +188,7 @@ if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))
 end
 
-versions = dir(strcat(destination_folder,'\Figures')) ;
+versions = dir(strcat(destination_folder,'\Figures\')) ;
 gabs = 0 ;
 for v = 1:length(versions)
     if  contains(versions(v).name, 'Fig4'+wildcardPattern+'.svg')
@@ -203,5 +203,5 @@ fig.PaperUnits = 'centimeters';   % set pdf printing paper units to cm
 fig.PaperSize = fig.Position(3:4);  % assign to the pdf printing paper the size of the figure
 fig.PaperPosition = [0 0 fig.Position(3:4)];
 set(fig, 'Renderer', 'painters');
-saveas(fig,strcat(destination_folder, '\Figures\Fig4(',num2str(gabs),')'),'svg')
+saveas(fig,strcat(destination_folder, '\Figures\Fig4(',num2str(gabs),').svg'),'svg')
 

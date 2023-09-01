@@ -171,8 +171,8 @@ end
 ax1 = nexttile(layout2,[3 3]);
 
 % import and plot trajectory
-original_x = readmatrix('C:\Users\pc\Desktop\mov_sist\Track fig1.xlsx', "Range", "A:A");
-original_y = readmatrix('C:\Users\pc\Desktop\mov_sist\Track fig1.xlsx', "Range", "B:B");
+original_x = readmatrix('C:\Users\pc\Desktop\Doctorado\Papers publicados\mov_sist\Tracking panel E fig1.xlsx', "Range", "A:A");
+original_y = readmatrix('C:\Users\pc\Desktop\Doctorado\Papers publicados\mov_sist\Tracking panel E fig1.xlsx', "Range", "B:B");
 
 % Do not center this trajectory
 scaled_x = original_x/11.63;
@@ -261,7 +261,7 @@ if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))
 end
 
-versions = dir(strcat(destination_folder,'\Figures')) ;
+versions = dir(strcat(destination_folder,'\Figures\')) ;
 gabs = 1 ;
 for v = 1:length(versions)
     if  contains(versions(v).name, 'Fig1'+wildcardPattern+'.svg')

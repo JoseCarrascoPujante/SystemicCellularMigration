@@ -141,7 +141,7 @@ if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))
 end
 
-versions = dir(strcat(destination_folder,'\Figures')) ;
+versions = dir(strcat(destination_folder,'\Figures\')) ;
 gabs = 1 ;
 for v = 1:length(versions)
     if contains(versions(v).name, 'Fig7'+wildcardPattern+'.svg')

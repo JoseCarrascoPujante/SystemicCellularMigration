@@ -121,15 +121,15 @@ colorgroups = [ones(length(rmsf_conds{1}{1}),1);
 
 rmsfs = {[],[],[]};
 for i=1:length(species) % species    
-    for f = find(contains(field_names(:),species(i)))' % conditions
+    for f = find(contains(field_names(:), species(i)))' % conditions
         rmsfs{i} = [rmsfs{i}; results.(field_names{f})(:,5)/120];
     end
 end
 
-boxChart_rmsf=cat(1,rmsfs{1},rmsfs{2},rmsfs{3});
-boxchart([ones(length(rmsfs{1}),1); repmat(2,length(rmsfs{2}),1); ...
-    repmat(3,length(rmsfs{3}),1)],boxChart_rmsf,'Notch','off',...
-    'GroupByColor',colorgroups,'BoxFaceAlpha',0) %Box charts whose notches do not overlap have different medians at the 5% significance level.
+boxChart_rmsf = cat(1, rmsfs{1}, rmsfs{2}, rmsfs{3});
+boxchart([ones(length(rmsfs{1}), 1); repmat(2, length(rmsfs{2}), 1); ...
+    repmat(3, length(rmsfs{3}), 1)], boxChart_rmsf, 'Notch', 'off',...
+    'GroupByColor', colorgroups, 'BoxFaceAlpha',0) %Box charts whose notches do not overlap have different medians at the 5% significance level.
 h=gca;
 xlim([.5 3.5])
 ylim([0 20])
@@ -150,7 +150,7 @@ if ~exist(strcat(destination_folder,'\Figures'), 'dir')
    mkdir(strcat(destination_folder,'\Figures'))
 end
 
-versions = dir(strcat(destination_folder,'\Figures')) ;
+versions = dir(strcat(destination_folder,'\Figures\')) ;
 gabs = 0 ;
 for v = 1:length(versions)
     if  contains(versions(v).name, 'Fig2'+wildcardPattern+'.svg')
