@@ -69,12 +69,13 @@ sZmin = min([min(min(AESh.AmoebaProteus)),min(min(AESh.MetamoebaLeningradensis))
 
 sZmax = max([max(max(AESh.AmoebaProteus)),max(max(AESh.MetamoebaLeningradensis)),max(max(AESh.AmoebaBorokensis))]);
 
-columns = size(AESh.SinEstimuloProteus11_63,2);
+columns = size(AESh.SinEstimuloProteus11_63,2)-6;
 
 for i = 1:length(fields)
     nexttile(layout1,i)
     h = gca;
-    imagesc(AE.(fields{i}))
+    dataExp = AE.(fields{i});
+    imagesc(dataExp(:,7:end))
     set(h,'YDir','normal')
     colormap(jet)
     xticklabels(h,{});
@@ -82,36 +83,40 @@ for i = 1:length(fields)
     if i == 1
         h.YAxis.FontSize = 8;
         ylabel(h,'Series','FontSize',10);
+        clim([Zmin Zmax])
     elseif i == 3
-        yticklabels(h,{});
-        h.YAxis.TickLength = [0 0];
+        % yticklabels(h,{});
+        % h.YAxis.TickLength = [0 0];
         a=colorbar;
         clim([Zmin Zmax])
         ylabel(a,'Approximate Entropy','FontSize',10,'Rotation',270);
     else
-        yticklabels(h,{});
-        h.YAxis.TickLength = [0 0];
+        % yticklabels(h,{});
+        % h.YAxis.TickLength = [0 0];
+        clim([Zmin Zmax])
     end
-
 
     nexttile(layout1,i+3)
     h = gca;
-    imagesc(AESh.(fields{i}))
+    dataShuf = AESh.(fields{i});
+    imagesc(dataShuf(:,7:end))
     set(h,'YDir','normal')
     colormap(jet)
-    xticks(0:columns/6:columns)
-    xticklabels(h,compose('%d',0:600:3600));
+    xticks([1:columns/6:columns,columns])
+    xticklabels(h,300:550:3600);
     h.XAxis.FontSize = 8;
     if i == 1
         h.YAxis.FontSize = 8;
         ylabel(h,'Series (shuffled)','FontSize',10);
+        clim([sZmin sZmax]);
     elseif i == 2
-        yticklabels(h,{});
-        h.YAxis.TickLength = [0 0];
-        xlabel(h,'time(s)','FontSize',10);
+        % yticklabels(h,{});
+        % h.YAxis.TickLength = [0 0];
+        xlabel(h,'Time(s)','FontSize',10);
+        clim([sZmin sZmax]);
     elseif i == 3
-        yticklabels(h,{});
-        h.YAxis.TickLength = [0 0];
+        % yticklabels(h,{});
+        % h.YAxis.TickLength = [0 0];
         a=colorbar;
         a.Label.Position(1) = 3.2;
         clim([sZmin sZmax]);

@@ -130,7 +130,7 @@ set(gcf, 'Color','k')
 objhl = findobj(objh, 'type', 'line'); %// objects of legend #1 of type line
 set(objhl, 'Markersize', 30); %// set marker size as desired
 
-[h2,objh2] = legend(hAxB(4),'','',strcat(num2str(conf),ellipseFitType), Orientation='Vertical', ...
+[h2,objh2] = legend(hAxB(4),'','','1x STD', Orientation='Vertical', ...
     TextColor='w',FontSize=8.5);
 objhl2 = findobj(objh2, 'type', 'line'); %// objects of legend #2 of type line
 set(objhl2, 'Markersize', 15); %// set marker size as desired

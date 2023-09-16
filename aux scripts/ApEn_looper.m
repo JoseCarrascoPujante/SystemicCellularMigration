@@ -4,7 +4,7 @@ close all
 load coordinates.mat coordinates destination_folder
 
 elapsedApEn = tic;
-step = 30;
+step = 60;
 
 field_names = ...
     {'SinEstimuloProteus11_63'
