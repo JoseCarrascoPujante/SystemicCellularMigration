@@ -512,7 +512,7 @@ copyfile('C:\Users\pc\Desktop\mov_sist\code', strcat(destination_folder, '\Scrip
 %% Generate publishable figures
 
 % Navigate through coordinates struct sequentially plotting each track
-plot_tracks_iterator(coordinates)
+load('coordinates.mat'),navigate_thru_tracks_app(coordinates)
 
 % Graphical Abstract
 figures.GraphAbs = GraphicalAbstract(field_names, results) ;
