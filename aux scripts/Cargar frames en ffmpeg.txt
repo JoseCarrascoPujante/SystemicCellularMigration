@@ -1,8 +1,0 @@
-
-rem Command for a single enucleated experiment folder ***hay que correrlo varias veces para que coja todas las variables bien***
-
-(set "folder=D:\Pavlov 2 y 3 completo\Amoeba proteus\Controles\Sin estimulo\2020.07.28_11.08.07")&&(for /f "delims=" %x in ('dir /b/o-n "%folder%\*.jpg"') do (set filename=%~nx))&& ffmpeg -r 480 -start_number %filename% -i "%folder%\%04d.jpg" -vf "drawtext=fontfile='c\:\/windows\/fonts\/arial.ttf': text=%{n}: x=w-tw-10: y=10: fontcolor=white: box=1: boxcolor=0x00000099: fontsize=55" -preset ultrafast "%folder%.mkv"
-
-rem Command for all frames in all subfolders in a directory, BEWARE THE /S FLAG WILL LIST AND PARSE ANY EXISTING SUBFOLDERS WITHIN DIR
-
-for /F "delims=" %D in ('dir /B /S /OD /TC /AD "E:\Doctorado\Amebas\Papers enucleadas TODO\Induccion\*"') do (ffmpeg -r 480 -start_number 0001 -i "%D\%04d.jpg" -vf "drawtext=fontfile='c\:\/windows\/fonts\/arial.ttf': text=%{n}: x=w-tw-10: y=10: fontcolor=white: box=1: boxcolor=0x00000099: fontsize=55" -preset ultrafast "%D.mkv")
