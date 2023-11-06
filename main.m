@@ -1,10 +1,13 @@
 %% Preprocessing
 
+clear
+close all
+
 % Run date & time
 run_date = char(datetime('now','Format','yyyy-MM-dd_HH.mm''''ss''''''''')) ;
 
 % Select dir containing .xlsx track files
-topLevelFolder = uigetdir('C:\') ;
+topLevelFolder = uigetdir('C:\Users\pc\Desktop\Doctorado\Publicaciones\mov.sist') ;
 
 % Number of times Rho(s) will be randomly permuted to test against the
 % null hypothesis that results are random
@@ -62,8 +65,10 @@ ratio_list = ...
     [11.63,11.63,11.63,11.63,11.63,11.63],...
 ] ;
 
-bar1 = waitbar(0,'In progress...','Name','Reading condition files...') ;
-bar2 = waitbar(0,'In progress...','Name','Reading file...') ;
+bar1 = waitbar(0,'In progress...', 'Name', 'Reading condition files...') ;
+bar1.Children.Title.Interpreter = 'none';
+bar2 = waitbar(0,'In progress...', 'Name', 'Reading file...') ;
+bar2.Children.Title.Interpreter = 'none';
 
 %% Track extraction and plotting
 
@@ -501,7 +506,7 @@ copyfile('C:\Users\pc\Desktop\mov_sist\code', strcat(destination_folder, '\Scrip
 
 % Export figures as vector graphic files (.svg)
 
-% FigList = findobj(allchild(0), 'flat', 'Type', 'figure') ;
+% FigList = findobj(allchild(0), 'flat', 'Type', 'figure', '-not','Tag','TMWWaitbar') ;
 % for iFig = 1:length(FigList)
 %   FigHandle = FigList(iFig) ;
 %   FigName = get(FigHandle, 'Name') ;
