@@ -116,7 +116,7 @@ for ek=1:length(pairs) % for # small axes do...
 end
 
 %# set axes properties
-set(hAxB, 'Color','w', 'XColor','k', 'YColor','k','FontSize',9.5,'FontWeight','bold')
+set(hAxB, 'Color','w', 'XColor','k', 'YColor','k','FontSize',9.5)
 set(hAxS, 'Color','w', 'XColor','k', 'YColor','k','LineWidth',.5,'FontSize',6, ...
     'XAxisLocation','bottom', 'YAxisLocation','left');
 
