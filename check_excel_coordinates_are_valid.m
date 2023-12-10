@@ -18,13 +18,6 @@ for k = 1 : length(UsefulSubFolderNames)
 	fprintf('Sub folder #%d = %s\n', k, UsefulSubFolderNames{k}) ;
 end
 
-% Custom pixel/mm ratio list for Chemotaxis of Metamoeba leningradensis
-ratio_list = [23.44,23.44,23.44,23.44,23.44,23.44,23.44,11.63,11.63,11.63,...
-    11.63,11.63,11.63,11.63,11.63,23.44,23.44,23.44,23.44,23.44,23.44,...
-    23.44,23.44,23.44,23.44,23.44,23.44,23.44,23.44,23.44,23.44,23.44,...
-    23.44,23.44,23.44,23.44,11.63,11.63,11.63,11.63,23.44,23.44,23.44...
-    ,11.63,11.63,11.63,11.63,11.63,11.63,11.63,23.44,23.44] ;
-
 bar1 = waitbar(0,'In progress...','Name','Processing condition...') ;
 bar2 = waitbar(0,'In progress...','Name','Processing file...') ;
 
