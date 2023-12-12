@@ -245,7 +245,7 @@ save(strcat(destination_folder, '\', run_date, '_coordinates.mat'),...
 
 ['Coordinate section FINISHED in ', tImportSec, ' seconds']
 
-%% Parameter calculation
+%% Statistics calculation
 
 tCalcSec=tic;
 
@@ -389,7 +389,7 @@ tCalcSec = num2str(toc(tCalcSec)) ;
 save(strcat(destination_folder, '\', run_date ,'_numerical_results.mat'),...
     'tCalcSec', 'results', 'field_names') ;
 
-%% Statistical analyses
+%% Statistical testing
 
 tStatsSec=tic;
 
