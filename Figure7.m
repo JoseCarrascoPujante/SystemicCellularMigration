@@ -65,29 +65,34 @@ for ej=1:length(pairs)
     disp(strcat('Plot nº',num2str(ej),': ',stat_names{pairs(ej,1)},'_vs_',stat_names{pairs(ej,2)}))
     metric1 = cat(1,results.full(:,pairs(ej,1)), results.full(:,pairs(ej,1)+1));
     metric2 = cat(1,results.full(:,pairs(ej,2)), results.full(:,pairs(ej,2)+1));
-    G = [1*ones(length(metric1)/2,1) ; 2*ones(length(metric2)/2,1)];
-    gscatter(hAxB(ej),metric1,metric2, G,[.3 .5 0;0 0 1],'..',2.8,'off')
+    G = [ones(length(metric1)/2,1) ; 2*ones(length(metric2)/2,1)];
+    gscatter(hAxB(ej),metric1,metric2, G,[.1 .5 0;0 0 1],'..',2.9,'off',...
+        stat_names{pairs(ej,1)},stat_names{pairs(ej,2)})
     hold(hAxB(ej),'on')
     ellipse_gscatter(hAxB(ej),cat(2,metric1,metric2),G,conf,'r')
-    xlabel(hAxB(ej),stat_names{pairs(ej,1)})
-    ylabel(hAxB(ej),stat_names{pairs(ej,2)})
+    axis(hAxB(ej),'padded')
+    % xlabel(hAxB(ej),stat_names{pairs(ej,1)})
+    % ylabel(hAxB(ej),stat_names{pairs(ej,2)})
 end
 
 % Plot on small axes, use ek+n when small panels start at big panel #n, use 
 % (ek[+n])+1 when plotting shuffled data
 for ek=1:length(pairs) % for # small axes do...
     if ek == 2 || ek == 3
-        scatter(hAxS(ek),results.full(:,pairs(ek+1,1)),results.full(:,pairs(ek+1,2)),.7,[.3 .5 0],'filled','o') ;
+        scatter(hAxS(ek),results.full(:,pairs(ek+1,1)),results.full(:,pairs(ek+1,2)),.7,[.1 .5 0],'filled','o') ;
         hold(hAxS(ek),'on')
         ellipse_scatter(hAxS(ek),cat(2,results.full(:,pairs(ek+1,1)),results.full(:,pairs(ek+1,2))),conf,'r')
+        axis(hAxS(ek),'padded')
     elseif ek == 6 % last small axis corresponds to original (green) data
-        scatter(hAxS(ek),results.full(:,pairs(ek,1)),results.full(:,pairs(ek,2)),.7,[.3 .5 0],'filled','o') ;
+        scatter(hAxS(ek),results.full(:,pairs(ek,1)),results.full(:,pairs(ek,2)),.7,[.1 .5 0],'filled','o') ;
         hold(hAxS(ek),'on')
         ellipse_scatter(hAxS(ek),cat(2,results.full(:,pairs(ek,1)),results.full(:,pairs(ek,2))),conf,'r')
+        axis(hAxS(ek),'padded')
     else
         scatter(hAxS(ek),results.full(:,pairs(ek+1,1)+1),results.full(:,pairs(ek+1,2)+1),.7,'b','filled','o') ;
         hold(hAxS(ek),'on')
         ellipse_scatter(hAxS(ek),cat(2,results.full(:,pairs(ek+1,1)+1),results.full(:,pairs(ek+1,2)+1)),conf,'r')
+        axis(hAxS(ek),'padded')
     end
     box(hAxS(ek),'on')
     xl = xlim(hAxS(ek));
