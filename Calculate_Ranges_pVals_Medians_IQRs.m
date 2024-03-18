@@ -1,3 +1,18 @@
+field_names = ...
+    {'SinEstimuloProteus11_63'
+    'GalvanotaxisProteus11_63'
+    'QuimiotaxisProteus11_63'
+    'InduccionProteus11_63'
+    'SinEstimuloLeningradensis11_63'
+    'GalvanotaxisLeningradensis11_63'
+    'QuimiotaxisLeningradensisVariosPpmm'
+    'InduccionLeningradensis11_63'
+    'SinEstimuloBorokensis23_44'
+    'GalvanotaxisBorokensis11_63'
+    'QuimiotaxisBorokensis23_44'
+    'InduccionBorokensis11_63'
+    };
+
 %% 1. Cellular migratory movements without external stimulus.
 
 length([results.SinEstimuloProteus11_63(:,19);...
@@ -250,26 +265,6 @@ iqr([results.SinEstimuloBorokensis23_44(:,1)...
 ;results.InduccionBorokensis11_63(:,1)])
 
 %global
-
-field_names = ...
-    {'SinEstimuloProteus11_63'
-    'GalvanotaxisProteus11_63'
-    'QuimiotaxisProteus11_63'
-    'InduccionProteus11_63'
-    'SinEstimuloLeningradensis11_63'
-    'GalvanotaxisLeningradensis11_63'
-    'QuimiotaxisLeningradensisVariosPpmm'
-    'InduccionLeningradensis11_63'
-    'SinEstimuloBorokensis23_44'
-    'GalvanotaxisBorokensis11_63'
-    'QuimiotaxisBorokensis23_44'
-    'InduccionBorokensis11_63'
-    };
-
-full = [];
-for index = 1:length(field_names)
-        full = cat(1,full, results.(field_names{index}));
-end
 
 %global experimental
 min(full(:,1))
@@ -907,20 +902,6 @@ results.SinEstimuloProteus11_63(:,17)...
 
 %% Supplemental tables
 
-field_names = ...
-    {'SinEstimuloProteus11_63'
-    'GalvanotaxisProteus11_63'
-    'QuimiotaxisProteus11_63'
-    'InduccionProteus11_63'
-    'SinEstimuloLeningradensis11_63'
-    'GalvanotaxisLeningradensis11_63'
-    'QuimiotaxisLeningradensisVariosPpmm'
-    'InduccionLeningradensis11_63'
-    'SinEstimuloBorokensis23_44'
-    'GalvanotaxisBorokensis11_63'
-    'QuimiotaxisBorokensis23_44'
-    'InduccionBorokensis11_63'
-    };
 
 % RMSF alpha
 for i = 1:length(field_names)
