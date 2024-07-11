@@ -184,10 +184,10 @@ for f = 1:length(UsefulSubFolderNames)
             
         for k=1:shuffles
           coordinates.(conditionValidName).shuffled_x(:,i) = ...
-              shuff(coordinates.(conditionValidName).shuffled_x(:,i)) ;
+              conu.shuff(coordinates.(conditionValidName).shuffled_x(:,i)) ;
 
           coordinates.(conditionValidName).shuffled_y(:,i) = ...
-              shuff(coordinates.(conditionValidName).shuffled_y(:,i)) ;
+              conu.shuff(coordinates.(conditionValidName).shuffled_y(:,i)) ;
         end
         
         % Shuffle Scaled_Rho
@@ -196,7 +196,7 @@ for f = 1:length(UsefulSubFolderNames)
         
         for k=1:shuffles
           coordinates.(conditionValidName).shuffled_rho(:,i) = ...
-              shuff(coordinates.(conditionValidName).shuffled_rho(:,i)) ;
+              conu.shuff(coordinates.(conditionValidName).shuffled_rho(:,i)) ;
         end
         
         % Plot trajectory and place black dot marker at its tip      
@@ -291,7 +291,7 @@ for i = 1:length(field_names)
         [results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF_alpha')),...
             results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF_R2')),...
             results.(field_names{i})(j,strcmp(stat_names(:), 'RMSFCorrelationTime')), tc2] = ...
-            amebas5(coordinates.(field_names{i}).scaled_rho(:,j), rmsfhandle) ;
+            conu.amebas5(coordinates.(field_names{i}).scaled_rho(:,j), rmsfhandle) ;
         
         % Shuffled RMSFalpha
         [results.(field_names{i})(j,strcmp(stat_names(:), 'sRMSF_alpha')),...
