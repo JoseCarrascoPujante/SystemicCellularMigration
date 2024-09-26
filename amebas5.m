@@ -40,7 +40,7 @@ for time_max=step:step:tc2   % plot one graph every "step" data points
             
     for j=1:dim
         
-        y(j)=compute_y(l,j);
+        y(j)=conu.compute_y(l,j);
         
     end
     
@@ -50,7 +50,7 @@ for time_max=step:step:tc2   % plot one graph every "step" data points
     
     for j=1:dim
         
-        F(j)=compute_F(y,j);
+        F(j)=conu.compute_F(y,j);
         
     end
    
@@ -58,9 +58,9 @@ for time_max=step:step:tc2   % plot one graph every "step" data points
     % F fitting %
     %%%%%%%%%%%%%
      
-    time=(1:dim)'.*scale_time*du;
-    idx=find( time(1:time_max)>0 & F(1:time_max)>0 );
-    [Rsq,slope,intercept]=rsquare (log10(time(idx)),log10(F(idx)));
+    time = (1:dim)'.*scale_time*du;
+    idx = find( time(1:time_max)>0 & F(1:time_max)>0 );
+    [Rsq,slope,intercept] = conu.rsquare (log10(time(idx)),log10(F(idx)));
     
     % alpha=slope;
     % v=time.^(alpha);

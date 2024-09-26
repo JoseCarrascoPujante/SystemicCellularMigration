@@ -24,7 +24,7 @@ for i=1:3 % subpanels (species)
     rmsfhandle = gca;
     set(rmsfhandle,'xscale','log')
     set(rmsfhandle,'yscale','log')
-    amebas5(coordinates.(fields{i}).scaled_rho(:,amoebas{i}),rmsfhandle,'orig') ;
+    conu.amebas5(coordinates.(fields{i}).scaled_rho(:,amoebas{i}),rmsfhandle,'orig') ;
 end
 
 %% Panel 2 - RMSF \alpha
@@ -103,7 +103,7 @@ for i=1:length(species) % main boxes (species)
 end
 
 for i=1:length(species) % main boxes (species)
-    superviolin(rmsf_conds{i},'Parent',ax,'Xposition',i,'FaceAlpha',0.15,...
+    conu.superviolin(rmsf_conds{i},'Parent',ax,'Xposition',i,'FaceAlpha',0.15,...
         'Errorbars','ci','Centrals','mean','LineWidth',0.1)
 end
 colorgroups = [ones(length(rmsf_conds{1}{1}),1);
@@ -140,7 +140,7 @@ xticklabels(h,[{'\itAmoeba proteus'},{'\itMetamoeba leningradensis'},...
     {'\itAmoeba borokensis'}])
 h.XAxis.FontSize = 16;
 h.XAxis.TickLength = [0 0];
-ylabel('Memory persistence (min)')
+ylabel('Correlations duration (min)')
 
 
 

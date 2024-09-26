@@ -77,7 +77,7 @@ for i = 1:length(fields)
     dataExp = AE.(fields{i});
     imagesc(dataExp(:,7:end))
     set(h,'YDir','normal')
-    colormap(jet)
+    colormap(flipud(jet))
     xticklabels(h,{});
     h.XAxis.TickLength = [0 0];
     if i == 1
@@ -101,7 +101,7 @@ for i = 1:length(fields)
     dataShuf = AESh.(fields{i});
     imagesc(dataShuf(:,7:end))
     set(h,'YDir','normal')
-    colormap(jet)
+    colormap(flipud(jet))
     xticks([1:columns/6:columns,columns])
     xticklabels(h,300:550:3600);
     h.XAxis.FontSize = 8;
@@ -155,7 +155,7 @@ for i=1:length(species) % main boxes (species)
         c = c+1;
         count = count+2;
         disp(field_names{f(j)})
-        al_goodplot(results.(field_names{f(j)})(:,12), count, [], col(c,:),'bilateral', [], [], 0); %Shuffled
+        conu.al_goodplot(results.(field_names{f(j)})(:,12), count, [], col(c,:),'bilateral', [], [], 0); %Shuffled
     end
 end
 xlim([1.5 28])
@@ -176,7 +176,7 @@ for i=1:length(species) % main boxes (species)
         c = c+1;
         count = count+2;
         disp(field_names{f(j)})
-        al_goodplot(results.(field_names{f(j)})(:,11), count, [], col(c,:),'bilateral', [], [], 0); % original
+        conu.al_goodplot(results.(field_names{f(j)})(:,11), count, [], col(c,:),'bilateral', [], [], 0); % original
     end
 end
 xlim([1.5 28])
