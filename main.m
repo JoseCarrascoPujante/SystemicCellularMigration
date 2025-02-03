@@ -400,7 +400,7 @@ tStatsSec=tic;
 % Kolmogorov-Smirnov test against the standard normal distribution of parameters
 
 for field = 1:length(field_names)
-    n_hypotheses = size(results.(field_names{field}),1) ; % # tracks being tested, for Bonferroni correction)
+    n_hypotheses = size(results.(field_names{field}),1) ; % # tracks == # hypothesis being tested, for Bonferroni correction)
     for column_index = 1:size(results.(field_names{field}),2) % do for each statistical test applied
 
         x = (results.(field_names{field})(:,column_index)...
