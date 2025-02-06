@@ -12,7 +12,7 @@ n=[ 158 251 398 631 1000 1585 2512 ];% 3981 6310 10000 15849 25119 39811 63096 1
 N1=length(n);
 F_n=zeros(N1,1);
 for i=1:N1
- F_n(i)=DFA2(DATA,n(i),1);
+ F_n(i)=conu.DFA2(DATA,n(i),1);
 end
 
 n=n';
@@ -31,7 +31,7 @@ ylabel('log10(F(n))','FontSize',10)
 A=polyfit(log10(n(1:end)),log10(F_n(1:end)),1);
 B=polyval(A,log10(n(1:end)));
 
-[z1,z2]=rsquare(log10(F_n(1:end)),B);
+[z1,z2]=conu.rsquare(log10(F_n(1:end)),B);
 
 if contains(input_type, 'Original')
     plot(log10(n(1:end)),A(1)*log10(n(1:end))+A(2), 'Color', [1 0 0], 'LineStyle','-')

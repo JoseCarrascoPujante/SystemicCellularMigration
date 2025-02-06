@@ -44,7 +44,7 @@ end
 % List the parameters to be calculated by the script
 stat_names = {'RMSF_alpha', 'sRMSF_alpha', 'RMSF_R2', 'sRMSF_R2', 'RMSFCorrelationTime', ...
     'sRMSFCorrelationTime', 'DFA_gamma', 'sDFA_gamma', 'MSD_beta', 'sMSD_beta', 'ApEn', ...
-    'sApEn','Intensity','sIntensity','DR','sDR','AvgSpeed','sAvgSpeed','DispCos'} ;
+    'sApEn','Intensity','sIntensity','DR','sDR','AvgSpeed','sAvgSpeed','dispCos'} ;
 
 % Initialize bulk data structures
 tracks = struct ;
@@ -176,11 +176,12 @@ for f = 1:length(UsefulSubFolderNames)
         end
         
         % Shuffle X and Y trajectories
+        % initialize variables
         coordinates.(conditionValidName).shuffled_x(:,i) = ...
-            coordinates.(conditionValidName).scaled_x(:,i) ; % initialize shuffled X
+            coordinates.(conditionValidName).scaled_x(:,i) ;
 
         coordinates.(conditionValidName).shuffled_y(:,i) = ...
-            coordinates.(conditionValidName).scaled_y(:,i) ; % initialize shuffled Y
+            coordinates.(conditionValidName).scaled_y(:,i) ;
             
         for k=1:shuffles
           coordinates.(conditionValidName).shuffled_x(:,i) = ...
@@ -191,6 +192,7 @@ for f = 1:length(UsefulSubFolderNames)
         end
         
         % Shuffle Scaled_Rho
+        % initialize variable
         coordinates.(conditionValidName).shuffled_rho(:,i) = ...
             coordinates.(conditionValidName).scaled_rho(:,i) ;
         
@@ -245,7 +247,7 @@ save(strcat(destination_folder, '\', run_date, '_coordinates.mat'),...
 
 ['Coordinate section FINISHED in ', tImportSec, ' seconds']
 
-%% Statistics calculation
+%% Metrics calculation
 
 tCalcSec=tic;
 
@@ -291,13 +293,13 @@ for i = 1:length(field_names)
         [results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF_alpha')),...
             results.(field_names{i})(j,strcmp(stat_names(:), 'RMSF_R2')),...
             results.(field_names{i})(j,strcmp(stat_names(:), 'RMSFCorrelationTime')), tc2] = ...
-            conu.amebas5(coordinates.(field_names{i}).scaled_rho(:,j), rmsfhandle) ;
+            conu.amebas5(coordinates.(field_names{i}).scaled_rho(:,j), rmsfhandle, 'orig') ;
         
         % Shuffled RMSFalpha
         [results.(field_names{i})(j,strcmp(stat_names(:), 'sRMSF_alpha')),...
             results.(field_names{i})(j,strcmp(stat_names(:), 'sRMSF_R2')),...
             ~, ~] = ...
-            amebas5(coordinates.(field_names{i}).shuffled_rho(:,j), rmsfhandle) ;
+            conu.amebas5(coordinates.(field_names{i}).shuffled_rho(:,j), rmsfhandle, 'shuff') ;
 
         legend('Original RMSF','Shuffled RMSF','Location','best')
 
@@ -309,12 +311,12 @@ for i = 1:length(field_names)
         dfahandle = gca;
 
         [results.(field_names{i})(j,strcmp(stat_names(:), 'DFA_gamma'))] = ...
-            DFA_main2(coordinates.(field_names{i}).scaled_rho(:,j),...
+            conu.DFA_main2(coordinates.(field_names{i}).scaled_rho(:,j),...
             'Original_DFA_', dfahandle) ;
 
         % Shuffled DFAgamma
         [results.(field_names{i})(j,strcmp(stat_names(:), 'sDFA_gamma'))] = ...
-            DFA_main2(coordinates.(field_names{i}).shuffled_rho(:,j),...
+            conu.DFA_main2(coordinates.(field_names{i}).shuffled_rho(:,j),...
             'Shuffled_DFA_', dfahandle) ;
 
         legend('Original data','Shuffled data (Gaussian noise)',...
@@ -323,22 +325,22 @@ for i = 1:length(field_names)
 
         % MSDbeta
         [results.(field_names{i})(j,strcmp(stat_names(:), 'MSD_beta'))] = ...
-            msd(coordinates.(field_names{i}).scaled_x(:,j),...
+            conu.msd(coordinates.(field_names{i}).scaled_x(:,j),...
             coordinates.(field_names{i}).scaled_y(:,j),msdhandleOr) ;
         
         % Shuffled MSDbeta
         [results.(field_names{i})(j,strcmp(stat_names(:), 'sMSD_beta'))] = ...
-            msd(coordinates.(field_names{i}).shuffled_x(:,j),...
+            conu.msd(coordinates.(field_names{i}).shuffled_x(:,j),...
             coordinates.(field_names{i}).shuffled_y(:,j),msdhandleShuff) ;
 
         % Approximate entropy (Kolmogorov-Sinai entropy)
         results.(field_names{i})(j,strcmp(stat_names(:), 'ApEn')) = ...
-            ApEn(2, 0.2*std(coordinates.(field_names{i}).scaled_rho(:,j)),...
+            conu.ApEn(2, 0.2*std(coordinates.(field_names{i}).scaled_rho(:,j)),...
             coordinates.(field_names{i}).scaled_rho(:,j)) ;
 
         % Shuffled Approximate entropy (Kolmogorov-Sinai entropy)
         results.(field_names{i})(j,strcmp(stat_names(:), 'sApEn')) = ...
-            ApEn(2, 0.2*std(coordinates.(field_names{i}).shuffled_rho(:,j)),...
+            conu.ApEn(2, 0.2*std(coordinates.(field_names{i}).shuffled_rho(:,j)),...
             coordinates.(field_names{i}).shuffled_rho(:,j)) ;
 
         % Intensity of response (mm)
@@ -371,7 +373,7 @@ for i = 1:length(field_names)
         [results.(field_names{i})(j,strcmp(stat_names(:), 'sAvgSpeed'))] = ...
             SdistTrav/1800;
 
-        %Displacement cosines
+        % Displacement cosines
         results.(field_names{i})(j,strcmp(stat_names(:), 'dispCos')) = ...
             cos(coordinates.(field_names{i}).theta(end,j));
 
@@ -393,7 +395,7 @@ tCalcSec = num2str(toc(tCalcSec)) ;
 save(strcat(destination_folder, '\', run_date ,'_numerical_results.mat'),...
     'tCalcSec', 'results', 'field_names') ;
 
-%% Statistical testing
+%% Statistical tests calculation
 
 tStatsSec=tic;
 
