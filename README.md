@@ -1,0 +1,1 @@
+Code used for the analyses in the research publication "Systemic cellular migration: The forces driving the directed locomotion movement of cells", available under Gold Open Access at https://doi.org/10.1093/pnasnexus/pgae171
