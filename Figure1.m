@@ -199,7 +199,7 @@ hold(ax1,'on');
 rectangle('Position',[left bottom width height], ...
     'EdgeColor','red','LineWidth',0.75);
 
-% Create first axes for zoomed-in view
+% Create first inset's axes for zoomed-in view
 ax2 = axes(layout2);
 ax2.Layout.Tile = 1;
 plot(scaled_x, scaled_y, 'Color', 'b')
@@ -231,7 +231,7 @@ hold(ax2,'on');
 rectangle('Position',[left bottom width height], ...
     'EdgeColor','red','LineWidth',0.5);
 
-% Create second axes for zoomed-in view
+% Create second inset's axes for zoomed-in view
 ax3 = axes(layout2);
 ax3.Layout.Tile = 7;
 plot(scaled_x, scaled_y, 'Color', 'b')
